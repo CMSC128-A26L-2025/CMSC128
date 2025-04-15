@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Navbar from "../header";
 import Footer from "../Footer";
 import event1 from "../../assets/event.png";
@@ -6,13 +7,28 @@ import notice2 from "../../assets/notice2.png";
 import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
 
+//test case for jobs
+const jobListings = [
+  {
+    title: "Frontend Developer",
+    company: "Tech Solutions Inc.",
+    datePosted: "April 10, 2025",
+    location: "Remote",
+  },
+  {
+    title: "Data Analyst",
+    company: "Global Analytics Co.",
+    datePosted: "April 12, 2025",
+    location: "Manila, PH",
+  },
+];
+
 export const MainPage = () => {
   return (
     <>
       <div className="fixed top-0 w-full z-50">
         <Navbar />
       </div>
-
       <div className="pt-12">
         <div className="w-full grid grid-cols-3 gap-0 min-h-[600px]">
           {/* Event 1 */}
@@ -62,40 +78,48 @@ export const MainPage = () => {
                 Explore<br />Recent Job<br />Opportunities
               </h2>
               <div className="flex justify-end mt-4 pr-10">
-                <button className="text-[#891839] border-3 border-[#891839] px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-[#891839] hover:text-white">
-                  View more &gt;
-                </button>
+                <Link to="/jobs">
+                  <button className="text-[#891839] border-3 border-[#891839] px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-[#891839] hover:text-white">
+                    View more &gt;
+                  </button>
+                </Link>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:w-2/3">
-              {/* Card 1 */}
-              <div className="bg-[#891839] p-3 rounded-3xl flex justify-center h-70 w-full">
-                <div className="bg-[#891839] text-white px-10 rounded-3xl border-2 border-white w-full flex flex-col items-start justify-center text-left">
-                  <h3 className="text-4xl font-semibold mb-3 pb-5">Job Title</h3>
-                  <p>Company Name</p>
-                  <p>Date Posted</p>
-                  <p>Location</p>
-                </div>
-              </div>
-
-              {/* Card 2 */}
-              <div className="bg-[#891839] p-3 rounded-3xl flex justify-center h-70 w-full">
-                <div className="bg-[#891839] text-white px-10 rounded-3xl border-2 border-white w-full flex flex-col items-start justify-center text-left">
-                  <h3 className="text-4xl font-semibold mb-3 pb-5">Job Title</h3>
-                  <p>Company Name</p>
-                  <p>Date Posted</p>
-                  <p>Location</p>
-                </div>
-              </div>
+              {jobListings.length > 0 ? (
+                jobListings.map((job, index) => (
+                  <Link
+                    key={index}
+                    to={`/job-details/${index}`}
+                    state={{ job }}
+                    className="transform transition-transform duration-300 hover:scale-105"
+                  >
+                    <div className="bg-[#891839] p-3 rounded-3xl flex justify-center h-70 w-full shadow-lg hover:shadow-xl">
+                      <div className="bg-[#891839] text-white px-10 rounded-3xl border-2 border-white w-full flex flex-col items-start justify-center text-left">
+                        <h3 className="text-4xl font-semibold mb-3 pb-5">{job.title}</h3>
+                        <p>Company: {job.company}</p>
+                        <p>Date Posted: {job.datePosted}</p>
+                        <p>Location: {job.location}</p>
+                      </div>
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <p>No job listings found.</p>
+              )}
             </div>
           </div>
           <div className="w-full h-0.5 mt-15 bg-[#891839]"></div>
         </div>
 
-         <div className="w-full h-110 grid grid-cols-2 gap-0">
+        <div className="w-full h-110 grid grid-cols-2 gap-0">
+          <Link to="/book-event">
             <BookEventButton />
+          </Link>
+          <Link to="/search-alumni">
             <SearchAlumniButton />
+          </Link>
         </div>
       </div>
 
