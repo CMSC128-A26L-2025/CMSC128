@@ -4,8 +4,8 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Landing_page } from './components/sections/Landing_page'
-import { MainPage } from './components/sections/MainPage'
+import { LandingPage } from './pages/LandingPage'
+import { MainPage } from './pages/MainPage'
 import "./index.css"
 
 // function App() {
@@ -27,7 +27,7 @@ function App() {
     // {
     //   path: "/",
     //   element: (
-    //     <Landing_page />
+    //     <LandingPage />
     //   ),
     // },
     {
@@ -45,19 +45,19 @@ function App() {
     {
       path: "/jobs",
       element: (
-        <Landing_page />
+        <LandingPage />
       )
     },
     {
       path: "/book-event",
       element: (
-        <Landing_page />
+        <LandingPage />
       )
     },
     {
       path: "/search-alumni",
       element: (
-        <Landing_page />
+        <LandingPage />
       )
     }
   ]);
