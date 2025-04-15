@@ -3,8 +3,8 @@ import Footer from "../Footer";
 import event1 from "../../assets/event.png";
 import notice1 from "../../assets/notice1.png";
 import notice2 from "../../assets/notice2.png";
-import calendar from "../../assets/calendar.png";
-import search from "../../assets/search_alumni.png";
+import BookEventButton from "../buttons/BookEvent";
+import SearchAlumniButton from "../buttons/SearchAlumni";
 
 export const MainPage = () => {
   return (
@@ -93,34 +93,9 @@ export const MainPage = () => {
           <div className="w-full h-0.5 mt-15 bg-[#891839]"></div>
         </div>
 
-        <div className="w-full h-110 grid grid-cols-2 gap-0">
-          {/* Book an Event */}
-          <div className="group relative bg-[#891839] p-8 pb-30 flex justify-center items-center w-full h-full transition-colors duration-300 hover:bg-[#145C44] overflow-hidden">
-            <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white/70 to-transparent transition-colors duration-300 group-hover:from-white/70 z-0" />
-            <button className="relative z-10 bg-[#891839] group-hover:bg-[#145C44] text-white rounded-3xl border-5 border-white w-full h-full flex items-center justify-center px-10 py-6 transition-colors duration-300">
-              <div className="flex items-center gap-6">
-                <img src={calendar} alt="Calendar Icon" className="w-60 h-60" />
-                <div className="text-right">
-                  <p className="text-6xl font-semibold leading-15">Book an</p>
-                  <p className="text-6xl font-semibold leading-15">Event</p>
-                </div>
-              </div>
-            </button>
-          </div>
-
-          {/* Search Alumni */}
-          <div className="group relative bg-[#145C44] p-8 pb-30 flex justify-center items-center w-full h-full transition-colors duration-300 hover:bg-[#891839] overflow-hidden">
-            <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white/70 to-transparent transition-colors duration-300 group-hover:from-white/70 z-0" />
-            <button className="relative z-10 bg-[#145C44] group-hover:bg-[#891839] text-white rounded-3xl border-5 border-white w-full h-full flex items-center justify-center px-10 py-6 transition-colors duration-300">
-              <div className="flex items-center gap-6">
-                <div className="text-left">
-                  <p className="text-6xl font-semibold leading-15">Search</p>
-                  <p className="text-6xl font-semibold leading-15">Alumni</p>
-                </div>
-                <img src={search} alt="Search Icon" className="w-60 h-60" />
-              </div>
-            </button>
-          </div>
+         <div className="w-full h-110 grid grid-cols-2 gap-0">
+            <BookEventButton />
+            <SearchAlumniButton />
         </div>
       </div>
 
