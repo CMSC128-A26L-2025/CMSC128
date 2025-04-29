@@ -10,7 +10,7 @@ export default function Navbar_landing() {
         <div className="container flex justify-between items-center py-1 px-4">
           {/* Left - Logo */}
           <a href="/">
-            <img src="src/assets/uplblogo.png" className="bg-none w-40 h-auto" alt="UPLB Logo" />
+            <img src="/assets/uplblogo.png" className="bg-none w-40 h-auto" alt="UPLB Logo" />
           </a>
         </div>
       </nav>

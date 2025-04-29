@@ -1,4 +1,4 @@
-import calendar from "../../assets/calendar.png";
+import calendar from "/assets/calendar.png";
 
 export default function BookEventButton() {
     return (

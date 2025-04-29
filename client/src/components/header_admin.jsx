@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import speakerIcon from '../assets/Speaker_Icon.svg';
+import speakerIcon from "/assets/Speaker_Icon.svg";
 export default function Navbar_admin() {
   const [isOpen, setIsOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);

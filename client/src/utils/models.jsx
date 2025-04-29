@@ -1,6 +1,6 @@
-import event1 from "../assets/event.png";
-import notice1 from "../assets/notice1.png";
-import notice2 from "../assets/notice2.png";
+import event1 from "/assets/event.png";
+import notice1 from "/assets/notice1.png";
+import notice2 from "/assets/notice2.png";
 
 export const jobList = [
     {
@@ -349,4 +349,4 @@ export const eventList = [
       donatable:false,
       image: event1
     },
-];  
+];
