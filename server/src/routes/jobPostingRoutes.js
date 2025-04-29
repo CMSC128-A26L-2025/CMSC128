@@ -5,15 +5,10 @@ import { jobPostingController } from "../controllers/modelControllers/jobPosting
 
 const router = express.Router();
 
-router.get("/admin-page-jobs", // validateToken, authorizeRoles(["Admin"]), * commented for testing
-    jobPostingController.adminPageJobs);
+router.get("/all", validateToken, authorizeRoles(["Admin", "Alumni"], jobPostingController.read));
+router.get("/admin-page-jobs", validateToken, authorizeRoles(["Admin"]), jobPostingController.adminPageJobs);
+router.get("/admin-page-job-requests", validateToken, authorizeRoles(["Admin"]), jobPostingController.adminPageJobRequests);
+router.get("/job-results", validateToken, authorizeRoles(["Admin", "Alumni"]), jobPostingController.jobResults);
+router.get("/job-bookmarked", validateToken, authorizeRoles(["Admin", "Alumni"]), jobPostingController.bookmarkJob);
 
-router.get("/admin-page-job-requests", // validateToken, authorizeRoles(["Admin"]), * commented for testing
-    jobPostingController.adminPageJobRequests);
-
-router.get("/job-results", // validateToken, authorizeRoles(["Admin"]), * commented for testing
-    jobPostingController.jobResults);
-
-router.get("/job-bookmarked", // validateToken, authorizeRoles(["Admin"]), * commented for testing
-    jobPostingController.bookmarkJob);
 export default router

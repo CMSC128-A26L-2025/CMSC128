@@ -9,32 +9,92 @@ import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
 import Error_Message from "../error_message";
 import { useParams } from 'react-router-dom';
+import { useAuth } from "../../AuthContext";
 
 export default function MainPage() {
+    const {authAxios, user} = useAuth();
     const {user_id} =useParams(); //Contains the User Id 
+
     const [jobs, setJobs] = useState(jobList);
     const [events, setEvents] = useState(eventList);
     const [announcements, setAnnouncements] = useState(announcementList);
+    const [isLoading, setIsLoading] = useState(true);
 
     // for events and announcements slideshow
-    const [currentEventIndex, setCurrentEventIndex] = useState(() => parseInt(sessionStorage.getItem("currentEventIndex")) || 0);
-    const [oddNoticeIndex, setOddNoticeIndex] = useState(() => parseInt(sessionStorage.getItem("oddNoticeIndex")) || 0);
-    const [evenNoticeIndex, setEvenNoticeIndex] = useState(() => parseInt(sessionStorage.getItem("evenNoticeIndex")) || 1);
-    const [Error_MessageBool, setError_MessageBool]= useState(false)
+    const [currentEventIndex, setCurrentEventIndex] = useState(() => {
+        const saved = parseInt(sessionStorage.getItem("currentEventIndex"));
+        return isNaN(saved) ? 0 : saved;
+    });
+    const [oddNoticeIndex, setOddNoticeIndex] = useState(() => {
+        const saved = parseInt(sessionStorage.getItem("oddNoticeIndex"));
+        return isNaN(saved) ? 0 : saved;
+    });
+    const [evenNoticeIndex, setEvenNoticeIndex] = useState(() => {
+        const saved = parseInt(sessionStorage.getItem("evenNoticeIndex"));
+        return isNaN(saved) ? 1 : saved;
+    });
+    const [Error_MessageBool, setError_MessageBool]= useState(false);
 
-    const totalEvents = events.length;
     const eventIntervalRef = useRef(null);
     const noticeIntervalRef = useRef(null);
 
+    // fetch data
     useEffect(() => {
-        startEventInterval();
-        startNoticeInterval();
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                console.log("Fetching data...");
+                
+                // Fetch jobs
+                const jobsResponse = await authAxios.get('/jobs/job-results');
+                setJobs(jobsResponse.data);
+                
+                // Fetch events
+                const eventsResponse = await authAxios.get('/events/all');
+                console.log("Events data:", eventsResponse.data);
+                
+                if (Array.isArray(eventsResponse.data) && eventsResponse.data.length > 0) {
+                    setEvents(eventsResponse.data);
+                    
+                    // Reset currentEventIndex if it's out of bounds
+                    if (currentEventIndex >= eventsResponse.data.length) {
+                        setCurrentEventIndex(0);
+                        sessionStorage.setItem("currentEventIndex", "0");
+                    }
+                } else {
+                    console.log("No events data or empty array");
+                    setEvents([]);
+                }
+                
+                // Fetch announcements
+                // const announcementsResponse = await authAxios.get('/announcements');
+                // setAnnouncements(announcementsResponse.data);
+                
+                setIsLoading(false);
+            } catch (err) {
+                console.error("Error fetching data:", err);
+                setIsLoading(false);
+                setError_MessageBool(true);
+            }
+        };
+        
+        fetchData();
+        ScrollToTop();
+    }, [authAxios]);
+
+    useEffect(() => {
+        // Only start intervals if we have data
+        if (events.length > 0) {
+            startEventInterval();
+        }
+        
+        if (announcements.length > 0) {
+            startNoticeInterval();
+        }
 
         // filter and display only approved jobs
         const approvedJobs = jobs.filter((job) => job.status === "approved");
         setJobs(approvedJobs);
-        setEvents(eventList);
-        setAnnouncements(announcementList);
         ScrollToTop();
 
         return () => {
@@ -48,7 +108,7 @@ export default function MainPage() {
         eventIntervalRef.current = setInterval(() => {
             setCurrentEventIndex((prev) => {
                 const next = (prev + 1) % events.length;
-                sessionStorage.setItem("currentEventIndex", next);
+                sessionStorage.setItem("currentEventIndex", next.toString());
                 return next;
             });
         }, 20000);   // 20sec interval for each event
@@ -59,34 +119,41 @@ export default function MainPage() {
         noticeIntervalRef.current = setInterval(() => {
             setOddNoticeIndex((prev) => {
                 const next = (prev + 2) % announcements.length;
-                sessionStorage.setItem("oddNoticeIndex", next);
+                sessionStorage.setItem("oddNoticeIndex", next.toString());
                 return next;
             });
             setEvenNoticeIndex((prev) => {
                 const next = (prev + 2) % announcements.length;
-                sessionStorage.setItem("evenNoticeIndex", next);
+                sessionStorage.setItem("evenNoticeIndex", next.toString());
                 return next;
             });
         }, 30000);   // 30sec interval per two announcements
     };
 
     const handlePrevEvent = () => {
+        if (events.length === 0) return;
+        
         setCurrentEventIndex((prev) => {
-            const newIndex = (prev - 1 + totalEvents) % totalEvents;
-            sessionStorage.setItem("currentEventIndex", newIndex);
+            const newIndex = (prev - 1 + events.length) % events.length;
+            sessionStorage.setItem("currentEventIndex", newIndex.toString());
             return newIndex;
         });
         startEventInterval();
     };
 
     const handleNextEvent = () => {
+        if (events.length === 0) return;
+        
         setCurrentEventIndex((prev) => {
-            const newIndex = (prev + 1) % totalEvents;
-            sessionStorage.setItem("currentEventIndex", newIndex);
+            const newIndex = (prev + 1) % events.length;
+            sessionStorage.setItem("currentEventIndex", newIndex.toString());
             return newIndex;
         });
         startEventInterval();
     };
+    
+    // Check if current event is valid before rendering it
+    const currentEvent = events.length > 0 ? events[currentEventIndex] : null;
     
     return (
         <>
@@ -125,7 +192,7 @@ export default function MainPage() {
                                 >
                                     <IoIosArrowBack size={15} />
                                 </button>
-                                <span className="text-sm font-normal select-none">{`${currentEventIndex + 1} of ${totalEvents}`}</span>
+                                <span className="text-sm font-normal select-none">{`${currentEventIndex + 1} of ${events.length}`}</span>
                                 <button 
                                     onClick={handleNextEvent} 
                                     className="text-sm font-normal cursor-pointer focus:!outline-none"

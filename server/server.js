@@ -32,7 +32,6 @@ app.use(cookieParser());
 
 // routes
 app.use("/alumni", alumniRoutes);
-app.use("/event", eventRoutes);
 app.use("/jobs", jobPostingRoutes);
 app.use("/auth", authRoutes);
 app.use("/file", fileRoutes);

@@ -7,57 +7,12 @@ import { BookmarkIcon } from '@heroicons/react/24/solid';
 // import { jobList } from "../../utils/models";
 // import { ScrollToTop } from "../../utils/helper";
 import axios from "axios";
-
-// const dummyJobs = [
-//   {
-//     id: 4,
-//     title: "UI/UX Designer",
-//     date: "December 28, 2025",
-//     description: "Design intuitive user interfaces and craft exceptional user experiences.",
-//     company: "PixelWave Studio",
-//     location: "Makati City, Metro Manila",
-//     image: "src/assets/Building.png",
-//   },
-//   {
-//     id: 1,
-//     title: "Software Engineer",
-//     date: "April 20, 2025",
-//     description: "Join our dynamic tech team to build and maintain modern web applications.",
-//     company: "TechNova Inc.",
-//     location: "Los Baños, Laguna",
-//     image: "src/assets/Building.png",
-//   },
-//   {
-//     id: 5,
-//     title: "Administrative Assistant",
-//     date: "January 30, 2025",
-//     description: "Support daily office operations and manage administrative tasks efficiently.",
-//     company: "Laguna Agritech Solutions",
-//     location: "Bay, Laguna",
-//     image: "src/assets/Building.png",
-//   },
-//   {
-//     id: 3,
-//     title: "Research Assistant",
-//     date: "February 25, 2025",
-//     description: "Assist with field and lab research under the College of Agriculture and Food Science.",
-//     company: "University of the Philippines Los Baños",
-//     location: "UPLB Campus",
-//     image: "src/assets/Building.png",
-//   },
-//   {
-//     id: 2,
-//     title: "Marketing Coordinator",
-//     date: "May 22, 2025",
-//     description: "Help execute marketing campaigns and boost brand awareness.",
-//     company: "GreenGrow Corp.",
-//     location: "Calamba, Laguna",
-//     image: "src/assets/Building.png",
-//   },
-// ];
+import { useAuth } from "../../AuthContext";
 
 export const Results_page_jobs = ( { user_id }) => {
   const navigate = useNavigate();
+  const { authAxios, user } = useAuth();
+
   const [sortBy, setSortBy] = useState("");
   const [bookmarkedIds, setBookmarkedIds] = useState([]);
   const [jobs, setJobs] = useState([]);
@@ -70,31 +25,10 @@ export const Results_page_jobs = ( { user_id }) => {
     }
   };
 
-//   const sortedJobs = useMemo(() => {
-//     if (sortBy === "date") {
-//       return [...jobs].sort((a, b) => new Date(a.date_posted) - new Date(b.date_posted));
-//     } else if (sortBy === "title") {
-//       return [...jobs].sort((a, b) => a.job_title.localeCompare(b.job_title));
-//     }
-//     return jobs;
-//   }, [sortBy, jobs]);
-
-//   useEffect(() => {
-//     const approvedJobs = jobList.filter((job) => job.status === "approved");
-//     setJobs(approvedJobs);
-//     ScrollToTop();
-//   }, []);
-
 useEffect(() => {
   const fetchJobs = async () => {
       try {
-          let token = localStorage.getItem("accessToken");
-
-          if (!token) {
-              navigate("/login");
-              return;
-          }
-
+          console.log("Fetching jobs...");
           const response = await axios.get(`${import.meta.env.VITE_API_URL}/jobs/job-results?sortBy=${sortBy}`, {
               headers: { Authorization: `Bearer ${token}` },
               withCredentials: true
@@ -103,50 +37,12 @@ useEffect(() => {
           setJobs(response.data);
 
           // Fetch bookmarked jobs
-          const bookmarkedResponse = await axios.get(`http://localhost:5050/jobs/bookmarked?userId=${user_id}`, {
-              headers: { Authorization: `Bearer ${token}` },
-              withCredentials: true
-          });
+          const bookmarkedResponse = await authAxios.get(`jobs/bookmarked?userId=${user_id}`);
 
           setBookmarkedIds(bookmarkedResponse.data.map(job => job._id));
 
       } catch (error) {
-          if (error.response?.status === 401 || error.response?.status === 403) {
-              console.log("Token invalid/expired. Attempting refresh...");
-
-              try {
-                  const refreshResponse = await axios.get("http://localhost:5050/auth/refresh", { withCredentials: true });
-
-                  if (refreshResponse.data.accessToken) {
-                      const newToken = refreshResponse.data.accessToken;
-                      localStorage.setItem("accessToken", newToken);
-
-                      console.log("Retrying job fetch with new token...");
-                      const retryResponse = await axios.get(`${import.meta.env.VITE_API_URL}/jobs/job-results?sortBy=${sortBy}`, {
-                          headers: { Authorization: `Bearer ${newToken}` },
-                          withCredentials: true
-                      });
-
-                      setJobs(retryResponse.data);
-
-                      // Retry fetch bookmarks
-                      const retryBookmarkResponse = await axios.get(`http://localhost:5050/jobs/bookmarked?userId=${user_id}`, {
-                          headers: { Authorization: `Bearer ${newToken}` },
-                          withCredentials: true
-                      });
-
-                      //setBookmarkedIds(retryBookmarkResponse.data.map(job => job._id));
-
-                  } else {
-                      navigate("/login");
-                  }
-              } catch (refreshError) {
-                  console.error("Token refresh failed:", refreshError);
-                  navigate("/login");
-              }
-          } else {
-              console.error("Error fetching jobs:", error);
-          }
+          console.error("Error fetching jobs:", error);
       }
   };
 

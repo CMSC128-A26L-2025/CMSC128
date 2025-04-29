@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import dotenv from "dotenv";
 dotenv.config({path: "../server/.env"})
 
-let accessSecretKey = process.env.ACCESS_TOKEN_SECRET__KEY;
+let accessSecretKey = process.env.ACCESS_TOKEN_SECRET_KEY;
 let refreshSecretKey = process.env.REFRESH_TOKEN_SECRET_KEY;
 
 export const refresh = async (req, res) => {
