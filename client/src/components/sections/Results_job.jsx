@@ -95,7 +95,7 @@ useEffect(() => {
               return;
           }
 
-          const response = await axios.get(`http://localhost:5050/jobs/job-results?sortBy=${sortBy}`, {
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/jobs/job-results?sortBy=${sortBy}`, {
               headers: { Authorization: `Bearer ${token}` },
               withCredentials: true
           });
@@ -122,7 +122,7 @@ useEffect(() => {
                       localStorage.setItem("accessToken", newToken);
 
                       console.log("Retrying job fetch with new token...");
-                      const retryResponse = await axios.get(`http://localhost:5050/jobs/job-results?sortBy=${sortBy}`, {
+                      const retryResponse = await axios.get(`${import.meta.env.VITE_API_URL}/jobs/job-results?sortBy=${sortBy}`, {
                           headers: { Authorization: `Bearer ${newToken}` },
                           withCredentials: true
                       });
