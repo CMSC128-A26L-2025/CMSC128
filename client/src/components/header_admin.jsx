@@ -9,6 +9,7 @@ import humanIcon from "../assets/Human Icon.png";
 export default function Navbar_admin() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate()
+  const  [notification_modal, setnotification_modal] = useState(false)
   const [formData, setFormData] = useState({
     title:"",
     read:false,
@@ -35,7 +36,13 @@ export default function Navbar_admin() {
     // setIsOpen(false); Remove after implementing the proper backend stuff
   }
   return (
-    <nav className="bg-white w-full py-1 fixed top-0 left-0 z-50">
+    <>
+     {notification_modal &&(
+            <div>
+              <Notification setVisible={setnotification_modal}></Notification>
+            </div>
+          )}
+    <nav className="bg-white w-full py-1 fixed top-0 left-0 z-20">
       {/* Flexbox for proper alignment */}
       <div className="container flex justify-between items-center py-1 px-4">
         {/* Left - Logo */}
@@ -93,9 +100,16 @@ export default function Navbar_admin() {
                 </div>
             </button>
             {/* Notification Icon */}   
-            <a href="/">
-                <img src={notifications} className="w-10 h-10" alt="Notifications" />
-            </a>
+             <div 
+                        onClick={()=>{
+                          setnotification_modal(true);
+                            
+                        }
+                        }
+                        className="cursor-pointer"
+                        >
+                          <img src={notifications} className="w-10 h-10" alt="Notifications" />
+                        </div>
 
             {/* Profile Icon inside Circle */}
             <div className="relative">
@@ -115,7 +129,7 @@ export default function Navbar_admin() {
                   >
                     View Profile
                   </Link>
-                  <button
+                  <button 
                     onClick={handleLogout}
                     className="block w-full px-4 py-2 !text-gray-700 hover:bg-[#891839] hover:!text-white focus:!outline-none"
                   >
@@ -127,5 +141,6 @@ export default function Navbar_admin() {
         </div>
       </div>
     </nav>
+  </>
   );
 }

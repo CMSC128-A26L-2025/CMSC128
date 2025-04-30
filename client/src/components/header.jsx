@@ -37,7 +37,8 @@ export default function Navbar({user_id}) {
             {/* Notification Icon */}
             <div 
             onClick={()=>{
-              setnotification_modal(true)
+              setnotification_modal(true);
+              console.log("testing")
             }
             }
             className="cursor-pointer"
