@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import Notification from "./notification";
 import { useAuth } from "../AuthContext";
 
-import uplbLogo from "../assets/uplblogo.png";
-import notifications from "../assets/notifications.png";
-import humanIcon from "../assets/Human Icon.png";
+import uplbLogo from "/assets/uplblogo.png";
+import notifications from "/assets/notifications.png";
+import humanIcon from "/assets/Human Icon.png";
 
 export default function Navbar({user_id}) {
   const  [notification_modal, setnotification_modal] = useState(false)

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import speakerIcon from '../assets/Speaker_Icon.svg';
+import speakerIcon from '/assets/Speaker_Icon.svg';
 import Notification from "./notification";
 import { useNavigate } from 'react-router-dom'
 import uplbLogo from "../assets/uplblogo.png";
-import notifications from "../assets/notifications.png";
-import humanIcon from "../assets/Human Icon.png";
+import notifications from "/assets/notifications.png";
+import humanIcon from "/assets/Human Icon.png";
 export default function Navbar_admin() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate()
