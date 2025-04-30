@@ -10,41 +10,52 @@ const dummyAccounts = [
 ];
 
 export const Results_page_accounts = () => {
-    return (
-        <>
-            <Navbar_search searchTerm={searchTerm} setSearchTerm={setSearchTerm} user_id={user_id} /> {/* Use Navbar_search */}
-            <div className="w-screen min-h-screen bg-gray-200 pt-24"> {/* Adjusted padding */}
-                {/* Header Row */}
-                <div className="w-full h-16 bg-[#891839] text-white grid grid-cols-4 justify-center items-center px-6">                        
-                    <p>Email</p>
-                    <p>Name</p>
-                    <p>Account Type</p>
-                    <p>Actions</p>
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredAccounts = useMemo(() => {
+    const term = searchTerm.toLowerCase();
+    return dummyAccounts.filter(
+      (acc) =>
+        acc.type !== "Admin" && // Don't show Admins
+        (acc.name.toLowerCase().includes(term) ||
+         acc.email.toLowerCase().includes(term))
+    );
+  }, [searchTerm]);
+
+  return (
+    <>
+      <Navbar_search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
+      <div className="w-screen min-h-screen bg-gray-200 pt-20">
+        {/* Header Row */}
+        <div className="w-full h-16 bg-red-900 text-white grid grid-cols-3 justify-center items-center px-6">
+          <p>Email</p>
+          <p>Name</p>
+          <p>Actions</p>
+        </div>
+
+        {/* Account Display */}
+        <div className="w-full h-full">
+          {filteredAccounts.length === 0 ? (
+            <div className="text-center py-10 text-gray-600">No matching users found.</div>
+          ) : (
+            filteredAccounts.map((account) => (
+              <div
+                key={account.id}
+                className="grid grid-cols-3 p-4 text-center text-black border-b border-gray-300"
+              >
+                <p>{account.email}</p>
+                <p>{account.name}</p>
+                <div className="flex justify-center items-center">
+                  <button className="w-30 bg-red-600 text-white text-sm py-1 rounded-full hover:bg-red-700 transition">
+                    Report
+                  </button>
                 </div>
-                {/* Header Row */}   
-                    {/* Account Display */}
-                    <div className="w-full h-full">
-                    {dummyAccounts.map((Account) => (
-                        <div key={Account.id} className="grid grid-cols-4 p-4 text-center text-black border-b border-gray-300">
-                            <p>{Account.email}</p>
-                            <p>{Account.name}</p>
-                            <p>{Account.type}</p>
-                            <div className="flex justify-center items-center">
-                                {Account.type === "Admin" ? (
-                                    <button className="w-30 bg-red-600 text-white text-sm py-1 rounded-full hover:bg-red-700 transition">
-                                        Report
-                                    </button>
-                                ) : (
-                                    <button className="w-30 bg-red-600 text-white text-sm py-1 rounded-full hover:bg-red-700 transition">
-                                        Ban
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                    </div>
-                    {/* Account Display */}     
-            </div>
-        </>
-    )
-}
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </>
+  );
+};

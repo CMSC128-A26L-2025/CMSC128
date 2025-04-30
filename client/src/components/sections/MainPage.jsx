@@ -78,7 +78,8 @@ export default function MainPage() {
                         >
                             <div className="relative z-10 group/title">
                                 <Link
-                                    to={`/event-details/${events[currentEventIndex].event_id}/${user_id}`}
+
+                                    to={`/event-details/${events[currentEventIndex]._id}`}
                                     state={{ event: events[currentEventIndex] }}
                                     className="!text-white !text-3xl sm:!text-4xl md:!text-7xl !font-bold !mb-4 !text-left cursor-pointer block w-full relative z-10 hover:!underline"
                                 >
