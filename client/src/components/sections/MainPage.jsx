@@ -23,7 +23,72 @@ export default function MainPage() {
     const [message, setmessage]=useState("");
 
     useEffect(() => {
-        const eventInterval = setInterval(() => {
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                console.log("Fetching data...");
+                
+                // Fetch jobs
+                const jobsResponse = await authAxios.get('/jobs/job-results');
+                setJobs(jobsResponse.data);
+                
+                // Fetch events
+                const eventsResponse = await authAxios.get('/events/all');
+                console.log("Events data:", eventsResponse.data);
+                
+                if (Array.isArray(eventsResponse.data) && eventsResponse.data.length > 0) {
+                    setEvents(eventsResponse.data);
+                    
+                    // Reset currentEventIndex if it's out of bounds
+                    if (currentEventIndex >= eventsResponse.data.length) {
+                        setCurrentEventIndex(0);
+                        sessionStorage.setItem("currentEventIndex", "0");
+                    }
+                } else {
+                    console.log("No events data or empty array");
+                    setEvents([]);
+                }
+                
+                // Fetch announcements
+                // const announcementsResponse = await authAxios.get('/announcements');
+                // setAnnouncements(announcementsResponse.data);
+                
+                setIsLoading(false);
+            } catch (err) {
+                console.error("Error fetching data:", err);
+                setIsLoading(false);
+                setError_MessageBool(true);
+            }
+        };
+        
+        fetchData();
+        ScrollToTop();
+    }, [authAxios]);
+
+    useEffect(() => {
+        // Only start intervals if we have data
+        if (events.length > 0) {
+            startEventInterval();
+        }
+        
+        if (announcements.length > 0) {
+            startNoticeInterval();
+        }
+
+        // filter and display only approved jobs
+        const approvedJobs = jobs.filter((job) => job.status === "approved");
+        setJobs(approvedJobs);
+        // ScrollToTop();
+
+        return () => {
+            clearInterval(eventIntervalRef.current);
+            clearInterval(noticeIntervalRef.current);
+        };
+    }, [events.length, announcements.length]);
+
+    const startEventInterval = () => {
+        clearInterval(eventIntervalRef.current);
+        eventIntervalRef.current = setInterval(() => {
             setCurrentEventIndex((prev) => {
                 const next = (prev + 1) % events.length;
                 localStorage.setItem("currentEventIndex", next);
