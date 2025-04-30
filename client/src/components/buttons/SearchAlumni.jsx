@@ -1,4 +1,4 @@
-import search from "../../assets/search_alumni.png";
+import search from "/assets/search_alumni.png";
 
 export default function SearchAlumniButton() {
     return (
