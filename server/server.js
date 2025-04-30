@@ -27,7 +27,6 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 
 // routes
@@ -42,6 +41,15 @@ app.use("/notifications", notificationRoutes);
 app.get('/', (req, res) => {
   res.send('API is running');
 });
+
+// Serve the React app in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'dist')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
+  });
+}
 
 //export for testing
 export default app;

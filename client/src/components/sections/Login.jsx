@@ -28,9 +28,19 @@ const Login = () => {
                 localStorage.setItem("accessToken", res.data.accessToken);
 
                 if (res.data.user_type === "admin") { //check if admin or alumni
-                    navigate(`/admin_main/${res.data.userId}`);
+                    try {
+                        navigate(`/admin_main/${res.data.userId}`);
+                    } catch (error) {
+                        console.error("Navigation error:", error);
+                        alert("Failed to navigate to the admin page. Please try again.");
+                    }
                 } else {
-                    navigate(`/home/${res.data.userId}`);
+                    try {
+                        navigate(`/home/${res.data.userId}`);
+                    } catch (error) {
+                        console.error("Navigation error:", error);
+                        alert("Failed to navigate to the home page. Please try again.");
+                    }
                 }
             } else {
                 alert("Login failed. Please check your credentials.");
