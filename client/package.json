@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "postinstall": "flowbite-react patch",
-    "start": "vite"
+    "start": "vite --host"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

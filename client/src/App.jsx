@@ -15,7 +15,7 @@ import { Results_page_accounts} from './components/sections/Results_accounts'
 import { Results_page_jobs } from './components/sections/Results_job'
 
 import { Create_Event } from './components/sections/Create_event'
-import { Post_Job } from './components/sections/post_job'
+import { Post_Job } from './components/sections/Post_job'
 
 import { Results_page_events } from './components/sections/Results_event'
 import { AuthProvider } from './AuthContext'
