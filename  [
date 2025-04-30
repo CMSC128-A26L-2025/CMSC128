@@ -1,0 +1,533 @@
+[33mcommit 4cf76f3d4c5fcdd048566c8a265ddf65d2c53b9d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: koolano <koolano@up.edu.ph>
+Date:   Wed Apr 30 13:15:54 2025 +0800
+
+    feat: Added file handling to Job Posting.
+
+[33mcommit e3108bb32ac63ff425f79b815c0296272166394f[m
+Author: GabDiocadiz <gddiocadiz@up.edu.ph>
+Date:   Tue Apr 29 08:41:16 2025 +0800
+
+    feat: added plugin-react
+
+[33mcommit 81394a76495cb1818652c9056c7717cc2e7ea65f[m
+Merge: 840fb85 ce20487
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Tue Apr 29 08:21:49 2025 +0800
+
+    Merge pull request #33 from CMSC128-A26L-2025/profile-dropdown
+    
+    feat: add profile dropdown menu
+
+[33mcommit 840fb852f5a4c36a0412a7aa43bfc2bdd449599b[m
+Merge: ea0a98d 482d092
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Tue Apr 29 08:21:34 2025 +0800
+
+    Merge pull request #34 from CMSC128-A26L-2025/job-results
+    
+    chore: integrate job results sorting and authentication handling
+
+[33mcommit ea0a98d346c6ea910883c3372c12f8409e8695c3[m
+Author: GabDiocadiz <gddiocadiz@up.edu.ph>
+Date:   Tue Apr 29 06:24:50 2025 +0800
+
+    refactor: added start script in package.json
+
+[33mcommit 482d092ecc4e5c4b907c2c2506565640ada2d88d[m
+Author: ella <eegarcia4@up.edu.ph>
+Date:   Tue Apr 29 00:26:31 2025 +0800
+
+    chore: integrate job results sorting and authentication handling
+
+[33mcommit ea78689511a9db770696e646014fb44987ac3bf9[m
+Author: K3shyyy <159239532+K3shyyy@users.noreply.github.com>
+Date:   Tue Apr 29 00:04:51 2025 +0800
+
+    Added Transaction page
+    
+    needs tweaking for cosmetics
+
+[33mcommit ce20487e6d1e54560b6314c9edc85f54ec3560a8[m
+Author: Precious Ramil <pdramil@up.edu.ph>
+Date:   Mon Apr 28 23:52:40 2025 +0800
+
+    feat: add profile dropdown menu
+
+[33mcommit d0e879e323a85a396fd6bd832bf6db72a3f8a031[m
+Merge: 2d91f21 6fd4b87
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Mon Apr 28 23:10:32 2025 +0800
+
+    Merge pull request #32 from rseangueco/login
+    
+    Login
+
+[33mcommit 6fd4b87deed1aa13561044fa0b36916d202d73d9[m
+Author: rseangueco <rngueco2@up.edu.ph>
+Date:   Mon Apr 28 23:10:03 2025 +0800
+
+    chore: removed previous api, changed admin page to new api
+
+[33mcommit 3bb49990cead2285720ce3b826ff89d722d7ec28[m
+Author: rseangueco <rngueco2@up.edu.ph>
+Date:   Mon Apr 28 22:44:12 2025 +0800
+
+    feat: accessing unauthorized pages no redirects to login page
+
+[33mcommit 4cbad07008958f9dd3381290285ee587b2c75492[m
+Author: rseangueco <rngueco2@up.edu.ph>
+Date:   Mon Apr 28 22:11:30 2025 +0800
+
+    feat: added AuthContext
+
+[33mcommit 2d91f214d71bdb3e6aacc574e55bd70d8b2646e6[m
+Author: K3shyyy <159239532+K3shyyy@users.noreply.github.com>
+Date:   Mon Apr 28 21:14:36 2025 +0800
+
+    Added Profile Page
+    
+    look for blue dot ( / 🔵 ) comments to see where linking and routing and backend relevant stuff are
+
+[33mcommit b1d4668c36c29b37a4ade567519450e4811b0e24[m
+Author: rseangueco <rngueco2@up.edu.ph>
+Date:   Mon Apr 28 19:57:06 2025 +0800
+
+    refactor: changed some route names
+
+[33mcommit 81f609feec3ceb1b4e2c6a0e47700c9d53eab829[m
+Author: rseangueco <rngueco2@up.edu.ph>
+Date:   Mon Apr 28 19:47:10 2025 +0800
+
+    fix: fixed event imports
+
+[33mcommit 9414b7272ee3539a1398b88a7bb86d92ab883f1b[m
+Merge: 05a5946 c754904
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Mon Apr 28 19:27:30 2025 +0800
+
+    Merge pull request #31 from rseangueco/results-event
+    
+    Results event
+
+[33mcommit c75490406dfd729aa5623141cb6d421d790e72f0[m
+Merge: 428c2f7 05a5946
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Mon Apr 28 19:27:22 2025 +0800
+
+    Merge branch 'main' into results-event
+
+[33mcommit 05a59464815fbf62b6ff6acbf747a50b297fc338[m
+Author: GabDiocadiz <gddiocadiz@up.edu.ph>
+Date:   Mon Apr 28 17:39:15 2025 +0800
+
+    feat: added link attribute in Event model
+
+[33mcommit 428c2f71703b9ba9aa7f41c7ba49481bd763c0c0[m
+Merge: c45c6cc 684ffbf
+Author: AJTJ09 <atjavier1@up.edu.ph>
+Date:   Mon Apr 28 17:07:58 2025 +0800
+
+    Merge branch 'results-event' of https://github.com/rseangueco/CMSC128 into results-event
+
+[33mcommit c45c6cca40771bb2d52d78ad25cebfa8ca32c8f5[m
+Author: AJTJ09 <atjavier1@up.edu.ph>
+Date:   Mon Apr 28 17:06:32 2025 +0800
+
+    feat: added /events endpoint
+
+[33mcommit 6f616fcea92e7da2faf420373b61f22bb827ae1e[m
+Author: AJTJ09 <atjavier1@up.edu.ph>
+Date:   Mon Apr 28 17:06:11 2025 +0800
+
+    feat: added eventController to fetch events
+
+[33mcommit d881b5295ced5128b34aa916b59b4dc59af0c678[m
+Author: AJTJ09 <atjavier1@up.edu.ph>
+Date:   Mon Apr 28 17:05:20 2025 +0800
+
+    fix: removed unneeded imports causing errors
+
+[33mcommit 863cf1c2f669e16879c2b5ef18afb21ddae4bf2f[m
+Author: AJTJ09 <atjavier1@up.edu.ph>
+Date:   Mon Apr 28 17:04:16 2025 +0800
+
+    fix: after validating token, now proceeds to next function
+
+[33mcommit 60a26f44a522aae898385db8321c73697bcaccc0[m
+Author: AJTJ09 <atjavier1@up.edu.ph>
+Date:   Mon Apr 28 17:03:02 2025 +0800
+
+    chore: updated login.js
+
+[33mcommit a707abace0a546ee1f8e13e59dc50ef3269a163e[m
+Author: AJTJ09 <atjavier1@up.edu.ph>
+Date:   Mon Apr 28 17:02:15 2025 +0800
+
+    feat: shown events are now from cloud database
+
+[33mcommit 2b845aa801a8b0c398aeb9e48b3e771280a3f23b[m
+Author: AJTJ09 <atjavier1@up.edu.ph>
+Date:   Mon Apr 28 17:01:44 2025 +0800
+
+    feat: added event routes
+
+[33mcommit 6d6cf4dc0e024aa549473e27947b1851ccd95691[m
+Author: AJTJ09 <atjavier1@up.edu.ph>
+Date:   Mon Apr 28 17:01:08 2025 +0800
+
+    feat: login w/ database implemented
+
+[33mcommit 94b605cd668fbdb9b0acbebbb15e020b2e3fd81a[m
+Merge: 8e5fbac 684ffbf
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Mon Apr 28 10:36:08 2025 +0800
+
+    Merge pull request #30 from rseangueco/results-event
+    
+    Results event
+
+[33mcommit 684ffbf697934f08b8a26ac304b36e067ac62810[m
+Author: Precious Ramil <pdramil@up.edu.ph>
+Date:   Mon Apr 28 10:08:51 2025 +0800
+
+    feat: add manual navigation for event slideshow
+
+[33mcommit 8e5fbac7c2a6137425401c1046916374e76445dd[m
+Merge: 4256bd4 e1d3b25
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Mon Apr 28 00:52:20 2025 +0800
+
+    Merge pull request #29 from rseangueco/login
+    
+    feat: added login functionality to frontend
+
+[33mcommit e1d3b25bea4aecd92fd480056e7faa78a1f837e4[m
+Author: perez-aaron <acperez5@up.edu.ph>
+Date:   Sun Apr 27 21:03:27 2025 +0800
+
+    feat: added login functionality to frontend
+
+[33mcommit 4256bd43d166fc873903143ebc713988d1be387f[m
+Merge: 6bc75b5 58a27d9
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Sun Apr 27 19:13:33 2025 +0800
+
+    Merge pull request #28 from rseangueco/admin-page-functions
+    
+    Admin page functions
+
+[33mcommit 58a27d9b3d0af56d698966ed5ecf274aee5fcb60[m
+Merge: 31350f2 6bc75b5
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Sun Apr 27 19:13:18 2025 +0800
+
+    Merge branch 'main' into admin-page-functions
+
+[33mcommit 31350f26b29c09b90d9b9a9de33fea00805e2596[m
+Author: rseangueco <rngueco2@up.edu.ph>
+Date:   Sun Apr 27 19:08:48 2025 +0800
+
+    feat: added functions for fetching jobs and job requests
+
+[33mcommit d1a50b3dc1f03d4cd2d1effa516ccb26cd3b51cf[m
+Author: Precious Ramil <pdramil@up.edu.ph>
+Date:   Sun Apr 27 18:47:12 2025 +0800
+
+    refactor: pass user_id to routes
+
+[33mcommit 1afaf177bfed680ec064df8ed88a4f02338f4487[m
+Author: rseangueco <rngueco2@up.edu.ph>
+Date:   Sun Apr 27 17:56:00 2025 +0800
+
+    feat: added function for fetching events
+
+[33mcommit 9646ff5c370a4ec31c03d8b9a6d48fa612d68a86[m
+Merge: 3af4460 6bc75b5
+Author: Precious Ramil <pdramil@up.edu.ph>
+Date:   Sun Apr 27 17:48:02 2025 +0800
+
+    Merge remote-tracking branch 'origin' into results-event
+
+[33mcommit 3af44600ee5e45ed7e8e92d4ec634c26e8875eae[m
+Author: Precious Ramil <pdramil@up.edu.ph>
+Date:   Sun Apr 27 17:42:05 2025 +0800
+
+    feat: add results event page
+
+[33mcommit 6bc75b58d6a4743e4804eccb8a3479a716cf715b[m
+Merge: 038fb5e 248c86e
+Author: Richmond <rbpore@up.edu.ph>
+Date:   Sun Apr 27 17:25:41 2025 +0800
+
+    Merge pull request #27 from rseangueco/notification_error
+    
+    Added Proper Routing and Changed View Events
+
+[33mcommit 248c86ec57c2569c46157f63c83d1c5ec10e76bd[m
+Author: Richhqw <rbpore@up.edu.ph>
+Date:   Sun Apr 27 17:24:15 2025 +0800
+
+    Fixed Routing and Implemented Proper Parameters for pages, Changed Event View, added is a charity event property for events
+
+[33mcommit 453bb1f0885888e7b6b4ed31d01210a3e4d5641d[m
+Merge: c1d5935 499d886
+Author: Richhqw <rbpore@up.edu.ph>
+Date:   Sun Apr 27 13:54:07 2025 +0800
+
+    resolved some merge conflicts
+
+[33mcommit c1d5935800e310e2c4db4a4284a4ac491e816b2f[m
+Author: Richhqw <rbpore@up.edu.ph>
+Date:   Sun Apr 27 13:52:38 2025 +0800
+
+    Changed Icons instead of directory in the code it is now imported
+
+[33mcommit 038fb5ec89f138b69e1d3e120dd80fad9dfbd8a8[m
+Merge: 8d55ae8 499d886
+Author: Richmond <rbpore@up.edu.ph>
+Date:   Sun Apr 27 13:50:41 2025 +0800
+
+    Merge pull request #26 from rseangueco/notification_error
+    
+    added notification component and error modal
+
+[33mcommit 499d886849f31507397d008e95d7e79d1028fb01[m
+Merge: f735bdc 8d55ae8
+Author: Richmond <rbpore@up.edu.ph>
+Date:   Sun Apr 27 13:49:55 2025 +0800
+
+    Merge branch 'main' into notification_error
+
+[33mcommit f735bdcd607c1393654d587e39fa7fa851e7e102[m
+Author: Richhqw <rbpore@up.edu.ph>
+Date:   Sun Apr 27 13:34:04 2025 +0800
+
+    added notification component and error modal
+
+[33mcommit 8d55ae86d33772a64ef216e03d2853f76a14fc26[m
+Merge: 84a6de3 8340eaa
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Sun Apr 27 13:04:35 2025 +0800
+
+    Merge pull request #25 from rseangueco/register
+    
+    feat: added registration function to frontend
+
+[33mcommit 8340eaae431c5cb8372e971af59d9f17cd01f35c[m
+Author: rseangueco <rngueco2@up.edu.ph>
+Date:   Sun Apr 27 12:35:54 2025 +0800
+
+    feat: added registration function to frontend
+
+[33mcommit 84a6de3232049ce233acdf232d0a05a718313a02[m
+Author: rseangueco <rngueco2@up.edu.ph>
+Date:   Sun Apr 27 11:33:00 2025 +0800
+
+    fix: merge errors
+
+[33mcommit d915abb949a164933593153a1e949cfcb967f1c5[m
+Merge: e7e996c 1650868
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Sun Apr 27 11:24:42 2025 +0800
+
+    Merge pull request #24 from rseangueco/notifications
+    
+    Implementing notifications with mark as read thing
+
+[33mcommit e7e996c3d0d8f45e9d7c7728e5a046adb01e5978[m
+Merge: e44790c 6fbf7c7
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Sun Apr 27 11:23:50 2025 +0800
+
+    Merge pull request #23 from rseangueco/database
+    
+    feat: added isRead in Notification model
+
+[33mcommit 6fbf7c7c8c8602032de84c66157a2a4bf522a00f[m
+Merge: 2d59ff8 e44790c
+Author: rseangueco <rngueco2@up.edu.ph>
+Date:   Sun Apr 27 11:23:12 2025 +0800
+
+    chore: merge
+
+[33mcommit e44790c99be752c186cb85dc673c8f9503812922[m
+Merge: b167624 3395b53
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Sun Apr 27 11:14:54 2025 +0800
+
+    Merge pull request #22 from rseangueco/view-job-event
+    
+    View job event
+
+[33mcommit b167624596731832b7824cc98e51404b2f4d4b35[m
+Merge: 43da387 4fa59d0
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Sun Apr 27 11:13:07 2025 +0800
+
+    Merge pull request #21 from rseangueco/admin_main
+    
+    Admin main
+
+[33mcommit 3395b535373502d23fc28a8cc28a874970bd999f[m
+Author: Precious Ramil <pdramil@up.edu.ph>
+Date:   Sat Apr 26 21:37:26 2025 +0800
+
+    refactor: update state handling; persist event & announcement slideshow
+
+[33mcommit 516da78c102bc1d6f7044880b39bc8867183a042[m
+Author: Precious Ramil <pdramil@up.edu.ph>
+Date:   Sat Apr 26 20:56:15 2025 +0800
+
+    feat: add view event page
+
+[33mcommit 47bb630c6fc21ab3d12c34f8f0f07d9c4094faa0[m
+Author: Precious Ramil <pdramil@up.edu.ph>
+Date:   Sat Apr 26 19:00:04 2025 +0800
+
+    style: adjust text size
+
+[33mcommit 242ef8d96922777ade5937abbdce9e0c4bf18fd9[m
+Author: Precious Ramil <pdramil@up.edu.ph>
+Date:   Sat Apr 26 18:59:32 2025 +0800
+
+    refactor: import assets for header images
+
+[33mcommit 8434c1f6c8bf970ac2d054e1f3867282f0ff5948[m
+Author: Precious Ramil <pdramil@up.edu.ph>
+Date:   Sat Apr 26 18:55:08 2025 +0800
+
+    refactor: update job results page to link job cards
+
+[33mcommit 68df6faa0eb2e30f93f875b4036ade6b0c11483f[m
+Author: Precious Ramil <pdramil@up.edu.ph>
+Date:   Sat Apr 26 18:47:39 2025 +0800
+
+    feat: add view job page
+
+[33mcommit 4fa59d0c96c29ee1d9c903e5071155c0bebc0cfa[m
+Merge: 9be5f30 0d46511
+Author: Richhqw <rbpore@up.edu.ph>
+Date:   Fri Apr 25 20:58:55 2025 +0800
+
+    Resolved merge conflicts
+
+[33mcommit 9be5f30313dcfb714d99d8beb08ad5daebf62894[m
+Author: Richhqw <rbpore@up.edu.ph>
+Date:   Fri Apr 25 20:28:30 2025 +0800
+
+    Added Admin Main Page, Job Result Page and Alumn Search
+
+[33mcommit 43da38721b0a272b5b6696ccd3d824638f40baea[m
+Merge: 8d1d29e 0d46511
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Fri Apr 25 11:48:01 2025 +0800
+
+    Merge pull request #17 from rseangueco/mainpage
+    
+    Mainpage
+
+[33mcommit 8d1d29e88a1c60e6e9ba1469afb063e2bc838991[m
+Author: rseangueco <rngueco2@up.edu.ph>
+Date:   Fri Apr 25 11:47:18 2025 +0800
+
+    fix: merge errors
+
+[33mcommit 4e432edf7ac4194a93ce704f6683c52711ed17e0[m
+Merge: d0593a0 ca0d028
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Fri Apr 25 11:43:25 2025 +0800
+
+    Merge pull request #19 from rseangueco/create-RSVP
+    
+    Create, View, Edit RSVP
+
+[33mcommit ca0d028d2f058f543bbda1ac7056f79488c5232a[m
+Merge: 606c480 d0593a0
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Fri Apr 25 11:42:42 2025 +0800
+
+    Merge branch 'main' into create-RSVP
+
+[33mcommit 16508680210823c99e2be3d15bdca352aa191734[m
+Author: jgbocobo <jgbocobo@up.edu.ph>
+Date:   Fri Apr 25 06:23:44 2025 +0800
+
+    Implementing notifications with mark as read thing
+
+[33mcommit 606c480404c7071c72c8fe8cd3c4e1e6cb137ffb[m
+Author: AJTJ09 <atjavier1@up.edu.ph>
+Date:   Fri Apr 25 04:50:15 2025 +0800
+
+    feat: added rsvp view and edit endpoints
+
+[33mcommit cd821a671789b68b8110cf2f13a10b44248ca864[m
+Author: AJTJ09 <atjavier1@up.edu.ph>
+Date:   Fri Apr 25 04:49:42 2025 +0800
+
+    feat: added rsvp view and edit
+
+[33mcommit d0593a02952053cb0d6293f72b5dcde900247bbf[m
+Author: rseangueco <rngueco2@up.edu.ph>
+Date:   Wed Apr 23 15:50:30 2025 +0800
+
+    fix: fixed errors from merge
+
+[33mcommit 2fb9364b9ef16be43838752c78286aaab6b17251[m
+Merge: 13284b2 d88fd26
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Wed Apr 23 15:29:40 2025 +0800
+
+    Merge pull request #18 from rseangueco/file-upload-download
+    
+    feat: Added file middleware and route for upload and downloading of f…
+
+[33mcommit d88fd260bbeca2f2c814c398525dd83665664b43[m
+Merge: 02b7e96 13284b2
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Wed Apr 23 15:28:59 2025 +0800
+
+    Merge branch 'main' into file-upload-download
+
+[33mcommit 13284b2a058bc34a6909e0a5b09aa3e8ed792684[m
+Merge: c3d1b94 91c78c2
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Mon Apr 21 19:44:53 2025 +0800
+
+    Merge pull request #16 from rseangueco/logout
+    
+    Logout
+
+[33mcommit 91c78c25c9bdbc4c889765e5e6cdf9f74129ad1b[m[33m ([m[1;31morigin/logout[m[33m)[m
+Merge: 9f57ca5 c3d1b94
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Mon Apr 21 19:44:43 2025 +0800
+
+    Merge branch 'main' into logout
+
+[33mcommit c3d1b94c7fc3a97d9a15e8ee93f97f1d1c8054ed[m
+Merge: 9023cc0 f0f3b11
+Author: rseangueco <159257175+rseangueco@users.noreply.github.com>
+Date:   Mon Apr 21 19:42:40 2025 +0800
+
+    Merge pull request #15 from rseangueco/alumni_search
+    
+    Alumni search
+
+[33mcommit f0f3b1190cef347bb510d38ba1ac422ed5eb6075[m
+Author: rseangueco <rngueco2@up.edu.ph>
+Date:   Mon Apr 21 19:41:55 2025 +0800
+
+    fix: moved test main method inside async function
+
+[33mcommit 870271a88718a4d128915cd28c305492b69e933f[m
+Author: ella <eegarcia4@up.edu.ph>
+Date:   Mon Apr 21 05:18:25 2025 +0800
+
+    test: added test cases for alumni search and filter
+
+[33mcommit 69ac4caa57d7b94f2660057c82d08b10b6b3d055[m
+Author: ella <eegarcia4@up.edu.ph>
+Date:   Mon Apr 21 05:17:29 2025 +0800
+
+    chore: updated route for alumni search and filter
