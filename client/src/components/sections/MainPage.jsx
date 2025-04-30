@@ -239,7 +239,7 @@ export default function MainPage() {
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:w-2/3">
-                            {jobs.length > 0 ? (
+                            {Array.isArray(jobs) && jobs.length > 0 ? (
                                 jobs.slice(0, 2).map((job, index) => (
                                     <Link
                                         key={index}
@@ -250,7 +250,6 @@ export default function MainPage() {
                                             <div className="bg-[#891839] text-white px-10 rounded-3xl border-2 border-white w-full flex flex-col items-start justify-center text-left">
                                                 <h3 className="text-4xl font-semibold mb-3 pb-5">{job.job_title}</h3>
                                                 <p>Company: {job.company}</p>
-                                                {/* <p>Date Posted: {new Date(job.date_posted).toLocaleDateString()}</p> */}
                                                 <p>
                                                     Date Posted: {new Date(job.date_posted).toLocaleDateString('en-US', {
                                                         year: 'numeric',
