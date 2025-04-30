@@ -15,7 +15,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://artemis-7cxd.onrender.com', // Change this to your backend server URL
+        target: 'https://artemis-7cxd.onrender.com', 
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ''),
