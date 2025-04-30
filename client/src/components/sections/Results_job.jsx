@@ -38,7 +38,6 @@ useEffect(() => {
 
           // Fetch bookmarked jobs
           const bookmarkedResponse = await authAxios.get(`jobs/bookmarked?userId=${user_id}`);
-          const bookmarkedResponse = await authAxios.get(`jobs/bookmarked?userId=${user_id}`);
 
           setBookmarkedIds(bookmarkedResponse.data.map(job => job._id));
 

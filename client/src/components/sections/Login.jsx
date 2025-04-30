@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Navbar_landing from "../header_landing";
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
+import { useAuth } from "../../AuthContext";
 
 const Login = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { login } = useAuth();
+
     const [formData, setFormData] = useState({
-        username: "",
+        email: "",
         password: "",
     });
 
@@ -17,13 +19,9 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5050';
-            const res = await axios.post(`${apiUrl}/auth/login`, {
-                email: formData.username,
-                password: formData.password,
-            }, {});
+            const result = await login(formData.email, formData.password);
 
-            if (res.data.success) { //check login is successful
+            if (result.success) {
                 alert("Login Successful. Redirecting to home page...");
 
                 console.log("User type: ", result.user.user_type);
@@ -36,12 +34,10 @@ const Login = () => {
                 alert("Login failed. Please check your credentials.");
             }
         } catch (err) {
-            console.error("Login error:", err.response?.data || err.message);
+            console.error("Login error:", err);
             alert("Login failed. Please try again.");
         }
     };
-
-
 
     return (
         <>
@@ -65,17 +61,16 @@ const Login = () => {
                             </div>
 
                         </div>
-                        {/* <div className="col-span-1"></div> */}
                         <div className="flex flex-col justify-start col-span-2 pr-20">
                             <div className="bg-white/60 p-8 rounded-3xl shadow-lg w-110 backdrop-blur-sm  flex justify-center">
                                 <form onSubmit={handleSubmit} className="space-y-6 ">
                                     <input
                                         type="text"
-                                        name="username"
-                                        value={formData.username}
+                                        name="email"
+                                        value={formData.email}
                                         onChange={handleChange}
                                         className="w-full p-2 border-3 border-[#3E3939] rounded-md outline-none focus:ring-1 "
-                                        placeholder="Username"
+                                        placeholder="Email"
                                         required
                                     />
                                     <input
