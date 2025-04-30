@@ -47,7 +47,7 @@ const Login = () => {
             <div className="w-screen">
                 <Navbar_landing></Navbar_landing>
             </div>
-            <div className="bg-[url('/assets/Building.png')] bg-cover bg-center w-full h-screen flex flex-col justify-center">
+            <div className="bg-[url('@/assets/Building.png')] bg-cover bg-center w-full h-screen flex flex-col justify-center">
                 <div className="flex  ">
                     <div className="grid grid-cols-5 gap-x-5 px-5">
                         <div className="flex flex-col justify-center col-span-3 pl-20 ">
