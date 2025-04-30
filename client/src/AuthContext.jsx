@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const res = await axios.post("http://localhost:5050/auth/login", {
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {
                 email,
                 password
             }, {
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            await axios.post("http://localhost:5050/auth/logout", {}, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/auth/logout`, {}, {
                 withCredentials: true
             });
         } catch (error) {
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
 
     const refreshToken = async () => {
         try {
-            const res = await axios.get("http://localhost:5050/auth/refresh", {
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
                 withCredentials: true
             });
 
@@ -101,7 +101,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     // Create axios instance with authorization header
-    const authAxios = axios.create({baseURL: 'http://localhost:5050'} );
+    const authAxios = axios.create({ baseURL: import.meta.env.VITE_API_URL });
 
     // Add token to all requests
     authAxios.interceptors.request.use(

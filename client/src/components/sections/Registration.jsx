@@ -48,7 +48,7 @@ const Registration = () => {
                 <Navbar_landing></Navbar_landing>
             </div> 
             
-            <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full h-full flex flex-col justify-between pb-20">
+            <div className="bg-[url('/assets/Building.png')] bg-cover bg-center w-full h-full flex flex-col justify-between pb-20">
                 <div className="grid grid-cols-1 gap-y-5 pt-16">
                     <h1 className=" !text-7xl font-bold text-white ">ARTEMIS</h1>       
                     <div className="flex justify-center">

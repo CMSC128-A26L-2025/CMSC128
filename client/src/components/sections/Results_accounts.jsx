@@ -27,7 +27,7 @@ export const Results_page_accounts = () => {
   
       console.log("Query Parameters:", queryParams); // Debug query parameters
   
-      const response = await axios.get("http://localhost:5050/alumni/search", { params: queryParams });
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/alumni/search`, { params: queryParams });
   
       console.log("API Response:", response.data); // Debug API response
   

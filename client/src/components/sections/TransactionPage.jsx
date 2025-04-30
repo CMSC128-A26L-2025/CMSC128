@@ -60,7 +60,7 @@ export default function TransactionPage() {
         <div
           className="w-full md:w-1/2 flex items-center justify-center text-white"
           style={{
-            backgroundImage: `linear-gradient(rgba(14, 66, 33, 0.85), rgba(14, 66, 33, 0.85)), url(${eventDetails.imageUrl})`,
+            backgroundImage: `linear-gradient(rgba(14, 66, 33, 0.85), rgba(14, 66, 33, 0.85)), url('/assets/${eventDetails.imageUrl}')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -129,10 +129,10 @@ export default function TransactionPage() {
             <div className="text-center mt-4 text-gray-600">or pay with</div>
             <div className="flex justify-center space-x-4 mt-4">
               <button type="button" className="hover:scale-105 transition-transform">
-                <img src="src/assets/gcash.png" alt="GCash" className="h-10" />
+                <img src="public/assets/gcash.png" alt="GCash" className="h-10" />
               </button>
               <button type="button" className="hover:scale-105 transition-transform">
-                <img src="src/assets/paymaya.png" alt="PayMaya" className="h-10" />
+                <img src="public/assets/paymaya.png" alt="PayMaya" className="h-10" />
               </button>
             </div>
           </form>

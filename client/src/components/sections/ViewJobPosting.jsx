@@ -31,7 +31,7 @@ export default function ViewJobDetails() {
         <div className="w-screen pt-12">
             <div
                 className="bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 py-14 w-full h-[50vh]"
-                style={{ backgroundImage: `url(${job.image})` }}
+                style={{ backgroundImage: `url('/assets/${job.image}')` }}
             >
             <div
                 className="flex items-center gap-2 cursor-pointer text-white hover:text-gray-300 mb-10"

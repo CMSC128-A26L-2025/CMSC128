@@ -173,7 +173,7 @@ export default function MainPage() {
                     {events.length > 0 && (
                         <div
                             className="col-span-1 sm:col-span-2 bg-cover bg-center text-white flex flex-col justify-center items-start px-8 py-16 sm:px-16 sm:py-32 w-full transition-all duration-1000 relative group"
-                            style={{ backgroundImage: `url(${events[currentEventIndex].image})` }}
+                            style={{ backgroundImage: `url('/assets/${events[currentEventIndex].image}')` }}
                         >
                             <div className="relative z-10 group/title">
                                 <Link
@@ -211,7 +211,7 @@ export default function MainPage() {
                             <div
                                 key={i}
                                 className="bg-cover bg-center !text-white flex flex-col justify-center items-end text-right px-8 sm:px-10 py-8 sm:py-10 w-full transition-all duration-1000"
-                                style={{ backgroundImage: `url(${announcements[index].image})` }}
+                                style={{ backgroundImage: `url('/assets/${announcements[index].image}')` }}
                             >
                                 <h2 className="!text-white !text-2xl sm:!text-3xl md:!text-4xl !font-bold !mb-4">
                                     {announcements[index].title}

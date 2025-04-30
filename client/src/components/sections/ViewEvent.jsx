@@ -18,7 +18,7 @@ export default function ViewEventDetails() {
     useEffect(() => {
         const fetchedEvent = async () => {
             try {
-                const response = await authAxios.get(`http://localhost:5050/events/find-event/${id}`);
+                const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/events/find-event/${id}`);
 
                 setEvent(response.data);
                 console.log("Fetched Event:", response.data);
@@ -28,14 +28,14 @@ export default function ViewEventDetails() {
                     console.log("Token invalid/expired. Attempting refresh...");
 
                     try {
-                        const refreshResponse = await axios.get("http://localhost:5050/auth/refresh", { withCredentials: true });
+                        const refreshResponse = await axios.get(`${import.meta.env.VITE_API_URL}/auth/refresh`, { withCredentials: true });
 
                         if (refreshResponse.data.accessToken) {
                             const newToken = refreshResponse.data.accessToken;
                             localStorage.setItem("accessToken", newToken);
 
                             console.log("Retrying event fetch with new token...");
-                            const retryResponse = await axios.get(`http://localhost:5050/events/find-event/${id}`, {
+                            const retryResponse = await axios.get(`${import.meta.env.VITE_API_URL}/events/find-event/${id}`, {
                                 headers: { Authorization: `Bearer ${newToken}` },
                                 withCredentials: true
                             });
@@ -74,7 +74,7 @@ export default function ViewEventDetails() {
             <div className="w-screen pt-12">
                 <div
                     className="min-h-[85vh] bg-cover bg-center text-white flex flex-col justify-center items-start px-8 sm:px-16 pb-10 w-full"
-                    style={{ backgroundImage: `url(${event.image})` }}
+                    style={{ backgroundImage: `url('/assets/${event.image}')` }}
                 >
                     <div className="flex justify-center">
                         <div className="w-[30vw]">
