@@ -98,7 +98,7 @@ const Login = () => {
                                     <hr className="border-t border-[#085740]" />
 
                                     <button
-                                        type="submit"
+                                        type="button"
                                         className="w-full bg-[#085740] font-bold text-white p-2 rounded-md hover:bg-green-700 transition"
                                         onClick={() =>
                                             navigate('/reg')}
