@@ -15,7 +15,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://artemis-7cxd.onrender.com', 
+        target: process.env.NODE_ENV === 'production' ? 'https://artemis-7cxd.onrender.com' : 'http://localhost:5050', 
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ''),

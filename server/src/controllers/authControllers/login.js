@@ -8,8 +8,6 @@ dotenv.config({ path: "../server/.env" })
 let accessSecretKey = process.env.ACCESS_TOKEN_SECRET_KEY || 'default_access_secret';
 let refreshSecretKey = process.env.REFRESH_TOKEN_SECRET_KEY || 'default_refresh_secret';
 
-console.log('Access Secret Key:', accessSecretKey);
-console.log('Refresh Secret Key:', refreshSecretKey);
 
 export const login = async (req, res) => {
     try {
@@ -17,9 +15,6 @@ export const login = async (req, res) => {
 
         // console.log(`Login attempt with email: ${email}`);
         const user = await User.findOne({ email: email });
-
-        // debugging log to check if user is found
-        console.log('User found:', user);
 
         if (!user) {
             return res.status(401).json({ error: 'User not found' });
