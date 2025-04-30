@@ -1,6 +1,5 @@
 export const create = async (Model, req, res) => {
     try {
-        // console.log("TANINGA")
         const item = new Model(req.body);
         await item.save();
         res.status(201).json(item)

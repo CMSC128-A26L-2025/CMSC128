@@ -29,7 +29,7 @@ router.post("/create", upload.array('files[]'), jobPostingController.create);
 //   });
 router.post("/:job_id/upload", upload.array('files[]'), jobPostingController.uploadJobFiles);
 // // List metadata of all files in a job posting
-// router.get('/:id/files[]', jobPostingController.getJobFiles);
+router.get('/:job_id/files', jobPostingController.getJobFiles);
 
 // // Delete a specific file (by server filename) from job posting
 // router.delete('/:id/file/:filename', jobPostingController.deleteJobFile);

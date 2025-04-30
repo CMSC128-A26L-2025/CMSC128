@@ -29,7 +29,7 @@ export const uploadFilesForModel = async (req, res) => {
   try {
     const Model = getModel(modelName); // You need to have this getModel
     
-    const document = await Model.find({ job_id: req.param.id}).exec();
+    const document = await Model.find({ job_id: id}).exec();
     // console.log("SUMAKSES KA E 1")
     // console.log(id)
     if (!document) return res.status(404).json({ message: "Document not found" });
@@ -59,7 +59,7 @@ export const getFilesForModel = async (req, res) => {
 
   try {
     const Model = getModel(modelName);
-    const document = await Model.findById(id);
+    const document = await Model.find({ job_id: id}).exec();
     if (!document) return res.status(404).json({ message: "Document not found" });
 
     res.json({ files: document.files || [] });
