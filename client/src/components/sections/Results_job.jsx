@@ -52,7 +52,14 @@ useEffect(() => {
       <div className="w-screen pb-10">
         <Navbar />
       </div>
-      
+      <div>
+            <button
+                className="fixed w-auto h-10 bottom-6 right-6 z-50 bg-[#891839]  hover:bg-blue-700 text-white rounded-2xl px-4 shadow-lg transition-colors duration-300"
+                    
+                >
+                Post A Job
+            </button>
+           </div>
       <div className="w-full h-full bg-gray-200 p-10 flex flex-col justify-center items-center">
         <div className="container flex flex-col items-start space-y-8 text-black text-left ">
           

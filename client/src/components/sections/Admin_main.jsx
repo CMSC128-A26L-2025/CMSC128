@@ -1,6 +1,6 @@
 import Navbar_admin from "../header_admin";
 import { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import Request_Confirmation from "../request_confirmation";
 import Speed_Dial_Admin from "../Speed_Dial_Admin";
 import { useAuth } from "../../AuthContext.jsx";

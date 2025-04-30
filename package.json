@@ -4,6 +4,8 @@
     "express": "^4.21.2",
     "mongoose": "^8.12.1",
     "react-range": "^1.10.0",
+    "motion": "^12.9.2",
+    "react-calendar": "^5.1.0",
     "react-router-dom": "^7.5.3"
   },
   "scripts": {

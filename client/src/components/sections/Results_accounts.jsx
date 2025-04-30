@@ -12,15 +12,16 @@ const dummyAccounts = [
 export const Results_page_accounts = () => {
     return (
         <>
-            <Navbar />
-            
-            <div className="w-screen min-h-screen bg-gray-200 pt-13">
+
+            <Navbar_search searchTerm={searchTerm} setSearchTerm={setSearchTerm} user_id={user_id} /> {/* Use Navbar_search */}
+
+            <div className="w-screen min-h-screen bg-gray-200 pt-24"> {/* Adjusted padding */}
                 {/* Header Row */}
-                <div className="w-full h-16 bg-red-900 text-white grid grid-cols-4 justify-center items-center px-6">                        
-                        <p>Email</p>
-                        <p>Name</p>
-                        <p>Account Type</p>
-                        <p>Actions</p>
+                <div className="w-full h-16 bg-[#891839] text-white grid grid-cols-4 justify-center items-center px-6">                        
+                    <p>Email</p>
+                    <p>Name</p>
+                    <p>Account Type</p>
+                    <p>Actions</p>
                 </div>
                 {/* Header Row */}   
                     {/* Account Display */}

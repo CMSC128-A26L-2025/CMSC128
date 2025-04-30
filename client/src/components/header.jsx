@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Notification from "./notification";
-
+import { useNavigate } from 'react-router-dom';
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
@@ -9,7 +9,14 @@ import humanIcon from "../assets/Human Icon.png";
 export default function Navbar({user_id}) {
   const  [notification_modal, setnotification_modal] = useState(false)
   const  [profileMenuOpen, setProfileMenuOpen] = useState(false);
-
+  const navigate = useNavigate()
+  const handleLogout=()=>{
+    //Logout
+    const logout=0;
+    //if (logout.success){
+    //}
+    navigate('/');
+  }
   return (
    <div>
       {notification_modal &&(

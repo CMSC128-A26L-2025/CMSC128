@@ -1,9 +1,14 @@
 import { useState } from "react";
-import Notification from "./notification";
+import notification from "./notification";
+
 export default function Navbar_landing() {
   return (
     
     <div>
+<<<<<<< HEAD
+=======
+      <notification></notification>
+>>>>>>> 424f251 (fixed view profile navigation)
       <nav className="bg-white w-full py-1 fixed top-0 left-0">
         {/* Flexbox for proper alignment */}
         <div className="container flex justify-between items-center py-1 px-4">

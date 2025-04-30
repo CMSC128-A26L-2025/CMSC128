@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { useState, useEffect } from "react";
 import { eventList, announcementList, jobList } from "../../utils/models";
 import { ScrollToTop } from "../../utils/helper";
 import Navbar from "../header";
@@ -9,158 +8,62 @@ import BookEventButton from "../buttons/BookEvent";
 import SearchAlumniButton from "../buttons/SearchAlumni";
 import Error_Message from "../error_message";
 import { useParams } from 'react-router-dom';
-import { useAuth } from "../../AuthContext";
 
 export default function MainPage() {
-    const {authAxios, user} = useAuth();
     const {user_id} =useParams(); //Contains the User Id 
-
     const [jobs, setJobs] = useState(jobList);
     const [events, setEvents] = useState(eventList);
     const [announcements, setAnnouncements] = useState(announcementList);
-    const [isLoading, setIsLoading] = useState(true);
 
     // for events and announcements slideshow
-    const [currentEventIndex, setCurrentEventIndex] = useState(() => {
-        const saved = parseInt(sessionStorage.getItem("currentEventIndex"));
-        return isNaN(saved) ? 0 : saved;
-    });
-    const [oddNoticeIndex, setOddNoticeIndex] = useState(() => {
-        const saved = parseInt(sessionStorage.getItem("oddNoticeIndex"));
-        return isNaN(saved) ? 0 : saved;
-    });
-    const [evenNoticeIndex, setEvenNoticeIndex] = useState(() => {
-        const saved = parseInt(sessionStorage.getItem("evenNoticeIndex"));
-        return isNaN(saved) ? 1 : saved;
-    });
+    const [currentEventIndex, setCurrentEventIndex] = useState(() => parseInt(localStorage.getItem("currentEventIndex")) || 0);
+    const [oddNoticeIndex, setOddNoticeIndex] = useState(() => parseInt(localStorage.getItem("oddNoticeIndex")) || 0);
+    const [evenNoticeIndex, setEvenNoticeIndex] = useState(() => parseInt(localStorage.getItem("evenNoticeIndex")) || 1);
     const [Error_MessageBool, setError_MessageBool]= useState(false);
-
-    const eventIntervalRef = useRef(null);
-    const noticeIntervalRef = useRef(null);
-
-    // fetch data
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setIsLoading(true);
-                console.log("Fetching data...");
-                
-                // Fetch jobs
-                const jobsResponse = await authAxios.get('/jobs/job-results');
-                setJobs(jobsResponse.data);
-                
-                // Fetch events
-                const eventsResponse = await authAxios.get('/events/all');
-                console.log("Events data:", eventsResponse.data);
-                
-                if (Array.isArray(eventsResponse.data) && eventsResponse.data.length > 0) {
-                    setEvents(eventsResponse.data);
-                    
-                    // Reset currentEventIndex if it's out of bounds
-                    if (currentEventIndex >= eventsResponse.data.length) {
-                        setCurrentEventIndex(0);
-                        sessionStorage.setItem("currentEventIndex", "0");
-                    }
-                } else {
-                    console.log("No events data or empty array");
-                    setEvents([]);
-                }
-                
-                // Fetch announcements
-                // const announcementsResponse = await authAxios.get('/announcements');
-                // setAnnouncements(announcementsResponse.data);
-                
-                setIsLoading(false);
-            } catch (err) {
-                console.error("Error fetching data:", err);
-                setIsLoading(false);
-                setError_MessageBool(true);
-            }
-        };
-        
-        fetchData();
-        ScrollToTop();
-    }, [authAxios]);
+    const [message, setmessage]=useState("");
 
     useEffect(() => {
-        // Only start intervals if we have data
-        if (events.length > 0) {
-            startEventInterval();
-        }
-        
-        if (announcements.length > 0) {
-            startNoticeInterval();
-        }
-
-        // filter and display only approved jobs
-        const approvedJobs = jobs.filter((job) => job.status === "approved");
-        setJobs(approvedJobs);
-        ScrollToTop();
-
-        return () => {
-            clearInterval(eventIntervalRef.current);
-            clearInterval(noticeIntervalRef.current);
-        };
-    }, [events.length, announcements.length]);
-
-    const startEventInterval = () => {
-        clearInterval(eventIntervalRef.current);
-        eventIntervalRef.current = setInterval(() => {
+        const eventInterval = setInterval(() => {
             setCurrentEventIndex((prev) => {
                 const next = (prev + 1) % events.length;
-                sessionStorage.setItem("currentEventIndex", next.toString());
+                localStorage.setItem("currentEventIndex", next);
                 return next;
             });
         }, 20000);   // 20sec interval for each event
-    };
 
-    const startNoticeInterval = () => {
-        clearInterval(noticeIntervalRef.current);
-        noticeIntervalRef.current = setInterval(() => {
+        const noticeInterval = setInterval(() => {
             setOddNoticeIndex((prev) => {
                 const next = (prev + 2) % announcements.length;
-                sessionStorage.setItem("oddNoticeIndex", next.toString());
+                localStorage.setItem("oddNoticeIndex", next);
                 return next;
             });
             setEvenNoticeIndex((prev) => {
                 const next = (prev + 2) % announcements.length;
-                sessionStorage.setItem("evenNoticeIndex", next.toString());
+                localStorage.setItem("evenNoticeIndex", next);
                 return next;
             });
-        }, 30000);   // 30sec interval per two announcements
-    };
+        }, 30000);  // 30sec interval per two announcements
 
-    const handlePrevEvent = () => {
-        if (events.length === 0) return;
-        
-        setCurrentEventIndex((prev) => {
-            const newIndex = (prev - 1 + events.length) % events.length;
-            sessionStorage.setItem("currentEventIndex", newIndex.toString());
-            return newIndex;
-        });
-        startEventInterval();
-    };
+        // filter and display only approved jobs
+        const approvedJobs = jobs.filter((job) => job.status === "approved");
+        setJobs(approvedJobs);
+        setEvents(eventList);
+        setAnnouncements(announcementList);
+        ScrollToTop();
 
-    const handleNextEvent = () => {
-        if (events.length === 0) return;
-        
-        setCurrentEventIndex((prev) => {
-            const newIndex = (prev + 1) % events.length;
-            sessionStorage.setItem("currentEventIndex", newIndex.toString());
-            return newIndex;
-        });
-        startEventInterval();
-    };
-    
-    // Check if current event is valid before rendering it
-    const currentEvent = events.length > 0 ? events[currentEventIndex] : null;
+        return () => {
+            clearInterval(eventInterval);
+            clearInterval(noticeInterval);
+        };
+    }, [events.length, announcements.length]);
     
     return (
         <>
             {/* For testing purposes */}
-            {/* {Error_MessageBool &&(
+            {Error_MessageBool &&(
+                
                 <Error_Message message={"Testing testing"} setVisible={setError_MessageBool}></Error_Message>
-            )} */} 
+            )} 
             <div className="fixed top-0 w-full z-50">
                 <Navbar user_id={user_id}/>
             </div>
@@ -175,7 +78,7 @@ export default function MainPage() {
                         >
                             <div className="relative z-10 group/title">
                                 <Link
-                                    to={`/event-details/${events[currentEventIndex].event_id}`}
+                                    to={`/event-details/${events[currentEventIndex].event_id}/${user_id}`}
                                     state={{ event: events[currentEventIndex] }}
                                     className="!text-white !text-3xl sm:!text-4xl md:!text-7xl !font-bold !mb-4 !text-left cursor-pointer block w-full relative z-10 hover:!underline"
                                 >
@@ -185,21 +88,6 @@ export default function MainPage() {
                             <p className="!text-md sm:!text-lg !max-w-2xl !text-left">
                                 {events[currentEventIndex].event_description}
                             </p>
-                            <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
-                                <button 
-                                    onClick={handlePrevEvent} 
-                                    className="text-sm font-normal cursor-pointer focus:!outline-none"
-                                >
-                                    <IoIosArrowBack size={15} />
-                                </button>
-                                <span className="text-sm font-normal select-none">{`${currentEventIndex + 1} of ${events.length}`}</span>
-                                <button 
-                                    onClick={handleNextEvent} 
-                                    className="text-sm font-normal cursor-pointer focus:!outline-none"
-                                >
-                                    <IoIosArrowForward size={15} />
-                                </button>
-                            </div>
                         </div>
                     )}
 
@@ -230,8 +118,8 @@ export default function MainPage() {
                                 Explore<br />Recent Job<br />Opportunities
                             </h2>
                             <div className="flex justify-end mt-4 pr-10">
-                                <Link to={`/jobs`}>
-                                    <button className="focus:!outline-none text-[#891839] border-3 border-[#891839] px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-[#891839] hover:text-white cursor-pointer">
+                                <Link to={`/jobs/${user_id}`}>
+                                    <button className="focus:!outline-none text-[#891839] border-3 border-[#891839] px-6 py-2 rounded-full font-semibold transition-all duration-300 hover:bg-[#891839] hover:text-white">
                                         View more &gt;
                                     </button>
                                 </Link>
@@ -243,7 +131,7 @@ export default function MainPage() {
                                 jobs.slice(0, 2).map((job, index) => (
                                     <Link
                                         key={index}
-                                        to={`/job-details/${job.job_id}`}
+                                        to={`/job-details/${job.job_id}/${user_id}`}
                                         className="transform transition-transform duration-300 hover:scale-105"
                                     >
                                         <div className="bg-[#891839] p-3 rounded-3xl flex justify-center h-70 w-full shadow-lg hover:shadow-xl">
@@ -273,10 +161,10 @@ export default function MainPage() {
 
                 {/* <div className="w-full h-110 grid grid-cols-2 gap-0"> */}
                 <div className="w-full min-h-[440px] grid grid-cols-1 sm:grid-cols-2">
-                    <Link to={`/events`}>
+                    <Link to="/book-event">
                         <BookEventButton />
                     </Link>
-                    <Link to={`/search-alumni`}>
+                    <Link to={`/search-alumni/${events[currentEventIndex].event_id}`}>
                         <SearchAlumniButton />
                     </Link>
                 </div>

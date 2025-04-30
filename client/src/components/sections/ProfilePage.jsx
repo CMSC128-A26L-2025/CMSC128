@@ -7,10 +7,8 @@ import Footer from '../footer';
 import { ScrollToTop } from '../../utils/helper';
 import { motion } from 'framer-motion';
 import './ProfilePage.css';
-
 export default function ProfilePage() {
   const navigate = useNavigate();
-
   const mockUser = {
     user_id: 1,
     name: "John Doe",

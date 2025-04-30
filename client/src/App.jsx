@@ -22,7 +22,7 @@ import { AuthProvider } from './AuthContext'
 import { RoleRoute } from './ProtectedRoutes'
 import ProfilePage from './components/sections/ProfilePage'
 
-
+import ProfilePage from './components/sections/ProfilePage'
 function App() {
   const [count, setCount] = useState(0)
   
@@ -33,7 +33,7 @@ function App() {
         <AuthProvider>
           <Routes>
 
-            <Route path="/" element={<Landing_page/>} /> 
+            <Route path="/" element={<Results_page_jobs/>} /> 
             <Route path="/reg" element={<Registration/>} />
             <Route path="/login" element={<Login/>} />
 
@@ -50,7 +50,7 @@ function App() {
               <Route path="/search-alumni" element={<Results_page_accounts/>} />
               <Route path="/create_event" element={<Create_Event/>} />
               <Route path="/post_job" element={<Post_Job/>} />
-              <Route path="/profile" element={<ProfilePage/>} />
+              <Route path= "/profile" element={<ProfilePage/>}/>
             </Route>
 
           </Routes>
