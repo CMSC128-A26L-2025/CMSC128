@@ -47,6 +47,9 @@ export default function MainPage() {
                 
                 // Fetch jobs
                 const jobsResponse = await authAxios.get('/jobs/job-results');
+                if (jobsResponse.headers['content-type'] !== 'application/json') {
+                    throw new Error('Invalid response format');
+                }
                 setJobs(jobsResponse.data);
                 
                 // Fetch events
@@ -87,14 +90,19 @@ export default function MainPage() {
         if (events.length > 0) {
             startEventInterval();
         }
-        
+
         if (announcements.length > 0) {
             startNoticeInterval();
         }
 
-        // filter and display only approved jobs
-        const approvedJobs = jobs.filter((job) => job.status === "approved");
-        setJobs(approvedJobs);
+        // ensure jobs is an array before filtering
+        if (Array.isArray(jobs)) {
+            const approvedJobs = jobs.filter((job) => job.status === "approved");
+            setJobs(approvedJobs);
+        } else {
+            console.error("Jobs is not an array:", jobs);
+        }
+
         ScrollToTop();
 
         return () => {
