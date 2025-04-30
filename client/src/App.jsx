@@ -16,6 +16,7 @@ import { Results_page_jobs } from './components/sections/Results_job'
 import { Results_page_events } from './components/sections/Results_event'
 import { AuthProvider } from './AuthContext'
 import { RoleRoute } from './ProtectedRoutes'
+import { CreateJobPosting } from './components/sections/JobPosting_create'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -30,7 +31,7 @@ function App() {
             <Route path="/" element={<Landing_page/>} /> 
             <Route path="/reg" element={<Registration/>} />
             <Route path="/login" element={<Login/>} />
-
+            <Route path="/job-postings/create" element={<CreateJobPosting />} />
             <Route element={<RoleRoute allowedRoles={['Admin']}/>}>
               <Route path="/admin_main/:user_id" element={<Admin_main/>} />
             </Route>

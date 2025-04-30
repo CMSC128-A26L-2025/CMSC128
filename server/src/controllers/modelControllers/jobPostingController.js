@@ -1,5 +1,11 @@
 import { JobPosting } from "../../models/Job_Posting.js";
 import { createCRUDController } from "../middlewareControllers/createCRUDController/index.js";
+import {
+    uploadFilesForModel,
+    getFilesForModel,
+    deleteFileFromModel,
+    downloadFile
+  } from "../fileController/fileController.js";
 
 export const jobPostingController = {
     ...createCRUDController(JobPosting),
@@ -100,5 +106,98 @@ export const jobPostingController = {
             console.error("Error fetching bookmarked jobs:", error);
             res.status(500).json({ message: "Internal server error" });
         }
-    }
+    },
+
+    async uploadJobFiles (req, res){
+        req.params.modelName = "JobPosting";
+        req.params.id = req.params.job_id; // Assuming job_id is passed in the URL
+        return uploadFilesForModel(req, res);
+    },
+      
+    
+    async getJobFiles(req, res) {
+        req.params.modelName = "JobPosting";
+        return getFilesForModel(req, res);
+    },
+    
+    async deleteJobFile (req, res) {
+        req.params.modelName = "JobPosting";
+        return deleteFileFromModel(req, res);
+    },
+    
+    async downloadJobFile (req, res){
+        return downloadFile(req, res); // doesn't need model name
+    },
+    // async uploadJobFiles(req, res) {
+    //     try {
+    //       const { jobId } = req.params;
+    //       const job = await JobPosting.findById(jobId);
+    
+    //       if (!job) return res.status(404).json({ message: "Job not found" });
+    
+    //       if (!req.files || req.files.length === 0) {
+    //         return res.status(400).json({ message: "No files uploaded" });
+    //       }
+    
+    //       const filenames = req.files.map(file => file.filename);
+    //       job.file.push(...filenames);
+    //       await job.save();
+    
+    //       res.status(200).json({ message: "Files uploaded", filenames });
+    //     } catch (err) {
+    //       console.error("Upload error:", err);
+    //       res.status(500).json({ message: "Upload failed" });
+    //     }
+    //   },
+    
+    //   async getJobFiles(req, res) {
+    //     try {
+    //       const { jobId } = req.params;
+    //       const job = await JobPosting.findById(jobId);
+    //       if (!job) return res.status(404).json({ message: "Job not found" });
+    
+    //       res.status(200).json({ files: job.file });
+    //     } catch (err) {
+    //       res.status(500).json({ message: "Error retrieving files" });
+    //     }
+    //   },
+    
+    //   async downloadJobFile(req, res) {
+    //     try {
+    //       const { filename } = req.params;
+    //       const filePath = path.resolve('uploads', filename);
+    
+    //       if (!fs.existsSync(filePath)) {
+    //         return res.status(404).json({ message: "File not found" });
+    //       }
+    
+    //       res.download(filePath);
+    //     } catch (err) {
+    //       res.status(500).json({ message: "Download failed" });
+    //     }
+    //   },
+    
+    //   async deleteJobFile(req, res) {
+    //     try {
+    //       const { jobId, filename } = req.params;
+    //       const job = await JobPosting.findById(jobId);
+    //       if (!job) return res.status(404).json({ message: "Job not found" });
+    
+    //       const fileIndex = job.file.indexOf(filename);
+    //       if (fileIndex === -1) {
+    //         return res.status(404).json({ message: "File not found in job posting" });
+    //       }
+    
+    //       job.file.splice(fileIndex, 1);
+    //       await job.save();
+    
+    //       const filePath = path.resolve('uploads', filename);
+    //       if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    
+    //       res.status(200).json({ message: "File deleted" });
+    //     } catch (err) {
+    //       res.status(500).json({ message: "Error deleting file" });
+    //     }
+    //   }
+      
 }

@@ -17,7 +17,6 @@ dotenv.config();
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 // middleware
 app.use(cors({
   origin: 'http://localhost:5173',
@@ -32,10 +31,11 @@ app.use("/alumni", alumniRoutes);
 app.use("/event", eventRoutes);
 app.use("/jobs", jobPostingRoutes);
 app.use("/auth", authRoutes);
-app.use("/file", fileRoutes);
+app.use("/files", fileRoutes);
 app.use("/events", eventRoutes);
 app.use("/notifications", notificationRoutes);
-
+app.use('/job-postings', jobPostingRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'src', 'uploads')))
 // temporary default route -- remove when connecting to frontend
 app.get('/', (req, res) => {
   res.send('API is running');
