@@ -9,7 +9,7 @@ import { BookmarkIcon } from '@heroicons/react/24/solid';
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
 
-export const Results_page_jobs = ( { user_id }) => {
+export const Results_page_jobs = () => {
   const navigate = useNavigate();
   const { authAxios, user } = useAuth();
 
@@ -38,10 +38,12 @@ useEffect(() => {
 
           // Fetch bookmarked jobs
           const bookmarkedResponse = await authAxios.get(`jobs/bookmarked?userId=${user_id}`);
+          const bookmarkedResponse = await authAxios.get(`jobs/bookmarked?userId=${user_id}`);
 
           setBookmarkedIds(bookmarkedResponse.data.map(job => job._id));
 
       } catch (error) {
+          console.error("Error fetching jobs:", error);
           console.error("Error fetching jobs:", error);
       }
   };

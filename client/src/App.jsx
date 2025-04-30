@@ -13,9 +13,14 @@ import { BrowserRouter,Routes, Route } from 'react-router-dom'
 import { Admin_main } from './components/sections/Admin_main'
 import { Results_page_accounts} from './components/sections/Results_accounts'
 import { Results_page_jobs } from './components/sections/Results_job'
+
+import { Create_Event } from './components/sections/Create_event'
+import { Post_Job } from './components/sections/post_job'
+
 import { Results_page_events } from './components/sections/Results_event'
 import { AuthProvider } from './AuthContext'
 import { RoleRoute } from './ProtectedRoutes'
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -32,20 +37,23 @@ function App() {
             <Route path="/login" element={<Login/>} />
 
             <Route element={<RoleRoute allowedRoles={['Admin']}/>}>
-              <Route path="/admin_main/:user_id" element={<Admin_main/>} />
+              <Route path="/admin_main" element={<Admin_main/>} />
             </Route>
 
             <Route element={<RoleRoute allowedRoles={['Admin', 'Alumni']}/>}>
-              <Route path="/home/:user_id" element={<MainPage/>} />
-              <Route path="/jobs/:user_id" element={<Results_page_jobs/>} />
-              <Route path="/job-details/:id/:user_id" element={<ViewJobDetails/>} />
-              <Route path="/events/:user_id" element={<Results_page_events/>} />
-              <Route path="/event-details/:id/:user_id" element={<ViewEventDetails/>} />
-              <Route path="/search-alumni/:id/:user_id" element={<Results_page_accounts/>} />
+              <Route path="/home" element={<MainPage/>} />
+              <Route path="/jobs" element={<Results_page_jobs/>} />
+              <Route path="/job-details/:id" element={<ViewJobDetails/>} />
+              <Route path="/events" element={<Results_page_events/>} />
+              <Route path="/event-details/:id" element={<ViewEventDetails/>} />
+              <Route path="/search-alumni" element={<Results_page_accounts/>} />
+              <Route path="/create_event" element={<Create_Event/>} />
+              <Route path="/post_job" element={<Post_Job/>} />
             </Route>
 
           </Routes>
         </AuthProvider>
+
       </BrowserRouter>
      }
     </>

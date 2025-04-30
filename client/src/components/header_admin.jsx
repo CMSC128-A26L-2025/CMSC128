@@ -3,8 +3,15 @@ import { Link } from "react-router-dom";
 import speakerIcon from "/assets/Speaker_Icon.svg";
 export default function Navbar_admin() {
   const [isOpen, setIsOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    title:"",
+    read:false,
+    description:"",
+  })
+
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const handleSend=(e)=>{
+    
     // await send= NULL;
     const send=0; //temporary var
     if (send.success){ // Successful sending
@@ -27,13 +34,26 @@ export default function Navbar_admin() {
         {isOpen && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
           <div className=" relative bg-white rounded-xl p-6 w-[60vw] h-[80vh]  shadow-lg flex flex-col">
-            <h2 className="text-7xl font-bold text-emerald-800 text-start pb-2 ">Announcement</h2>
-            <p className="text-black text-start h-2">Send announcement to everybody</p>
+            <h2 className="text-7xl font-bold text-emerald-800 text-start  ">Announcement</h2>
+            <p className="text-black text-start">Send announcement to everybody</p>
             {/* https://flowbite.com/docs/forms/textarea/ Text Area */}
-            <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your message</label>
-            <textarea id="message" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-2xl border border-gray-30 resize-none h-[50vh]"
-             placeholder="Write your message here..."></textarea>
+            <div className="flex flex-col">
+              <h2 className="text-2xl font-bold text-emerald-800 text-start">Title</h2>
+             
+              <textarea 
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
 
+              rows="1" id="message" class="block p-2.5 mb-5 w-full text-sm text-gray-900 bg-gray-50 rounded-2xl border border-gray-30 resize-none"
+              placeholder="Title"></textarea>
+            
+              <textarea 
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              id="message" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-2xl border border-gray-30 resize-none h-[40vh]"
+              placeholder="Write your message here..."></textarea>
+            </div>
+            {console.log(formData)}
             <div className="grid grid-cols-2 absolute bottom-4 right-4 gap-x-4">
               {/* Cancel */}
               <button 

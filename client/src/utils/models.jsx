@@ -1,8 +1,18 @@
-import event1 from "/assets/event.png";
-import notice1 from "/assets/notice1.png";
-import notice2 from "/assets/notice2.png";
-
+import event1 from "../assets/event.png";
+import notice1 from "../assets/notice1.png";
+import notice2 from "../assets/notice2.png";
+export const jobRequiremets  =[
+  { value: 'Python', label: 'Python', isFixed: true },
+  { value: 'Java', label: 'Java'},
+  { value: 'C', label: 'C' },
+  { value: 'SQL', label: 'SQL', isFixed: true },
+  { value: 'CSS', label: 'CSS', },
+  { value: 'Rust', label: 'Rust', },
+  { value: 'C++', label: 'C++', },
+  { value: 'OOP', label: 'OOp', },
+];
 export const jobList = [
+  
     {
       job_id: 1,
       posted_by: 123,

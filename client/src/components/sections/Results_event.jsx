@@ -6,7 +6,7 @@ import axios from "axios";
 import Navbar from "../header";
 import Footer from "../footer";
 
-export const Results_page_events = ({ user_id }) => {
+export const Results_page_events = ( ) => {
     const navigate = useNavigate();
     const {authAxios, user} = useAuth();
 
@@ -94,7 +94,7 @@ export const Results_page_events = ({ user_id }) => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                             {events.map(event => (
                                 <div key={event._id} className="flex flex-col h-full bg-white rounded-xl shadow-md overflow-hidden">
-                                    <Link to={`/event-details/${event._id}/${user_id}`}>
+                                    <Link to={`/event-details/${event._id}`}>
                                         <img src={event.image} alt={event.event_name} className="w-full h-48 object-cover" />
                                     </Link>
 

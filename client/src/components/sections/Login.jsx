@@ -25,22 +25,12 @@ const Login = () => {
 
             if (res.data.success) { //check login is successful
                 alert("Login Successful. Redirecting to home page...");
-                localStorage.setItem("accessToken", res.data.accessToken);
 
-                if (res.data.user_type === "admin") { //check if admin or alumni
-                    try {
-                        navigate(`/admin_main/${res.data.userId}`);
-                    } catch (error) {
-                        console.error("Navigation error:", error);
-                        alert("Failed to navigate to the admin page. Please try again.");
-                    }
+                console.log("User type: ", result.user.user_type);
+                if (result.user.user_type === "Admin") {
+                    navigate(`/admin_main`);
                 } else {
-                    try {
-                        navigate(`/home/${res.data.userId}`);
-                    } catch (error) {
-                        console.error("Navigation error:", error);
-                        alert("Failed to navigate to the home page. Please try again.");
-                    }
+                    navigate(`/home`);
                 }
             } else {
                 alert("Login failed. Please check your credentials.");
