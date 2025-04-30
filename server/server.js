@@ -20,12 +20,20 @@ const __dirname = path.dirname(__filename);
 
 // middleware
 app.use(cors({
-  origin: [
-    'http://localhost:5173', // local
-    'https://gab-artemis.onrender.com' // deployed
-  ],
-  credentials: true
+    origin: ["http://localhost:5173", "https://gab-artemis.onrender.com"], // allow frontend origins
+    credentials: true, // allow cookies and credentials
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // allowed headers
 }));
+
+// Handle preflight requests
+app.options("*", cors({
+    origin: ["http://localhost:5173", "https://gab-artemis.onrender.com"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 
