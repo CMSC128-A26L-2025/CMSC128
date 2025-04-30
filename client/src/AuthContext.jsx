@@ -39,27 +39,21 @@ export const AuthProvider = ({ children }) => {
     }, [user]);
 
 
+    const API_URL = import.meta.env.VITE_API_URL || "https://gab-artemis.onrender.com/";
+
     const login = async (email, password) => {
         try {
-            const res = await axios.post(`${import.meta.env.VITE_API_URL || "http://localhost:5050"}/auth/login`, {
-                email,
-                password
-            }, {
-                withCredentials: true
-            });
+            const res = await axios.post(`${API_URL}/auth/login`, { email, password }, { withCredentials: true });
 
             if (res.data.accessToken && res.data.user) {
-                // Set state
                 setAccessToken(res.data.accessToken);
                 setUser(res.data.user);
-
                 return { success: true, user: res.data.user };
             } else {
-                logout(); // Use logout function to clear everything
+                logout();
                 return { success: false };
             }
         } catch (error) {
-            console.error("Login error:", error.response?.data || error.message);
             logout();
             return { success: false, error };
         }
@@ -67,34 +61,27 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL || "http://localhost:5050"}/auth/logout`, {}, {
-                withCredentials: true
-            });
+            await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
         } catch (error) {
             console.error("Logout API call error:", error);
         } finally {
-             // Clear state and localStorage
             setAccessToken(null);
             setUser(null);
         }
-        return true; // Indicate client-side logout was attempted/completed
+        return true;
     };
 
     const refreshToken = async () => {
         try {
-            const res = await axios.get(`${import.meta.env.VITE_API_URL || "https://gab-artemis.onrender.com"}/auth/refresh`, {
-                withCredentials: true
-            });
+            const res = await axios.get(`${API_URL}/auth/refresh`, { withCredentials: true });
 
             if (res.data.accessToken) {
-                 // Update state
                 setAccessToken(res.data.accessToken);
                 return true;
             }
             logout();
             return false;
         } catch (error) {
-            console.error("Refresh token error:", error);
             logout();
             return false;
         }
