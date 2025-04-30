@@ -12,15 +12,14 @@ import { useParams } from 'react-router-dom';
 import { useAuth } from "../../AuthContext";
 
 export default function MainPage() {
-    const {authAxios, user} = useAuth();
-    const {user_id} =useParams(); //Contains the User Id 
+    const { authAxios, user } = useAuth();
+    const { user_id } = useParams();
 
     const [jobs, setJobs] = useState(jobList);
     const [events, setEvents] = useState(eventList);
     const [announcements, setAnnouncements] = useState(announcementList);
     const [isLoading, setIsLoading] = useState(true);
 
-    // for events and announcements slideshow
     const [currentEventIndex, setCurrentEventIndex] = useState(() => {
         const saved = parseInt(sessionStorage.getItem("currentEventIndex"));
         return isNaN(saved) ? 0 : saved;
@@ -33,30 +32,26 @@ export default function MainPage() {
         const saved = parseInt(sessionStorage.getItem("evenNoticeIndex"));
         return isNaN(saved) ? 1 : saved;
     });
-    const [Error_MessageBool, setError_MessageBool]= useState(false);
+    const [Error_MessageBool, setError_MessageBool] = useState(false);
 
     const eventIntervalRef = useRef(null);
     const noticeIntervalRef = useRef(null);
 
-    // fetch data
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
                 console.log("Fetching data...");
-                
-                // Fetch jobs
+
                 const jobsResponse = await authAxios.get('/jobs/job-results');
                 setJobs(jobsResponse.data);
-                
-                // Fetch events
+
                 const eventsResponse = await authAxios.get('/events/all');
                 console.log("Events data:", eventsResponse.data);
-                
+
                 if (Array.isArray(eventsResponse.data) && eventsResponse.data.length > 0) {
                     setEvents(eventsResponse.data);
-                    
-                    // Reset currentEventIndex if it's out of bounds
+
                     if (currentEventIndex >= eventsResponse.data.length) {
                         setCurrentEventIndex(0);
                         sessionStorage.setItem("currentEventIndex", "0");
@@ -65,11 +60,7 @@ export default function MainPage() {
                     console.log("No events data or empty array");
                     setEvents([]);
                 }
-                
-                // Fetch announcements
-                // const announcementsResponse = await authAxios.get('/announcements');
-                // setAnnouncements(announcementsResponse.data);
-                
+
                 setIsLoading(false);
             } catch (err) {
                 console.error("Error fetching data:", err);
@@ -77,22 +68,25 @@ export default function MainPage() {
                 setError_MessageBool(true);
             }
         };
-        
+
         fetchData();
         ScrollToTop();
     }, [authAxios]);
 
+    // Force light mode
     useEffect(() => {
-        // Only start intervals if we have data
+        document.documentElement.classList.remove("dark");
+    }, []);
+
+    useEffect(() => {
         if (events.length > 0) {
             startEventInterval();
         }
-        
+
         if (announcements.length > 0) {
             startNoticeInterval();
         }
 
-        // filter and display only approved jobs
         const approvedJobs = jobs.filter((job) => job.status === "approved");
         setJobs(approvedJobs);
         ScrollToTop();
@@ -111,7 +105,7 @@ export default function MainPage() {
                 sessionStorage.setItem("currentEventIndex", next.toString());
                 return next;
             });
-        }, 20000);   // 20sec interval for each event
+        }, 20000);
     };
 
     const startNoticeInterval = () => {
@@ -127,12 +121,12 @@ export default function MainPage() {
                 sessionStorage.setItem("evenNoticeIndex", next.toString());
                 return next;
             });
-        }, 30000);   // 30sec interval per two announcements
+        }, 30000);
     };
 
     const handlePrevEvent = () => {
         if (events.length === 0) return;
-        
+
         setCurrentEventIndex((prev) => {
             const newIndex = (prev - 1 + events.length) % events.length;
             sessionStorage.setItem("currentEventIndex", newIndex.toString());
@@ -143,7 +137,7 @@ export default function MainPage() {
 
     const handleNextEvent = () => {
         if (events.length === 0) return;
-        
+
         setCurrentEventIndex((prev) => {
             const newIndex = (prev + 1) % events.length;
             sessionStorage.setItem("currentEventIndex", newIndex.toString());
@@ -151,20 +145,15 @@ export default function MainPage() {
         });
         startEventInterval();
     };
-    
-    // Check if current event is valid before rendering it
+
     const currentEvent = events.length > 0 ? events[currentEventIndex] : null;
-    
+
     return (
         <>
-            {/* For testing purposes */}
-            {/* {Error_MessageBool &&(
-                <Error_Message message={"Testing testing"} setVisible={setError_MessageBool}></Error_Message>
-            )} */} 
             <div className="fixed top-0 w-full z-50">
-                <Navbar user_id={user_id}/>
+                <Navbar user_id={user_id} />
             </div>
-            
+
             <div className="w-screen pt-12">
                 <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-0 min-h-[600px]">
                     {/* Events */}
@@ -186,17 +175,11 @@ export default function MainPage() {
                                 {events[currentEventIndex].event_description}
                             </p>
                             <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
-                                <button 
-                                    onClick={handlePrevEvent} 
-                                    className="text-sm font-normal cursor-pointer focus:!outline-none"
-                                >
+                                <button onClick={handlePrevEvent}>
                                     <IoIosArrowBack size={15} />
                                 </button>
-                                <span className="text-sm font-normal select-none">{`${currentEventIndex + 1} of ${events.length}`}</span>
-                                <button 
-                                    onClick={handleNextEvent} 
-                                    className="text-sm font-normal cursor-pointer focus:!outline-none"
-                                >
+                                <span>{`${currentEventIndex + 1} of ${events.length}`}</span>
+                                <button onClick={handleNextEvent}>
                                     <IoIosArrowForward size={15} />
                                 </button>
                             </div>
@@ -250,7 +233,6 @@ export default function MainPage() {
                                             <div className="bg-[#891839] text-white px-10 rounded-3xl border-2 border-white w-full flex flex-col items-start justify-center text-left">
                                                 <h3 className="text-4xl font-semibold mb-3 pb-5">{job.job_title}</h3>
                                                 <p>Company: {job.company}</p>
-                                                {/* <p>Date Posted: {new Date(job.date_posted).toLocaleDateString()}</p> */}
                                                 <p>
                                                     Date Posted: {new Date(job.date_posted).toLocaleDateString('en-US', {
                                                         year: 'numeric',
@@ -271,7 +253,6 @@ export default function MainPage() {
                     <div className="w-full h-0.5 mt-15 bg-[#891839]"></div>
                 </div>
 
-                {/* <div className="w-full h-110 grid grid-cols-2 gap-0"> */}
                 <div className="w-full min-h-[440px] grid grid-cols-1 sm:grid-cols-2">
                     <Link to={`/events`}>
                         <BookEventButton />
@@ -281,7 +262,7 @@ export default function MainPage() {
                     </Link>
                 </div>
             </div>
-            
+
             <div className="w-full z-50">
                 <Footer />
             </div>
