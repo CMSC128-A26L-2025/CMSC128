@@ -4,6 +4,20 @@ import { createCRUDController } from '../middlewareControllers/createCRUDControl
 export const alumniController = {
     ...createCRUDController(Alumni),
 
+    async findAlumniById(req, res) {
+        try {
+            const { id } = req.params;
+            const event = await Alumni.findById(id);
+            if (!event) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            res.status(200).json(event);
+        } catch (e) {
+            console.error("Error in eventController.findAlumniById:", e);
+            res.status(500).json({ message: e.message });
+        }
+    },
+
     async deleteByEmail(req, res) {
         try {
             const { email } = req.params;
@@ -15,65 +29,115 @@ export const alumniController = {
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
-      }
+    },
+
+    async editProfile(req, res) {
+        if (req.params.id !== req.user.userId) {
+            return res.status(401)
+        }
+        
+        try {
+            const { contact_number, address, current_job_title, company, industry, skills } = req.body;
+        
+            const updatedUser = await Alumni.findByIdAndUpdate(
+            req.params.id,
+            {
+                contact_number,
+                address,
+                current_job_title,
+                company,
+                industry,
+                skills,
+            },
+            { new: true, runValidators: true }
+            ).select('-password');
+        
+            if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+            }
+        
+            res.json({ message: 'Profile updated successfully!', user: updatedUser });
+        } catch (err) {
+            console.error(err);
+            if (err.name === 'ValidationError') {
+            const errors = {};
+            for (const field in err.errors) {
+                errors[field] = err.errors[field].message;
+            }
+            return res.status(400).json({ message: 'Validation error', errors });
+            }
+            res.status(500).json({ message: 'Server error' });
+        }
+    }
 }
 
 // Controller function to search for alumni based on query parameters
 export const alumniSearch = async (req, res) => {
     try {
-        // Destructure query parameters from the request
-        const {
-            name = '',
-            degree = '',
-            graduation_year,
-            current_job_title = '',
-            company = '',
-            skills = ''
-        } = req.query;
-
-        // Initialize the MongoDB match stage with a filter to only show visible profiles
-        const matchStage = {
-            profile_visibility: true
-        };
-
-        // Add regex-based matching for various fields if provided
-        if (name) matchStage.name = { $regex: name, $options: 'i' }; // case-insensitive name search
-        if (degree) matchStage.degree = { $regex: degree, $options: 'i' }; // case-insensitive degree search
-        if (current_job_title) matchStage.current_job_title = { $regex: current_job_title, $options: 'i' }; // job title match
-        if (company) matchStage.company = { $regex: company, $options: 'i' }; // company name match
-        if (skills) matchStage.skills = { $in: [new RegExp(skills, 'i')] }; // case-insensitive skill match using RegExp
-        if (graduation_year) matchStage.graduation_year = parseInt(graduation_year); // convert grad year to int for exact match
-
-        // Perform an aggregation query on the Alumni collection
-        const alumni = await Alumni.aggregate([
-            { $match: matchStage }, // filter documents based on matchStage
-
-            // Add a temporary field `lastname` extracted from the full `name` for sorting
-            {
-                $addFields: {
-                    lastname: {
-                        $arrayElemAt: [
-                            { $split: ["$name", " "] }, // split the name string by space
-                            -1 // get the last element (assumed to be last name)
-                        ]
-                    }
-                }
+      const {
+        name = '',
+        degree = '',
+        startYear,
+        endYear,
+        current_job_title = '',
+        company = '',
+        skills = ''
+      } = req.query;
+  
+      // Initialize the match stage with profile visibility
+      const matchStage = {
+        profile_visibility: true,
+      };
+  
+      // Add filters only if they are non-empty
+      if (name) matchStage.name = { $regex: name, $options: 'i' }; // Case-insensitive name search
+      if (degree) matchStage.degree = { $regex: degree, $options: 'i' }; // Case-insensitive degree search
+      if (current_job_title) matchStage.current_job_title = { $regex: current_job_title, $options: 'i' }; // Job title match
+      if (company) matchStage.company = { $regex: company, $options: 'i' }; // Company name match
+  
+      // Handle skills: Use $in to match any skill in the array
+      if (skills) {
+        const skillsArray = skills.split(',').map(skill => skill.trim()); // Convert skills string to array
+        matchStage.skills = { $in: skillsArray }; // Match any skill in the array
+      }
+  
+      // Handle graduation year range
+      if (startYear && endYear) {
+        matchStage.graduation_year = { $gte: parseInt(startYear), $lte: parseInt(endYear) };
+      }
+  
+      console.log("Match Stage:", matchStage); // Debug match stage
+  
+      // Perform the aggregation query
+      const alumni = await Alumni.aggregate([
+        { $match: matchStage },
+        {
+          $addFields: {
+            lastname: {
+              $ifNull: [
+                {
+                  $arrayElemAt: [
+                    { $split: ["$name", " "] },
+                    -1,
+                  ],
+                },
+                "",
+              ],
             },
-
-            // Sort the results by lastname in ascending order
-            { $sort: { lastname: 1 } }
-        ]);
-
-        // If no results found, return a 404 with a message
-        if (alumni.length === 0) {
-            return res.status(404).json({ message: 'No alumni match the search criteria.' });
-        }
-
-        // Return the matching alumni with a 200 OK response
-        res.status(200).json(alumni);
+          },
+        },
+        { $sort: { lastname: 1 } },
+      ]);
+  
+      console.log("Aggregation Results:", alumni); // Debug aggregation results
+  
+      if (alumni.length === 0) {
+        return res.status(404).json({ message: 'No alumni match the search criteria.' });
+      }
+  
+      res.status(200).json(alumni);
     } catch (error) {
-        // Log any errors and return a 500 Internal Server Error
-        console.error('Alumni Search Error:', error);
-        res.status(500).json({ message: 'Server error while searching alumni.' });
+      console.error("Alumni Search Error:", error.message, error.stack);
+      res.status(500).json({ message: "Server error while searching alumni.", error: error.message });
     }
-};
+  };

@@ -1,4 +1,4 @@
-import app from "./server.js"
+import app from "./server.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
@@ -7,9 +7,7 @@ dotenv.config();
 const PORT = process.env.PORT || 5050;
 
 // connect to MongoDB
-mongoose.connect(
-    process.env.CONNECTION_STRING, 
-    { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.CONNECTION_STRING)
   .then(() => {
     console.log("MongoDB Connected...");
     app.listen(PORT, () => {

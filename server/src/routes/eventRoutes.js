@@ -5,7 +5,9 @@ import { eventController } from "../controllers/modelControllers/eventController
 import upload from '../middleware/fileMiddleware.js'; // Multer middleware
 const router = express.Router();
 
-router.get('/read-sort', validateToken, eventController.readSort);
+router.get('/all', validateToken, authorizeRoles(["Admin", "Alumni"]), eventController.read);
+router.get('/read-sort', validateToken, authorizeRoles(["Admin", "Alumni"]), eventController.readSort);
+router.get('/find-event/:id', validateToken, authorizeRoles(["Admin", "Alumni"]), eventController.findEventById);
 router.get("/admin-page-events", validateToken, authorizeRoles(["Admin"]), eventController.adminPageEvents);
 router.post("/create", upload.array('files[]'), eventController.create);
 

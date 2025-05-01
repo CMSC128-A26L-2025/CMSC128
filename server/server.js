@@ -19,7 +19,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // middleware
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173', // local
+    'https://gab-artemis.onrender.com' // deployed
+  ],
   credentials: true
 }));
 app.use(express.json());
@@ -28,7 +31,6 @@ app.use(cookieParser());
 
 // routes
 app.use("/alumni", alumniRoutes);
-app.use("/event", eventRoutes);
 app.use("/jobs", jobPostingRoutes);
 app.use("/auth", authRoutes);
 app.use("/files", fileRoutes);

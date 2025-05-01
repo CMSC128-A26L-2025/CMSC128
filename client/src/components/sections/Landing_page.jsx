@@ -9,7 +9,6 @@ export const Landing_page = () => {
     <>
       <div className="w-scree h-auto">
         <Navbar_landing />
-        <notification />
       </div>
       <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full h-175 flex flex-col justify-between">
         <div className="flex justify-between items-start h-full text-white text-left pl-16 pt-24">

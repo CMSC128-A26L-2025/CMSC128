@@ -15,7 +15,7 @@ export const eventController = {
                 .select('event_name event_date');
             res.status(200).json(items);
         } catch (err) {
-            res.status(400).json({ error: err.message})
+            res.status(400).json({ error: err.message })
         }
     },
 
@@ -24,7 +24,7 @@ export const eventController = {
 
             const { sortBy } = req.query;
             let events;
-    
+
             if (sortBy === "date") {
                 events = await Event.find().sort({ event_date: -1 }); // Sort newest first
             } else if (sortBy === "title") {
@@ -32,7 +32,7 @@ export const eventController = {
             } else {
                 events = await Event.find(); // Default: return unsorted events
             }
-    
+
             console.log("Fetched Events:", events.length);
             res.status(200).json(events);
         } catch (e) {
@@ -53,4 +53,18 @@ export const eventController = {
         req.params.id = req.params.event_id; 
         return getFilesForModel(req, res);
     },
+
+    async findEventById(req, res) {
+        try {
+            const { id } = req.params;
+            const event = await Event.findById(id);
+            if (!event) {
+                return res.status(404).json({ message: "Event not found" });
+            }
+            res.status(200).json(event);
+        } catch (e) {
+            console.error("Error in eventController.findEventById:", e);
+            res.status(500).json({ message: e.message });
+        }
+    }
 }

@@ -6,70 +6,82 @@ import Navbar from '../header';
 import Footer from '../footer';
 import { ScrollToTop } from '../../utils/helper';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../AuthContext';
 import './ProfilePage.css';
 
 export default function ProfilePage() {
+  // const mockEvents = [
+  //   { event_id: 1, event_name: "Tech Conference", event_date: "2025-05-15" },
+  //   { event_id: 2, event_name: "Job Fair", event_date: "2025-06-20" },
+  //   { event_id: 3, event_name: "Career Expo", event_date: "2025-05-15" },
+  // ];
+
+  // const mockJobs = [
+  //   { job_id: 1, job_title: "Frontend Developer", company: "Google", location: "Mountain View", date_posted: "2025-04-01", status: "pending" },
+  //   { job_id: 2, job_title: "Backend Engineer", company: "Amazon", location: "Seattle", date_posted: "2025-03-15", status: "approved" },
+  //   { job_id: 3, job_title: "UI Designer", company: "Facebook", location: "Menlo Park", date_posted: "2025-02-10", status: "rejected" },
+  // ];
+
+  // const mockUser = {
+  //   user_id: 1,
+  //   name: "John Doe",
+  //   email: "john@example.com",
+  //   batch_graduated: "2024",
+  //   profile_picture: "https://i.pravatar.cc/300",
+  //   contact_number: "1234567890",
+  //   address: "123 Main Street",
+  //   current_job_title: "Software Engineer",
+  //   company: "Tech Corp",
+  //   industry: "Information Technology",
+  //   skills: "React, Node.js, Python, GraphQL",
+  // };
+
   const navigate = useNavigate();
-
-  // 🔵 TODO: Replace mockUser with API call to fetch logged-in user's data
-  const mockUser = {
-    user_id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    profile_picture: "https://i.pravatar.cc/300",
-    contact_number: "1234567890",
-    address: "123 Main Street",
-    current_job_title: "Software Engineer",
-    company: "Tech Corp",
-    industry: "Information Technology",
-    skills: "React, Node.js, Python, GraphQL",
-  };
-
-  // 🔵 TODO: Replace mockEvents with API call to fetch upcoming events for the user
-  const mockEvents = [
-    { event_id: 1, event_name: "Tech Conference", event_date: "2025-05-15" },
-    { event_id: 2, event_name: "Job Fair", event_date: "2025-06-20" },
-    { event_id: 3, event_name: "Career Expo", event_date: "2025-05-15" },
-  ];
-
-  // 🔵 TODO: Replace mockJobs with API call to fetch job applications submitted by the user
-  const mockJobs = [
-    { job_id: 1, job_title: "Frontend Developer", company: "Google", location: "Mountain View", date_posted: "2025-04-01", status: "pending" },
-    { job_id: 2, job_title: "Backend Engineer", company: "Amazon", location: "Seattle", date_posted: "2025-03-15", status: "approved" },
-    { job_id: 3, job_title: "UI Designer", company: "Facebook", location: "Menlo Park", date_posted: "2025-02-10", status: "rejected" },
-  ];
-
+  const { authAxios, user } = useAuth();
+  const [profileData, setProfileData] = useState(null);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [jobApplications, setJobApplications] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({});
   const [activeTab, setActiveTab] = useState('pending');
-
   const [hoveredEvent, setHoveredEvent] = useState(null);
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const [isHoveringTile, setIsHoveringTile] = useState(false);
   const [isHoveringPopup, setIsHoveringPopup] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // 🔵 TODO: On page load, fetch user profile, events, and jobs via API here
-
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (prefersDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-
+    document.documentElement.classList.remove('dark');
     ScrollToTop();
+    fetchProfileData();
+  }, [authAxios, user?._id]);
 
-    // Set editable fields with user data
-    setEditableData({
-      contact_number: mockUser.contact_number,
-      address: mockUser.address,
-      current_job_title: mockUser.current_job_title,
-      company: mockUser.company,
-      industry: mockUser.industry,
-      skills: mockUser.skills,
-    });
-  }, []);
+  const fetchProfileData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      console.log("Fetching data");
+      const response = await authAxios.get(`/alumni/find-alumni/${user?._id}`);
+      console.log(response.data);
+      setProfileData(response.data);
+      setUpcomingEvents(response.data.events_attended);
+      setJobApplications(response.data.job_postings);
+      setEditableData({
+        contact_number: response.data?.contact_number || '',
+        address: response.data?.address || '',
+        current_job_title: response.data?.current_job_title || '',
+        company: response.data?.company || '',
+        industry: response.data?.industry || '',
+        skills: response.data?.skills || '',
+      });
+    } catch (err) {
+      console.error('Error fetching profile data:', err);
+      setError('Failed to load profile information.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEditToggle = () => setIsEditing(!isEditing);
 
@@ -78,19 +90,22 @@ export default function ProfilePage() {
     setEditableData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    // 🔵 TODO: Send updated profile data to backend API (PUT or PATCH request)
-    console.log('Save profile changes:', editableData);
+  const handleSave = async () => {
+    try {
+      await authAxios.put(`/alumni/edit-profile/${user?._id}`, editableData);
+      setIsEditing(false);
+      fetchProfileData(); 
+    } catch (err) {
+      console.error('Error updating profile:', err);
+    }
   };
 
-  const upcomingEvents = mockEvents.filter(event => new Date(event.event_date) >= new Date());
-  const filteredJobs = mockJobs.filter(job => job.status === activeTab);
+  const filteredJobs = jobApplications.filter(job => job.status?.toLowerCase() === activeTab);
 
   return (
-    <div className="fixed inset-0 overflow-y-auto bg-[#891839] dark:bg-[#891839]">
+    <div className="fixed inset-0 overflow-y-auto bg-[#891839]">
       <div className="fixed top-0 w-full z-50">
-        <Navbar user_id={mockUser.user_id} />
+        <Navbar user_id={user._id} />
       </div>
 
       <motion.main
@@ -99,22 +114,20 @@ export default function ProfilePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
-
-        {/* 🔵 Profile Section - display user info and allow editing */}
-        <section className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8 flex flex-col gap-8">
+        <section className="bg-white rounded-3xl shadow-lg p-8 flex flex-col gap-8">
           <div className="flex flex-col md:flex-row items-center justify-center gap-6">
             <img 
-              src={mockUser.profile_picture} 
+              src={profileData?.profile_picture} 
               alt="Profile" 
               className="w-28 h-28 rounded-full object-cover border-4 border-[#891839]" 
             />
             <div className="text-center md:text-left">
-              <h2 className="text-3xl font-bold text-[#891839] dark:text-[#0E4221]">{mockUser.name}</h2>
-              <p className="text-gray-600 dark:text-gray-400">{mockUser.email}</p>
+              <h2 className="text-3xl font-bold text-[#891839]">{profileData?.name}</h2>
+              <p className="text-gray-600">{profileData?.email}</p>
+              <p className="text-gray-600">Batch Graduated: {profileData?.graduation_year}</p>
             </div>
           </div>
 
-          {/* Profile Details */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6">
             <ProfileSection title="Contact Info" fields={[
               { label: "Phone", name: "contact_number" },
@@ -132,7 +145,6 @@ export default function ProfilePage() {
             ]} editableData={editableData} isEditing={isEditing} handleChange={handleChange} />
           </div>
 
-          {/* Edit / Save Button */}
           <div className="mt-6 flex justify-center">
             {isEditing ? (
               <button className="save-button" onClick={handleSave}>Save</button>
@@ -142,9 +154,8 @@ export default function ProfilePage() {
           </div>
         </section>
 
-        {/* 🔵 Calendar Section - shows upcoming events */}
-        <section className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8 relative">
-          <h3 className="text-3xl font-bold text-[#891839] dark:text-[#0E4221] mb-6">Upcoming Events</h3>
+        <section className="bg-white rounded-3xl shadow-lg p-8 relative">
+          <h3 className="text-3xl font-bold text-[#891839] mb-6">Upcoming Events</h3>
           <div className="custom-calendar-wrapper">
             <Calendar
               tileContent={({ date }) => {
@@ -200,7 +211,6 @@ export default function ProfilePage() {
                     key={event.event_id}
                     className="popup-event-item cursor-pointer"
                     onClick={() => {
-                      // 🔵 Navigate to event details page
                       navigate(`/events/${event.event_id}`);
                       setHoveredEvent(null);
                     }}
@@ -213,9 +223,8 @@ export default function ProfilePage() {
           </div>
         </section>
 
-        {/* 🔵 Job Applications Section */}
-        <section className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg p-8 mb-16">
-          <h3 className="text-3xl font-bold text-[#891839] dark:text-[#0E4221] mb-6 text-center">Job Applications</h3>
+        <section className="bg-white rounded-3xl shadow-lg p-8 mb-16">
+          <h3 className="text-3xl font-bold text-[#891839] mb-6 text-center">Job Applications</h3>
           <div className="flex justify-center space-x-4 mb-6">
             {['pending', 'approved', 'rejected'].map((status) => (
               <button 
@@ -229,7 +238,6 @@ export default function ProfilePage() {
           </div>
           <JobList jobs={filteredJobs} />
         </section>
-
       </motion.main>
 
       <Footer />
@@ -237,15 +245,14 @@ export default function ProfilePage() {
   );
 }
 
-// 🔵 Reusable component for profile sections
 function ProfileSection({ title, fields, editableData, isEditing, handleChange }) {
   return (
     <div>
-      <h3 className="text-xl font-bold text-[#891839] dark:text-[#0E4221] mb-4 text-center">{title}</h3>
+      <h3 className="text-xl font-bold text-[#891839] mb-4 text-center">{title}</h3>
       <div className="space-y-3">
         {fields.map((field) => (
           <div key={field.name}>
-            <span className="text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wide text-xs mb-1 block">
+            <span className="text-gray-500 font-medium uppercase tracking-wide text-xs mb-1 block">
               {field.label}
             </span>
             {isEditing ? (
@@ -254,10 +261,10 @@ function ProfileSection({ title, fields, editableData, isEditing, handleChange }
                 name={field.name}
                 value={editableData[field.name] || ''}
                 onChange={handleChange}
-                className="border-2 rounded-xl p-2 text-gray-800 dark:text-white dark:bg-gray-700 focus:border-[#891839] w-full"
+                className="border-2 rounded-xl p-2 text-gray-800 focus:border-[#891839] w-full"
               />
             ) : (
-              <p className="text-gray-700 dark:text-gray-300 font-semibold">{editableData[field.name]}</p>
+              <p className="text-gray-700 font-semibold">{editableData[field.name]}</p>
             )}
           </div>
         ))}
@@ -266,14 +273,13 @@ function ProfileSection({ title, fields, editableData, isEditing, handleChange }
   );
 }
 
-// 🔵 Component to display list of jobs
 function JobList({ jobs }) {
   if (jobs.length === 0) return <p className="text-gray-300 text-center">No jobs found.</p>;
 
   return (
     <ul className="space-y-4">
       {jobs.map((job) => (
-        <li key={job.job_id} className="border-2 border-[#891839] rounded-2xl p-6 hover:bg-[#891839] hover:text-white transition dark:border-[#0E4221] dark:hover:bg-[#0E4221]">
+        <li key={job.job_id} className="border-2 border-[#891839] rounded-2xl p-6 hover:bg-[#891839] hover:text-white transition">
           <h4 className="font-bold text-2xl mb-1">{job.job_title}</h4>
           <p className="text-md">{job.company} - {job.location}</p>
           <p className="text-sm text-gray-400">Posted on {new Date(job.date_posted).toLocaleDateString()}</p>

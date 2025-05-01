@@ -28,9 +28,9 @@ const Login = () => {
 
                 console.log("User type: ", result.user.user_type);
                 if (result.user.user_type === "Admin") {
-                    navigate(`/admin_main/${result.user._id}`);
+                    navigate(`/admin_main`);
                 } else {
-                    navigate(`/home/${result.user._id}`);
+                    navigate(`/home`);
                 }
             } else {
                 alert("Login failed. Please check your credentials.");
