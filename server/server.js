@@ -30,6 +30,10 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 
+// serve static files from the client/public directory
+const clientPublicPath = path.join(__dirname, '../client/public');
+app.use('/assets', express.static(path.join(clientPublicPath, 'assets')));
+
 // routes
 app.use("/alumni", alumniRoutes);
 app.use("/jobs", jobPostingRoutes);
