@@ -35,15 +35,11 @@ export const CreateEvent= () => {
     const fileFormData = new FormData();
     actualFiles.forEach(file => fileFormData.append("files[]", file));
 
-    // 1. Upload Files
     const file_res = await axios.post(`http://localhost:5050/events/${eventData.event_id}/upload`, fileFormData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    console.log("File upload response:", file_res.data.files); // Log the response
+    
     const uploadedFiles = file_res.data.files.map(file => file.serverFilename)
-    // setFiles(uploadedFiles);
-    // console.log("FILES:" + uploadedFiles)
-    // 2. Create Event Posting (Separate Request)
     const eventPostingData = {
         event_name: eventData.event_name,
         event_description: eventData.event_description,
@@ -57,7 +53,6 @@ export const CreateEvent= () => {
 
     const res = await axios.post("http://localhost:5050/events/create", eventPostingData); // Send as JSON
     alert("Job posting submitted successfully!");
-    console.log("Response:", res.data);
   } catch (err) {
     console.error("Error creating job posting:", err);
     alert("Submission failed.");

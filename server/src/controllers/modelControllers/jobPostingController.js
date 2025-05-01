@@ -119,15 +119,7 @@ export const jobPostingController = {
         req.params.modelName = "JobPosting";
         return getFilesForModel(req, res);
     },
-    
-    async deleteJobFile (req, res) {
-        req.params.modelName = "JobPosting";
-        return deleteFileFromModel(req, res);
-    },
-    
-    async downloadJobFile (req, res){
-        return downloadFile(req, res); // doesn't need model name
-    },
+
     // async uploadJobFiles(req, res) {
     //     try {
     //       const { jobId } = req.params;

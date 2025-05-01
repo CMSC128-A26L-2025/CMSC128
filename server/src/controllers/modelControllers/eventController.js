@@ -53,13 +53,4 @@ export const eventController = {
         req.params.id = req.params.event_id; 
         return getFilesForModel(req, res);
     },
-    
-    async deleteEventFile (req, res) {
-        req.params.modelName = "Event";
-        return deleteFileFromModel(req, res);
-    },
-    
-    async downloadEventFile (req, res){
-        return downloadFile(req, res); // doesn't need model name
-    },
 }

@@ -10,7 +10,7 @@ router.get("/admin-page-events", validateToken, authorizeRoles(["Admin"]), event
 router.post("/create", upload.array('files[]'), eventController.create);
 
 router.post("/:event_id/upload", upload.array('files[]'), eventController.uploadEventFiles);
-// // List metadata of all files in a job posting
+
 router.get('/:event_id/files', eventController.getEventFiles);
 
 export default router
