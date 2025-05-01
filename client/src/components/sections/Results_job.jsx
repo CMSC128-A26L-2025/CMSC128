@@ -94,7 +94,7 @@ useEffect(() => {
       ) :(
         
         <div className="min-w-screen min-h-screen bg-gray-200 px-10 py-20 pb-30 flex flex-col justify-center items-center">
-            {setjobButton(true)}
+            {/* {setjobButton(true)} */}
             <div className="container flex flex-col items-start space-y-8 text-black text-left ">
               
               {/* Sort by */}
@@ -118,7 +118,7 @@ useEffect(() => {
               {jobs.map((job) => (
                 <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden">
                   <Link to={`/job-details/${job._id}`}>
-                    <img src={job.image || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
+                    <img src={`http://localhost:5050/uploads/${job.files[0]}` || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
                   </Link>
                   <div className="p-4">
                     

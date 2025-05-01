@@ -106,7 +106,7 @@ export const Results_page_events = ( ) => {
                                     {events.map(event => (
                                         <div key={event._id} className="flex flex-col h-full bg-white rounded-xl shadow-md overflow-hidden">
                                             <Link to={`/event-details/${event._id}`}>
-                                                <img src={event.image} alt={event.event_name} className="w-full h-48 object-cover" />
+                                                <img src={`http://localhost:5050/uploads/${event.files[0]}`} alt={event.event_name} className="w-full h-48 object-cover" />
                                             </Link>
 
                                             <div className="p-4 flex flex-col h-full">

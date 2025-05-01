@@ -47,6 +47,7 @@ function App() {
               <Route path="/home" element={<MainPage/>} />
               <Route path="/jobs" element={<Results_page_jobs/>} />
               <Route path="/job-details/:id" element={<ViewJobDetails/>} />
+              <Route path="/job-postings/create" element={<CreateJobPosting/>} />
               <Route path="/events" element={<Results_page_events/>} />
               <Route path="/event-details/:id" element={<ViewEventDetails/>} />
               <Route path="/search-alumni" element={<Results_page_accounts/>} />
