@@ -1,6 +1,11 @@
 import { Event } from '../../models/Event.js';
 import { createCRUDController } from '../middlewareControllers/createCRUDController/index.js';
-
+import {
+    uploadFilesForModel,
+    getFilesForModel,
+    deleteFileFromModel,
+    downloadFile
+  } from "../fileController/fileController.js";
 export const eventController = {
     ...createCRUDController(Event),
 
@@ -34,5 +39,27 @@ export const eventController = {
             console.error("Error in eventController.read:", e);
             res.status(500).json({ message: e.message });
         }
-    }
+    },
+
+    async uploadEventFiles (req, res){
+        req.params.modelName = "Event";
+        req.params.id = req.params.event_id;
+        return uploadFilesForModel(req, res);
+    },
+        
+    
+    async getEventFiles(req, res) {
+        req.params.modelName = "Event";
+        req.params.id = req.params.event_id; 
+        return getFilesForModel(req, res);
+    },
+    
+    async deleteEventFile (req, res) {
+        req.params.modelName = "Event";
+        return deleteFileFromModel(req, res);
+    },
+    
+    async downloadEventFile (req, res){
+        return downloadFile(req, res); // doesn't need model name
+    },
 }

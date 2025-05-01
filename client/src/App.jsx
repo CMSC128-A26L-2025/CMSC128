@@ -17,6 +17,7 @@ import { Results_page_events } from './components/sections/Results_event'
 import { AuthProvider } from './AuthContext'
 import { RoleRoute } from './ProtectedRoutes'
 import { CreateJobPosting } from './components/sections/JobPosting_create'
+import { CreateEvent } from './components/sections/Event_create'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -31,7 +32,7 @@ function App() {
             <Route path="/" element={<Landing_page/>} /> 
             <Route path="/reg" element={<Registration/>} />
             <Route path="/login" element={<Login/>} />
-            <Route path="/job-postings/create" element={<CreateJobPosting />} />
+            <Route path="/events/create" element={<CreateEvent />} />
             <Route element={<RoleRoute allowedRoles={['Admin']}/>}>
               <Route path="/admin_main/:user_id" element={<Admin_main/>} />
             </Route>
@@ -40,6 +41,7 @@ function App() {
               <Route path="/home/:user_id" element={<MainPage/>} />
               <Route path="/jobs/:user_id" element={<Results_page_jobs/>} />
               <Route path="/job-details/:id/:user_id" element={<ViewJobDetails/>} />
+              <Route path="/job-postings/create" element={<CreateJobPosting />} />
               <Route path="/events/:user_id" element={<Results_page_events/>} />
               <Route path="/event-details/:id/:user_id" element={<ViewEventDetails/>} />
               <Route path="/search-alumni/:id/:user_id" element={<Results_page_accounts/>} />
