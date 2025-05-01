@@ -157,5 +157,19 @@ export const jobPostingController = {
             console.error("Error fetching bookmarked jobs:", error);
             res.status(500).json({ message: "Internal server error" });
         }
+    },
+
+    async findJobById(req, res) {
+        try {
+            const { id } = req.params;
+            const event = await JobPosting.findById(id);
+            if (!event) {
+                return res.status(404).json({ message: "Job Posting not found" });
+            }
+            res.status(200).json(event);
+        } catch (e) {
+            console.error("Error in findJobById: ", e);
+            res.status(500).json({ message: e.message });
+        }
     }
 }

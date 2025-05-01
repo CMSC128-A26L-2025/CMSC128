@@ -246,7 +246,7 @@ export default function MainPage() {
                                     {jobs.slice(0, 2).map((job, index) => (
                                         <Link
                                             key={index}
-                                            to={`/job-details/${job.job_id}`}
+                                            to={`/job-details/${job._id}`}
                                             className="transform transition-transform duration-300 hover:scale-105"
                                         >
                                             <div className="bg-[#891839] p-3 rounded-3xl flex justify-center h-70 w-full shadow-lg hover:shadow-xl">
