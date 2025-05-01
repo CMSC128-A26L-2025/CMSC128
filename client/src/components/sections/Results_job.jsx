@@ -34,7 +34,12 @@ useEffect(() => {
           const response = await authAxios.get(`jobs/job-results?sortBy=${sortBy}`);
 
           setJobs(response.data);
+          
           setIsLoading(false);
+          if (jobs.length === 0){
+            setjobButton(true)
+          }
+
 
           // Fetch bookmarked jobs
           const bookmarkedResponse = await authAxios.get(`jobs/job-bookmarked`);  
@@ -94,7 +99,7 @@ useEffect(() => {
       ) :(
         
         <div className="min-w-screen min-h-screen bg-gray-200 px-10 py-20 pb-30 flex flex-col justify-center items-center">
-            {setjobButton(true)}
+          
             <div className="container flex flex-col items-start space-y-8 text-black text-left ">
               
               {/* Sort by */}
@@ -168,4 +173,3 @@ useEffect(() => {
     </>
   );
 };
-
