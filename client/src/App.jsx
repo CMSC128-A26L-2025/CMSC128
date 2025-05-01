@@ -34,7 +34,7 @@ function App() {
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Landing_page/>} /> 
-            <Route path="/reg" element={<Results_page_jobs/>} />
+            <Route path="/reg" element={<Registration/>} />
             <Route path="/login" element={<Login/>} />
 
             <Route element={<RoleRoute allowedRoles={['Admin']}/>}>
