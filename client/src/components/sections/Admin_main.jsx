@@ -123,7 +123,7 @@ export const Admin_main = () => {
                                                             
                                                         } 
                                                     className="w-10 hover:ring-3 ring-red-400 rounded-lg">
-                                                        <img src="src/assets/Close_round_fill.svg" className="h-10 w-10"></img>
+                                                        <img src="/assets/Close_round_fill.svg" className="h-10 w-10"></img>
                                                     </button>
                                                     <button onClick={()=>{
                                                         setreq_modalOpen(true)
