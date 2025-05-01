@@ -133,7 +133,7 @@ export const Admin_main = () => {
                                                         
                                                     }
                                                     className="w-10 hover:ring-3 ring-green-400 rounded-lg">
-                                                        <img src="src/assets/Check_round_fill.svg" className="h-10 w-10"></img>
+                                                        <img src="/assets/Check_round_fill.svg" className="h-10 w-10"></img>
                                                     </button>
                                             
                                                 </div>
