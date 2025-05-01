@@ -26,7 +26,7 @@ export default function ViewJobDetails() {
     useEffect(() => {
         const fetchedJob = async () => {
             try {
-                const response = await authAxios.get(`/jobs/find-job/${id}`);
+                const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/jobs/find-job/${id}`);
 
                 setJob(response.data);
             } catch (error) {
