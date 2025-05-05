@@ -14,7 +14,6 @@
     "start": "concurrently \"npm run server\" \"npm run client\""
   },
   "devDependencies": {
-    "concurrently": "^9.1.2",
-    "vite-plugin-static-copy": "^2.3.1"
+    "concurrently": "^9.1.2"
   }
 }
