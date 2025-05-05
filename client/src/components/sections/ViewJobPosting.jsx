@@ -5,20 +5,34 @@ import { FaLocationDot } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { ScrollToTop } from "../../utils/helper";
 import { jobList } from "../../utils/models";
+import { useAuth } from "../../AuthContext";
 import Navbar from "../header";
 import Footer from "../footer";
 
 export default function ViewJobDetails() {
     const { id } = useParams();
     const [job, setJob] = useState(null);
+    const { authAxios, user } = useAuth();
     const navigate = useNavigate();
 
+    // useEffect(() => {
+    //     const fetchedJob = jobList.find((job) => job.job_id === parseInt(id));
+    //     if (fetchedJob) {
+    //         setJob(fetchedJob);
+    //     }
+    //     ScrollToTop();
+    // }, [id]);
+
     useEffect(() => {
-        const fetchedJob = jobList.find((job) => job.job_id === parseInt(id));
-        if (fetchedJob) {
-            setJob(fetchedJob);
+        const fetchedJob = async () => {
+            try {
+                const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/jobs/find-job/${id}`);
+
+                setJob(response.data);
+            } catch (error) {
+                console.error("Error fetching job posting: ", error)
+            }
         }
-        ScrollToTop();
     }, [id]);
 
     if (!job) return <div>Job not found</div>;
