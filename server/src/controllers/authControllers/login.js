@@ -12,10 +12,6 @@ export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        console.log('Access Secret Key:', accessSecretKey);
-        console.log('Refresh Secret Key:', refreshSecretKey);
-
-
         // console.log(`Login attempt with email: ${email}`);
         const user = await User.findOne({ email: email });
 

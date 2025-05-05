@@ -51,7 +51,7 @@ export default function MainPage() {
                 
                 // Fetch events
                 const eventsResponse = await authAxios.get('/events/all');
-                console.log("Events data:", eventsResponse.data);
+                // console.log("Events data:", eventsResponse.data);
                 
                 if (Array.isArray(eventsResponse.data) && eventsResponse.data.length > 0) {
                     setEvents(eventsResponse.data);
