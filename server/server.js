@@ -47,5 +47,10 @@ app.get('/', (req, res) => {
   res.send('API is running');
 });
 
+// add a catch-all route to serve the React app for non-API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(clientPublicPath, 'index.html'));
+});
+
 //export for testing
 export default app;
