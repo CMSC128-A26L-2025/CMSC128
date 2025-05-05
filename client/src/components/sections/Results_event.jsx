@@ -82,7 +82,7 @@ export const Results_page_events = ( ) => {
                     <div className="w-16 h-16 border-4 border-[#145C44] border-t-transparent rounded-full animate-spin"></div>
                 </div>
             ) : (
-                <div className="w-full h-full bg-gray-200 px-10 py-20 pb-30 flex flex-col justify-center items-center">
+                <div className="w-full min-w-screen min-h-screen bg-gray-200 px-10 pt-24 flex flex-col items-center">
                     <div className="container flex flex-col items-start space-y-8 text-black text-left ">
 
                         {/* Sort dropdown */}
