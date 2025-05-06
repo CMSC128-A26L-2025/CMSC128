@@ -23,7 +23,7 @@ const Registration = () => {
 
         // register API call
         try {
-            const res = await axios.post("http://localhost:5050/auth/register", {
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, {
                 user_id: "TEST01",
                 name: formData.username,
                 email: formData.email,
