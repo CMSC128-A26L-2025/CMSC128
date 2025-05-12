@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const jobPostingSchema = new Schema({
-    job_id: { type: Number, required: true },
-    posted_by: { type: Schema.Types.ObjectId, ref: 'Alumni', required: true },
+    job_id: { type: Number},
+    posted_by: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     job_title: { type: String, required: true },
     company: { type: String, required: true },
     location: { type: String, required: true },
@@ -22,7 +22,17 @@ const jobPostingSchema = new Schema({
     approval_date: {
         type: Date,
         default: null
-    }
+    },
+    files: [
+        {
+          name: String,
+          size: Number,
+          type: String,
+          lastModified: Number,
+          serverFilename: String, // optional
+        },
+    ],
+
 });
 
 // Add indexes

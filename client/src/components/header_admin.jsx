@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import speakerIcon from '../assets/Speaker_Icon.svg';
 import Notification from "./notification";
@@ -6,14 +6,22 @@ import { useNavigate } from 'react-router-dom'
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
-export default function Navbar_admin({toggleSidebar}) {
+import { useAuth } from "../AuthContext";
+
+import axios from "axios";
+export default function Navbar_admin() {
+  const { authAxios, user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate()
   const  [notification_modal, setnotification_modal] = useState(false)
+  const [announcementModal, setAnnouncementModal] = useState(false);
+
   const [formData, setFormData] = useState({
+    type:"announcement",
     title:"",
     read:false,
-    description:"",
+    content:"",
+    posted_by:user?._id
   })
   const handleLogout=()=>{
     //Logout
@@ -23,20 +31,35 @@ export default function Navbar_admin({toggleSidebar}) {
     navigate('/')
   }
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const handleSend=(e)=>{
-    
-    // await send= NULL;
-    const send=0; //temporary var
-    if (send.success){ // Successful sending
+  const handleSend=async (e)=>{
+    try{
+      const res = await axios.post("http://localhost:5050/announcement/create", formData);
       console.log("Successfully sent to all users");
       setIsOpen(false);
-    }else{ //Sending Failed
-
     }
+    catch(err){
+      console.error("Error creating announcement", err);
+      alert("Submission failed.");
+    }
+    
+
     // setIsOpen(false); Remove after implementing the proper backend stuff
   }
+  const handleLogout=()=>{
+    //Logout
+    const logout=0;
+    //if (logout.success){
+    //}
+    navigate('/')
+  }
+
+  useEffect(()=>{
+    console.log(formData)
+  },[formData]);
+
   return (
     <>
+
      {notification_modal &&(
             <div>
               <Notification setVisible={setnotification_modal}></Notification>
@@ -58,7 +81,7 @@ export default function Navbar_admin({toggleSidebar}) {
           </a>
             {/* Left - Logo */}
           <Link to="/admin_main">
-            <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
+            <img src={uplbLogo} className="bg-none w-40 h-auto" draggable= "false" alt="UPLB Logo" />
           </Link>
         </div>
         {/* Modal for Sending An Announcement */}
@@ -79,8 +102,8 @@ export default function Navbar_admin({toggleSidebar}) {
               placeholder="Title"></textarea>
             
               <textarea 
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              value={formData.content}
+              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               id="message" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-2xl border border-gray-30 resize-none h-[40vh]"
               placeholder="Write your message here..."></textarea>
             </div>
@@ -106,18 +129,19 @@ export default function Navbar_admin({toggleSidebar}) {
         <div className="absolute top-1 right-4 flex items-center space-x-5">
             <button onClick={()=>setIsOpen(true)}
             className="bg-[#891839] rounded-lg pr-5 pl-2 py-1 font-semibold text-left text-sm flex justify-center h-12">
-                <img src={speakerIcon} className="w-10 h-10 py-1"></img>
+                <img src={speakerIcon} draggable="false" className="w-10 h-10 py-1"></img>
                 <div className="pl-5">
                 Make an <br></br> Announcement
                 </div>
             </button>
             {/* Notification Icon */}   
-             <div 
+            <div 
                 onClick={()=>{
                   setnotification_modal(true);
                 }}
-                className="cursor-pointer">
-                  <img src={notifications} className="w-10 h-10" alt="Notifications" />
+                className="cursor-pointer"
+                >
+                  <img src={notifications} className="w-10 h-10" draggable="false" alt="Notifications" />
               </div>
 
             {/* Profile Icon inside Circle */}
@@ -126,7 +150,8 @@ export default function Navbar_admin({toggleSidebar}) {
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                 className="w-10 h-10 bg-none flex items-center justify-center rounded-full cursor-pointer"
               >
-                <img src={humanIcon} className="w-10 h-10" alt="Profile" />
+
+                <img src={humanIcon} className="w-10 h-10" draggable="false" alt="Profile" />
               </div>
 
               {profileMenuOpen && (
@@ -138,7 +163,7 @@ export default function Navbar_admin({toggleSidebar}) {
                   >
                     View Profile
                   </Link>
-                  <button 
+                  <button
                     onClick={handleLogout}
                     className="block w-full px-4 py-2 !text-gray-700 hover:bg-[#891839] hover:!text-white focus:!outline-none"
                   >
@@ -150,6 +175,6 @@ export default function Navbar_admin({toggleSidebar}) {
         </div>
       </div>
     </nav>
-  </>
+    </>
   );
 }

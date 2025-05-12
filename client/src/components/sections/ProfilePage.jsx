@@ -6,36 +6,43 @@ import Navbar from '../header';
 import Footer from '../footer';
 import { ScrollToTop } from '../../utils/helper';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../AuthContext';
 import './ProfilePage.css';
 import Sidebar from '../Sidebar';
 export default function ProfilePage() {
+
   const navigate = useNavigate();
-  const mockUser = {
-    user_id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    batch_graduated: "2024",
-    profile_picture: "https://i.pravatar.cc/300",
-    contact_number: "1234567890",
-    address: "123 Main Street",
-    current_job_title: "Software Engineer",
-    company: "Tech Corp",
-    industry: "Information Technology",
-    skills: "React, Node.js, Python, GraphQL",
-  };
+  
+  // const mockEvents = [
+  //   { event_id: 1, event_name: "Tech Conference", event_date: "2025-05-15" },
+  //   { event_id: 2, event_name: "Job Fair", event_date: "2025-06-20" },
+  //   { event_id: 3, event_name: "Career Expo", event_date: "2025-05-15" },
+  // ];
+  // const mockJobs = [
+  //   { job_id: 1, job_title: "Frontend Developer", company: "Google", location: "Mountain View", date_posted: "2025-04-01", status: "pending" },
+  //   { job_id: 2, job_title: "Backend Engineer", company: "Amazon", location: "Seattle", date_posted: "2025-03-15", status: "approved" },
+  //   { job_id: 3, job_title: "UI Designer", company: "Facebook", location: "Menlo Park", date_posted: "2025-02-10", status: "rejected" },
+  // ];
 
-  const mockEvents = [
-    { event_id: 1, event_name: "Tech Conference", event_date: "2025-05-15" },
-    { event_id: 2, event_name: "Job Fair", event_date: "2025-06-20" },
-    { event_id: 3, event_name: "Career Expo", event_date: "2025-05-15" },
-  ];
+  // const mockUser = {
+  //   user_id: 1,
+  //   name: "John Doe",
+  //   email: "john@example.com",
+  //   batch_graduated: "2024",
+  //   profile_picture: "https://i.pravatar.cc/300",
+  //   contact_number: "1234567890",
+  //   address: "123 Main Street",
+  //   current_job_title: "Software Engineer",
+  //   company: "Tech Corp",
+  //   industry: "Information Technology",
+  //   skills: "React, Node.js, Python, GraphQL",
+  // };
 
-  const mockJobs = [
-    { job_id: 1, job_title: "Frontend Developer", company: "Google", location: "Mountain View", date_posted: "2025-04-01", status: "pending" },
-    { job_id: 2, job_title: "Backend Engineer", company: "Amazon", location: "Seattle", date_posted: "2025-03-15", status: "approved" },
-    { job_id: 3, job_title: "UI Designer", company: "Facebook", location: "Menlo Park", date_posted: "2025-02-10", status: "rejected" },
-  ];
-
+  const navigate = useNavigate();
+  const { authAxios, user } = useAuth();
+  const [profileData, setProfileData] = useState(null);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [jobApplications, setJobApplications] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({});
   const [activeTab, setActiveTab] = useState('pending');
@@ -45,18 +52,41 @@ export default function ProfilePage() {
   const [isHoveringPopup, setIsHoveringPopup] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+
   useEffect(() => {
     document.documentElement.classList.remove('dark');
     ScrollToTop();
-    setEditableData({
-      contact_number: mockUser.contact_number,
-      address: mockUser.address,
-      current_job_title: mockUser.current_job_title,
-      company: mockUser.company,
-      industry: mockUser.industry,
-      skills: mockUser.skills,
-    });
-  }, []);
+    fetchProfileData();
+  }, [authAxios, user?._id]);
+
+  const fetchProfileData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      console.log("Fetching data");
+      const response = await authAxios.get(`/alumni/find-alumni/${user?._id}`);
+      console.log(response.data);
+      setProfileData(response.data);
+      setUpcomingEvents(response.data.events_attended);
+      setJobApplications(response.data.job_postings);
+      setEditableData({
+        contact_number: response.data?.contact_number || '',
+        address: response.data?.address || '',
+        current_job_title: response.data?.current_job_title || '',
+        company: response.data?.company || '',
+        industry: response.data?.industry || '',
+        skills: response.data?.skills || '',
+      });
+    } catch (err) {
+      console.error('Error fetching profile data:', err);
+      setError('Failed to load profile information.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEditToggle = () => setIsEditing(!isEditing);
 
@@ -65,13 +95,17 @@ export default function ProfilePage() {
     setEditableData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    console.log('Save profile changes:', editableData);
+  const handleSave = async () => {
+    try {
+      await authAxios.put(`/alumni/edit-profile/${user?._id}`, editableData);
+      setIsEditing(false);
+      fetchProfileData(); 
+    } catch (err) {
+      console.error('Error updating profile:', err);
+    }
   };
 
-  const upcomingEvents = mockEvents.filter(event => new Date(event.event_date) >= new Date());
-  const filteredJobs = mockJobs.filter(job => job.status === activeTab);
+  const filteredJobs = jobApplications.filter(job => job.status?.toLowerCase() === activeTab);
 
   return (
     <div className="fixed inset-0 overflow-y-auto bg-[#891839]">

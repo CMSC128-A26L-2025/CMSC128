@@ -11,6 +11,15 @@ const eventSchema = new Schema({
     created_by: { type: Schema.Types.ObjectId, ref: 'Admin', required: true },
     attendees: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Alumni' }],
     link: { type: String },
+    files: [
+        {
+          name: String,
+          size: Number,
+          type: String,
+          lastModified: Number,
+          serverFilename: String, // optional
+        },
+      ],
 });
 
 eventSchema.index({ event_name: 1 });

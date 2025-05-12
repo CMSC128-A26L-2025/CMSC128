@@ -5,7 +5,7 @@ export default function Speed_Dial_Admin({user_id}){
     const navigate = useNavigate();
     return(
       
-<div data-dial-init class="fixed end-6 bottom-6 group">
+<div data-dial-init class="fixed end-6 bottom-6 group z-20">
     <div id="speed-dial-menu-default" class="flex-col items-center opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 mb-4 space-y-2">
      
         <button 

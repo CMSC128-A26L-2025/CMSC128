@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react';
 import { useState } from "react";
+import { useAuth } from "../AuthContext";
+import axios from "axios";
 
 export default function Request_Confirmation({request_response, setVisible,id,refetch}){
+  const { authAxios, user } = useAuth();
   const [response, setResponse]=useState("");
   const handleHeader=()=>{
     if (request_response === 1){
@@ -10,16 +13,30 @@ export default function Request_Confirmation({request_response, setVisible,id,re
       setResponse("REJECT")
     }
   }
-  const handleDeleteRequest=()=>{
-    
+  const handleDeleteRequest=async ()=>{
+      try{
+        const res = await axios.put(`http://localhost:5050/jobs/${id}/reject`, {userId: user?._id, jobId:id});
+        console.log("Successfully rejected job posting");
+      }
+      catch(e){
+        console.error("Error rejecting job posting", err);
+        alert("Reject job failed.");
+      }
       // fetch the information of request using the id
       //Send information to the inbox of the requester
       //delete the request
       refetch();
       setVisible(false);// Close the Modal
   }
-  const handleApproveRequest=()=>{
-    
+  const handleApproveRequest=async()=>{
+    try{
+      const res = await axios.put(`http://localhost:5050/jobs/${id}/approve`, {userId: user?._id, jobId:id});
+      console.log("Successfully approve job posting");
+    }
+    catch(e){
+      console.error("Error approve job posting", err);
+      alert("Approve job failed.");
+    }
     // fetch the information of request using the id
     //Send information to the inbox of the requester
     //Approve the request
@@ -59,12 +76,16 @@ export default function Request_Confirmation({request_response, setVisible,id,re
             <div class="p-4 border-gray-200 rounded-b dark:border-gray-600 flex justify-center gap-4 font-semibold">
 
               <button 
-                onClick={handleDeleteRequest}
+                onClick={()=>setVisible(false)}
               data-modal-hide="static-modal" type="button" class="bg-[#891839] text-white px-4 py-2 rounded w-[150px] hover:bg-red-700">
                 No
               </button>
               <button 
-              onClick={handleApproveRequest}
+              onClick={e=>{ response === "ACCEPT" ?
+                handleApproveRequest() :
+                handleDeleteRequest();
+                console.log(response)
+              }}
               data-modal-hide="static-modal" type="button"  class="w-[150px] bg-emerald-800 text-w hite px-4 py-2 rounded hover:bg-green-700">
                 Yes
               </button>

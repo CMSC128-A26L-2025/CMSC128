@@ -134,7 +134,7 @@ const Registration = () => {
                                 {/* Register Button */}
                                 <button
                                     type="register"
-                                    className="font-semibold w-full bg-[#085740] p-2 rounded-md hover:bg-green-600 transition focus:ring-1 focus:ring-green-600"
+                                    className="font-semibold w-full bg-[#085740] p-2 rounded-md hover:bg-green-600 transition focus:ring-1 focus:ring-green-600 focus:!outline-none"
                                     
                                 >
                                     Register

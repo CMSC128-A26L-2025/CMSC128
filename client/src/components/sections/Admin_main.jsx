@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import Request_Confirmation from "../request_confirmation";
 import { eventList } from "../../utils/models.jsx";
 import { useAuth } from "../../AuthContext.jsx";
-import Sidebar from "../Sidebar.jsx";
+import yes from "../../assets/Check_round_fill.svg"
+import no from "../../assets/Close_round_fill.svg"
 
-// ... imports remain the same ...
+import Sidebar from "../Sidebar.jsx";
 
 export const Admin_main = () => {
     const navigate = useNavigate();

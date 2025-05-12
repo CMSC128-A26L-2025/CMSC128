@@ -7,38 +7,38 @@ export default function Notification({setVisible,uid}) {
       title: "ICS Week123",
       message: "Good Morning,\nLorem ipsum dolor sit amet. Et commodi sint est enim nemo est optio magnam et provident optio et voluptates beatae sit suscipit iure? \nEa magnam labore qui ullam deserunt in eligendi dicta aut suscipit optio nam rerum iste! Et accusantium pariatur hic neque dicta eos necessitatibus asperiores ea corrupti sapiente quo illo nisi.Lorem ipsum dolor sit amet. Et commodi sint est enim nemo est optio magnam et provident optio et voluptates beatae sit suscipit iure? \nEa magnam labore qui ullam deserunt in eligendi dicta aut suscipit optio nam rerum iste! Et accusantium pariatur hic neque dicta eos necessitatibus asperiores ea corrupti sapiente quo illo nisi.Lorem ipsum dolor sit amet. Et commodi sint est enim nemo est optio magnam et provident optio et voluptates beatae sit suscipit iure? \nEa magnam labore qui ullam deserunt in eligendi dicta aut suscipit optio nam rerum iste! Et accusantium pariatur hic neque dicta eos necessitatibus asperiores ea corrupti sapiente quo illo nisi.Lorem ipsum dolor sit amet. Et commodi sint est enim nemo est optio magnam et provident optio et voluptates beatae sit suscipit iure? \nEa magnam labore qui ullam deserunt in eligendi dicta aut suscipit optio nam rerum iste! Et accusantium pariatur hic neque dicta eos necessitatibus asperiores ea corrupti sapiente quo illo nisi.Lorem ipsum dolor sit amet. Et commodi sint est enim nemo est optio magnam et provident optio et voluptates beatae sit suscipit iure? \nEa magnam labore qui ullam deserunt in eligendi dicta aut suscipit optio nam rerum iste! Et accusantium pariatur hic neque dicta eos necessitatibus asperiores ea corrupti sapiente quo illo nisi.Lorem ipsum dolor sit amet. Et commodi sint est enim nemo est optio magnam et provident optio et voluptates beatae sit suscipit iure? \nEa magnam labore qui ullam deserunt in eligendi dicta aut suscipit optio nam rerum iste! Et accusantium pariatur hic neque dicta eos necessitatibus asperiores ea corrupti sapiente quo illo nisi.",
       read:1,
-      date:"2025/03/14"
+      date: "2025-03-14T08:30:00.000+00:00"
     },
     {
       
       title: "ICS Week",
       message: "Good Morning ,asdasdasdasdsda",
       read:1,
-      date:"2025/03/14"
+      date: "2025-03-14T09:00:00.000+00:00"
     },
     {
       title: "ICS Week",
       message: "Good Morning ,asdasdasdasdsda",
       read:1,
-      date:"2025/03/14"
+      date: "2025-03-14T10:15:00.000+00:00"
     },
     {
       title: "Maintenance at xx/xx/xxxx",
       message: "Good Morning ,asdasdasdasdsda",
       read:0,
-      date:"2025/03/14"
+      date: "2025-03-14T12:45:00.000+00:00"
     },
     {
       title: "Maintenance at xx/xx/xxxx",
       message: "Good Morning ,asdasdasdasdsda",
       read:0,
-      date:"2025/03/14"
+      date: "2025-03-14T02:00:00.000+00:00"
     },
     {
       title: "Maintenance at xx/xx/xxxx",
       message: "Good Morning ,asdasdasdasdsda",
       read:0,
-      date:"2025/03/14"
+      date: "2025-03-14T13:00:00.000+00:00"
     }
     
   
@@ -114,8 +114,18 @@ export default function Notification({setVisible,uid}) {
             className=" group p-6 text-center text-xl text-black hover:bg-neutral-400 rounded-b-lg transition-colors">
              <div className=" flex justify-between items-center bg-transparent  ">
               <div className="grid grid-cols-1">
-                <span className="!text-black  font-bold">{notifications.title}</span>
-                <span className="text-gray-400 !text-sm group-hover:text-white text-start "> {notifications.date}</span>
+                <span className="!text-black text-left font-bold">{notifications.title}</span>
+                <span className="text-gray-400 !text-sm group-hover:text-white text-start "> 
+                  {new Date(notifications.date).toLocaleString('en-US', {
+                    timeZone: 'UTC',
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                  })}
+                </span>
               </div>
               
               {notifications.read == 1 && (

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Notification from "./notification";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../AuthContext";
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
@@ -9,14 +9,18 @@ import humanIcon from "../assets/Human Icon.png";
 export default function Navbar({toggleSidebar,}) {
   const  [notification_modal, setnotification_modal] = useState(false)
   const  [profileMenuOpen, setProfileMenuOpen] = useState(false);
+
   const navigate = useNavigate()
-  const handleLogout=()=>{
-    //Logout
-    const logout=0;
-    //if (logout.success){
-    //}
-    navigate('/');
+  
+
+
+  const { logout } = useAuth();
+
+  const handleLogout = async (e) => {
+    await logout();
   }
+
+
   return (
    <div>
       {notification_modal &&(
@@ -27,8 +31,6 @@ export default function Navbar({toggleSidebar,}) {
        <nav className="bg-white w-full py-1 fixed top-0 left-0 z-60">
         {/* Flexbox for proper alignment */}
         <div className="container flex justify-between items-center py-1 px-4">
-          
-        
           <div className="flex">
             <a
             href="#"
@@ -45,6 +47,7 @@ export default function Navbar({toggleSidebar,}) {
             </Link>
           </div>
             
+
           {/* Right - Notification & Profile Icons */}
           <div className="absolute top-2 right-4 flex items-center space-x-4">
             {/* Notification Icon */}
@@ -56,7 +59,7 @@ export default function Navbar({toggleSidebar,}) {
             }
             className="cursor-pointer"
             >
-              <img src={notifications} className="w-10 h-10" alt="Notifications" />
+              <img src={notifications} className="w-10 h-10" draggable="false" alt="Notifications" />
             </div>
 
             {/* Profile Icon inside Circle */}
@@ -65,7 +68,7 @@ export default function Navbar({toggleSidebar,}) {
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                 className="w-10 h-10 bg-none flex items-center justify-center rounded-full cursor-pointer"
               >
-                <img src={humanIcon} className="w-10 h-10" alt="Profile" />
+                <img src={humanIcon} className="w-10 h-10" draggable="false" alt="Profile" />
               </div>
 
               {profileMenuOpen && (
@@ -78,7 +81,7 @@ export default function Navbar({toggleSidebar,}) {
                     View Profile
                   </Link>
                   <button
-                    // onClick={}
+                    onClick={handleLogout}
                     className="block w-full px-4 py-2 !text-gray-700 hover:bg-[#891839] hover:!text-white focus:!outline-none"
                   >
                     Logout
