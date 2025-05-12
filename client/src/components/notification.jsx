@@ -55,7 +55,7 @@ export default function Notification({setVisible,uid}) {
   }
   return (
     
-    <div className="fixed inset-0 flex justify-end items-start z-50 p-8 bg-black/50">
+    <div className="fixed inset-0 flex justify-end items-start z-70 p-8 bg-black/50">
       {notification_view && (
       <Notification_View notification_info={notification_var} setNotification_view={setNotification_view} ></Notification_View>
       

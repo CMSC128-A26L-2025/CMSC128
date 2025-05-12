@@ -6,7 +6,7 @@ import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
 
-export default function Navbar({user_id}) {
+export default function Navbar({toggleSidebar,}) {
   const  [notification_modal, setnotification_modal] = useState(false)
   const  [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const navigate = useNavigate()
@@ -24,14 +24,27 @@ export default function Navbar({user_id}) {
           <Notification setVisible={setnotification_modal}></Notification>
         </div>
       )}
-       <nav className="bg-white w-full py-1 fixed top-0 left-0 z-20">
+       <nav className="bg-white w-full py-1 fixed top-0 left-0 z-60">
         {/* Flexbox for proper alignment */}
         <div className="container flex justify-between items-center py-1 px-4">
-          {/* Left - Logo */}
-          <Link to={`/home`}>
-            <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
-          </Link>
-
+          
+        
+          <div className="flex">
+            <a
+            href="#"
+              onClick={toggleSidebar}
+              className="flex justify-center items-center  !text-black pr-4">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+              
+            </a>
+              {/* Left - Logo */}
+            <Link to={`/home`}>
+              <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
+            </Link>
+          </div>
+            
           {/* Right - Notification & Profile Icons */}
           <div className="absolute top-2 right-4 flex items-center space-x-4">
             {/* Notification Icon */}

@@ -5,9 +5,12 @@ import CreatableSelect from "react-select/creatable";
 import { jobRequiremets } from "../../utils/models";
 import { useParams } from 'react-router-dom';
 import { Button } from "flowbite-react";
+import Sidebar from "../Sidebar";
 export const Post_Job = () => {
     
-
+    const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
+    const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+    
     const [formData, setFormData] = useState({
         job_id: "",
         job_title: "",
@@ -27,10 +30,18 @@ export const Post_Job = () => {
     }
     return(
         <>  
-            
+        
             <div className="w-screen">
-                <Navbar></Navbar>
+                <Navbar toggleSidebar={toggleSidebar}></Navbar>
             </div>
+            <div
+                className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+                    sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                }`}
+            >
+                <Sidebar />
+            </div>
+            <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
                 <form className="bg-[#DDDDDD] bg-cover bg-center bg-no-repeat h-[auto] pt-17 pb-30 px-10 ">
                     <div className="flex p-1">
                         
@@ -123,7 +134,7 @@ export const Post_Job = () => {
                     
                 </form>
                                     
-
+            </div>
         </>
     );
 }

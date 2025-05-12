@@ -11,7 +11,7 @@ import { Range } from "react-range"; // Import react-range
 const GRADUATION_YEAR_MIN = 1900;
 const GRADUATION_YEAR_MAX = 2025;
 
-export default function Navbar_search({ searchTerm, setSearchTerm, user_id }) {
+export default function Navbar_search({ searchTerm, setSearchTerm,toggleSidebar }) {
   const [notification_modal, setnotification_modal] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
@@ -58,13 +58,25 @@ export default function Navbar_search({ searchTerm, setSearchTerm, user_id }) {
           <Notification setVisible={setnotification_modal}></Notification>
         </div>
       )}
-      <nav className="bg-white w-full py-1 fixed top-0 left-0 z-20 shadow-md">
+      <nav className="bg-white w-full py-1 fixed top-0 left-0 z-60 shadow-md">
         {/* Flexbox for proper alignment */}
         <div className="container flex justify-between items-center py-1 px-4">
           {/* Left - Logo */}
-          <Link to={`/home`}> {/* Dynamically navigate based on user_id */}
-            <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
-          </Link>
+          <div className="flex">
+              <a
+              href="#"
+                onClick={toggleSidebar}
+                className="flex justify-center items-center  !text-black pr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+                
+              </a>
+                {/* Left - Logo */}
+              <Link to={`/home`}>
+                <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
+              </Link>
+            </div>
           
           {/* Middle - Search Bar */}
           <div className="flex-1 flex justify-center" style={{ marginLeft: '200px' }}>

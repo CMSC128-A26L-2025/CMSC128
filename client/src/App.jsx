@@ -21,6 +21,7 @@ import { Results_page_events } from './components/sections/Results_event'
 import { AuthProvider } from './AuthContext'
 import { RoleRoute } from './ProtectedRoutes'
 import ProfilePage from './components/sections/ProfilePage'
+import TransactionPage from './components/sections/TransactionPage'
 function App() {
   const [count, setCount] = useState(0)
   
@@ -31,7 +32,7 @@ function App() {
         <AuthProvider>
           <Routes>
 
-            <Route path="/" element={<Results_page_accounts/>} /> 
+            <Route path="/" element={<Landing_page/>} /> 
             <Route path="/reg" element={<Registration/>} />
             <Route path="/login" element={<Login/>} />
 
@@ -49,6 +50,7 @@ function App() {
               <Route path="/create_event" element={<Create_Event/>} />
               <Route path="/post_job" element={<Post_Job/>} />
               <Route path= "/profile" element={<ProfilePage/>}/>
+              <Route path= "/transaction" element={<TransactionPage/>}/>
             </Route>
 
           </Routes>

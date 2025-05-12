@@ -1,25 +1,26 @@
 import { useState, useMemo } from "react";
 import Navbar_search from "../Navbar_Search";
 
-const dummyAccounts = [
-  { id: 1, email: "alice.santos@example.com", name: "Alice Santos", type: "Admin" },
-  { id: 4, email: "benji.torres@example.org", name: "Benji Torres", type: "User" },
-  { id: 5, email: "camille_ruz@example.net", name: "Camille Ruz", type: "Admin" },
-  { id: 3, email: "david.khoo@example.com", name: "David Khoo", type: "User" },
-  { id: 2, email: "elena_matsuda@example.co", name: "Elena Matsuda", type: "User" },
-];
 
-export const Results_page_accounts = () => {
+export const Results_page_accounts_admin = () => {
+  const dummyAccounts = [
+    { id: 1, email: "alice.santos@example.com", name: "Alice Santos", type: "Admin" },
+    { id: 4, email: "benji.torres@example.org", name: "Benji Torres", type: "User" },
+    { id: 5, email: "camille_ruz@example.net", name: "Camille Ruz", type: "Admin" },
+    { id: 3, email: "david.khoo@example.com", name: "David Khoo", type: "User" },
+    { id: 2, email: "elena_matsuda@example.co", name: "Elena Matsuda", type: "User" },
+  ];
   const [searchTerm, setSearchTerm] = useState("");
-
   const filteredAccounts = useMemo(() => {
-    const term = searchTerm.toLowerCase();
-    return dummyAccounts.filter(
-      (acc) =>
-        acc.name.toLowerCase().includes(term) ||
-        acc.email.toLowerCase().includes(term)
-    );
-  }, [searchTerm]);
+      const term = searchTerm.toLowerCase();
+      return dummyAccounts.filter(
+        (acc) =>
+          acc.name.toLowerCase().includes(term) ||
+          acc.email.toLowerCase().includes(term)
+      );
+    }, [searchTerm]);
+
+  
 
   return (
     <>

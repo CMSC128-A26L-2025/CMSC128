@@ -7,6 +7,7 @@ import Footer from '../footer';
 import { ScrollToTop } from '../../utils/helper';
 import { motion } from 'framer-motion';
 import './ProfilePage.css';
+import Sidebar from '../Sidebar';
 export default function ProfilePage() {
   const navigate = useNavigate();
   const mockUser = {
@@ -42,7 +43,8 @@ export default function ProfilePage() {
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const [isHoveringTile, setIsHoveringTile] = useState(false);
   const [isHoveringPopup, setIsHoveringPopup] = useState(false);
-
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   useEffect(() => {
     document.documentElement.classList.remove('dark');
     ScrollToTop();
@@ -74,141 +76,148 @@ export default function ProfilePage() {
   return (
     <div className="fixed inset-0 overflow-y-auto bg-[#891839]">
       <div className="fixed top-0 w-full z-50">
-        <Navbar user_id={mockUser.user_id} />
+        <Navbar toggleSidebar={toggleSidebar} />
       </div>
-
-      <motion.main
-        className="pt-24 px-4 md:px-6 lg:px-8 w-full max-w-5xl mx-auto space-y-12"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-      >
-        <section className="bg-white rounded-3xl shadow-lg p-8 flex flex-col gap-8">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-            <img 
-              src={mockUser.profile_picture} 
-              alt="Profile" 
-              className="w-28 h-28 rounded-full object-cover border-4 border-[#891839]" 
-            />
-            <div className="text-center md:text-left">
-              <h2 className="text-3xl font-bold text-[#891839]">{mockUser.name}</h2>
-              <p className="text-gray-600">{mockUser.email}</p>
-              <p className="text-gray-600">Batch Graduated: {mockUser.batch_graduated}</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6">
-            <ProfileSection title="Contact Info" fields={[
-              { label: "Phone", name: "contact_number" },
-              { label: "Address", name: "address" }
-            ]} editableData={editableData} isEditing={isEditing} handleChange={handleChange} />
-
-            <ProfileSection title="Professional Info" fields={[
-              { label: "Current Job Title", name: "current_job_title" },
-              { label: "Company", name: "company" },
-              { label: "Industry", name: "industry" }
-            ]} editableData={editableData} isEditing={isEditing} handleChange={handleChange} />
-
-            <ProfileSection title="Skills" fields={[
-              { label: "Skills", name: "skills" }
-            ]} editableData={editableData} isEditing={isEditing} handleChange={handleChange} />
-          </div>
-
-          <div className="mt-6 flex justify-center">
-            {isEditing ? (
-              <button className="save-button" onClick={handleSave}>Save</button>
-            ) : (
-              <button className="force-button" onClick={handleEditToggle}>Edit Profile</button>
-            )}
-          </div>
-        </section>
-
-        <section className="bg-white rounded-3xl shadow-lg p-8 relative">
-          <h3 className="text-3xl font-bold text-[#891839] mb-6">Upcoming Events</h3>
-          <div className="custom-calendar-wrapper">
-            <Calendar
-              tileContent={({ date }) => {
-                const eventsToday = upcomingEvents.filter(e => new Date(e.event_date).toDateString() === date.toDateString());
-                return (
-                  <div
-                    className={`relative w-full h-full flex flex-col items-center justify-center rounded-md ${
-                      eventsToday.length > 0 ? 'bg-[#0E4221] text-white' : ''
-                    }`}
-                    onMouseEnter={(e) => {
-                      if (eventsToday.length > 0) {
-                        setHoveredEvent(eventsToday);
-                        setHoverPosition({ x: e.clientX, y: e.clientY });
-                        setIsHoveringTile(true);
-                      }
-                    }}
-                    onMouseLeave={() => setIsHoveringTile(false)}
-                  >
-                    {eventsToday.length > 0 && (
-                      <div className="flex justify-center items-center gap-1 mt-1">
-                        {eventsToday.map((_, idx) => (
-                          <div key={idx} className="w-1.5 h-1.5 rounded-full bg-white"></div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              }}
-              className="custom-calendar"
-            />
-
-            {(hoveredEvent && (isHoveringTile || isHoveringPopup)) && (
-              <div
-                className="popup-events"
-                onMouseEnter={() => setIsHoveringPopup(true)}
-                onMouseLeave={() => {
-                  setIsHoveringPopup(false);
-                  setHoveredEvent(null);
-                }}
-                style={{
-                  position: 'fixed',
-                  top: hoverPosition.y + 10,
-                  left: hoverPosition.x + 10,
-                  background: 'white',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  boxShadow: '0px 2px 10px rgba(0,0,0,0.15)',
-                  zIndex: 1000,
-                }}
-              >
-                {hoveredEvent.map((event) => (
-                  <div
-                    key={event.event_id}
-                    className="popup-event-item cursor-pointer"
-                    onClick={() => {
-                      navigate(`/events/${event.event_id}`);
-                      setHoveredEvent(null);
-                    }}
-                  >
-                    {event.event_name}
-                  </div>
-                ))}
+      <div
+        className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+        >
+        <Sidebar/>
+      </div>
+      <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
+        <motion.main
+          className="pt-24 px-4 md:px-6 lg:px-8 w-full max-w-5xl mx-auto space-y-12"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
+          <section className="bg-white rounded-3xl shadow-lg p-8 flex flex-col gap-8">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+              <img 
+                src={mockUser.profile_picture} 
+                alt="Profile" 
+                className="w-28 h-28 rounded-full object-cover border-4 border-[#891839]" 
+              />
+              <div className="text-center md:text-left">
+                <h2 className="text-3xl font-bold text-[#891839]">{mockUser.name}</h2>
+                <p className="text-gray-600">{mockUser.email}</p>
+                <p className="text-gray-600">Batch Graduated: {mockUser.batch_graduated}</p>
               </div>
-            )}
-          </div>
-        </section>
+            </div>
 
-        <section className="bg-white rounded-3xl shadow-lg p-8 mb-16">
-          <h3 className="text-3xl font-bold text-[#891839] mb-6 text-center">Job Applications</h3>
-          <div className="flex justify-center space-x-4 mb-6">
-            {['pending', 'approved', 'rejected'].map((status) => (
-              <button 
-                key={status}
-                className={`force-button ${activeTab === status ? 'active-tab' : ''}`}
-                onClick={() => setActiveTab(status)}
-              >
-                {status}
-              </button>
-            ))}
-          </div>
-          <JobList jobs={filteredJobs} />
-        </section>
-      </motion.main>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6">
+              <ProfileSection title="Contact Info" fields={[
+                { label: "Phone", name: "contact_number" },
+                { label: "Address", name: "address" }
+              ]} editableData={editableData} isEditing={isEditing} handleChange={handleChange} />
 
+              <ProfileSection title="Professional Info" fields={[
+                { label: "Current Job Title", name: "current_job_title" },
+                { label: "Company", name: "company" },
+                { label: "Industry", name: "industry" }
+              ]} editableData={editableData} isEditing={isEditing} handleChange={handleChange} />
+
+              <ProfileSection title="Skills" fields={[
+                { label: "Skills", name: "skills" }
+              ]} editableData={editableData} isEditing={isEditing} handleChange={handleChange} />
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              {isEditing ? (
+                <button className="save-button" onClick={handleSave}>Save</button>
+              ) : (
+                <button className="force-button" onClick={handleEditToggle}>Edit Profile</button>
+              )}
+            </div>
+          </section>
+
+          <section className="bg-white rounded-3xl shadow-lg p-8 relative">
+            <h3 className="text-3xl font-bold text-[#891839] mb-6">Upcoming Events</h3>
+            <div className="custom-calendar-wrapper">
+              <Calendar
+                tileContent={({ date }) => {
+                  const eventsToday = upcomingEvents.filter(e => new Date(e.event_date).toDateString() === date.toDateString());
+                  return (
+                    <div
+                      className={`relative w-full h-full flex flex-col items-center justify-center rounded-md ${
+                        eventsToday.length > 0 ? 'bg-[#0E4221] text-white' : ''
+                      }`}
+                      onMouseEnter={(e) => {
+                        if (eventsToday.length > 0) {
+                          setHoveredEvent(eventsToday);
+                          setHoverPosition({ x: e.clientX, y: e.clientY });
+                          setIsHoveringTile(true);
+                        }
+                      }}
+                      onMouseLeave={() => setIsHoveringTile(false)}
+                    >
+                      {eventsToday.length > 0 && (
+                        <div className="flex justify-center items-center gap-1 mt-1">
+                          {eventsToday.map((_, idx) => (
+                            <div key={idx} className="w-1.5 h-1.5 rounded-full bg-white"></div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }}
+                className="custom-calendar"
+              />
+
+              {(hoveredEvent && (isHoveringTile || isHoveringPopup)) && (
+                <div
+                  className="popup-events"
+                  onMouseEnter={() => setIsHoveringPopup(true)}
+                  onMouseLeave={() => {
+                    setIsHoveringPopup(false);
+                    setHoveredEvent(null);
+                  }}
+                  style={{
+                    position: 'fixed',
+                    top: hoverPosition.y + 10,
+                    left: hoverPosition.x + 10,
+                    background: 'white',
+                    padding: '8px',
+                    borderRadius: '8px',
+                    boxShadow: '0px 2px 10px rgba(0,0,0,0.15)',
+                    zIndex: 1000,
+                  }}
+                >
+                  {hoveredEvent.map((event) => (
+                    <div
+                      key={event.event_id}
+                      className="popup-event-item cursor-pointer"
+                      onClick={() => {
+                        navigate(`/events/${event.event_id}`);
+                        setHoveredEvent(null);
+                      }}
+                    >
+                      {event.event_name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+
+          <section className="bg-white rounded-3xl shadow-lg p-8 mb-16">
+            <h3 className="text-3xl font-bold text-[#891839] mb-6 text-center">Job Applications</h3>
+            <div className="flex justify-center space-x-4 mb-6">
+              {['pending', 'approved', 'rejected'].map((status) => (
+                <button 
+                  key={status}
+                  className={`force-button ${activeTab === status ? 'active-tab' : ''}`}
+                  onClick={() => setActiveTab(status)}
+                >
+                  {status}
+                </button>
+              ))}
+            </div>
+            <JobList jobs={filteredJobs} />
+          </section>
+        </motion.main>
+      </div>
       <Footer />
     </div>
   );
