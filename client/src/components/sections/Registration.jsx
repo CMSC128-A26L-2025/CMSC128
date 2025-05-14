@@ -1,8 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
-
 import Navbar_landing from "../header_landing";
 import { useNavigate } from 'react-router-dom'
+
 const Registration = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -14,12 +14,37 @@ const Registration = () => {
         graduation_year: ""
     });
 
+    // Add errors state
+    const [errors, setErrors] = useState({});
+
     const handleChange = (e) => {
         setFormData ({ ...formData, [e.target.name]: e.target.value});
+        setErrors({ ...errors, [e.target.name]: "" }); // Clear error on change
+    };
+
+    // Validate fields and set errors
+    const validate = () => {
+        const newErrors = {};
+        if (!formData.username.trim()) newErrors.username = "Name is required.";
+        if (!formData.email.trim()) newErrors.email = "Email is required.";
+        if (!formData.password) newErrors.password = "Password is required.";
+        if (!formData.confirmPassword) newErrors.confirmPassword = "Please confirm your password.";
+        if (formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword) {
+            newErrors.confirmPassword = "Passwords do not match.";
+        }
+        if (!formData.degree.trim()) newErrors.degree = "Degree Program is required.";
+        if (!formData.graduation_year.trim()) newErrors.graduation_year = "Year Graduated is required.";
+        return newErrors;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const newErrors = validate();
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
 
         // register API call
         try {
@@ -54,10 +79,10 @@ const Registration = () => {
                     <div className="flex justify-center">
                         <div className="bg-white/50 py-8 px-6 rounded-2xl shadow-lg w-96 backdrop-blur-sm">
                             <p className="text-xl text-center text-[#00110C] font-light pb-4">Alumni Registration Form</p>
-                            <form onSubmit={handleSubmit} className="space-y-4">
+                            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
 
                                 {/* Username */}
-                                <div className="">
+                                <div>
                                     <input
                                         type="text"
                                         name="username"
@@ -65,8 +90,8 @@ const Registration = () => {
                                         onChange={handleChange}
                                         className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1 "
                                         placeholder="Name"
-                                        required
                                     />
+                                    {errors.username && <p className="text-red-700 text-sm">{errors.username}</p>}
                                 </div>
                             
                                 {/* Email */}
@@ -78,8 +103,8 @@ const Registration = () => {
                                         onChange={handleChange}
                                         className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
                                         placeholder="Email"
-                                        required
                                     />
+                                    {errors.email && <p className="text-red-700 text-sm">{errors.email}</p>}
                                 </div>
 
                                 {/* Password */}
@@ -91,8 +116,8 @@ const Registration = () => {
                                         onChange={handleChange}
                                         className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
                                         placeholder="Password"
-                                        required
                                     />
+                                    {errors.password && <p className="text-red-700 text-sm">{errors.password}</p>}
                                 </div>
 
                                 {/* Confirm Password */}
@@ -104,10 +129,11 @@ const Registration = () => {
                                         onChange={handleChange}
                                         className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
                                         placeholder="Re-enter password"
-                                        required
                                     />
+                                    {errors.confirmPassword && <p className="text-red-700 text-sm">{errors.confirmPassword}</p>}
                                 </div>
 
+                                {/* Degree */}
                                 <div>
                                     <input
                                         type="text"
@@ -116,9 +142,11 @@ const Registration = () => {
                                         onChange={handleChange}
                                         className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
                                         placeholder="Degree Program"
-                                        required
                                     />
+                                    {errors.degree && <p className="text-red-700 text-sm">{errors.degree}</p>}
                                 </div>
+                                
+                                {/* Graduation Year */}
                                 <div>
                                     <input
                                         type="text"
@@ -127,28 +155,36 @@ const Registration = () => {
                                         onChange={handleChange}
                                         className="w-full p-2 border-3 border-[#3E3939] bg-white-700 rounded-md outline-none focus:ring-1"
                                         placeholder="Year Graduated"
-                                        required
                                     />
+                                    {errors.graduation_year && <p className="text-red-700 text-sm">{errors.graduation_year}</p>}
                                 </div>
+                                
                                 <div className="w-full bg-[#3E3939] h-0.5"></div>
                                 {/* Register Button */}
                                 <button
-                                    type="register"
+                                    type="submit"
                                     className="font-semibold w-full bg-[#085740] p-2 rounded-md hover:bg-green-600 transition focus:ring-1 focus:ring-green-600 focus:!outline-none"
-                                    
                                 >
                                     Register
+                                </button>
+
+                                {/* Cancel Button */}
+                                <button
+                                    type="button"
+                                    className="font-semibold w-full bg-[#9b2c2c] p-2 rounded-md hover:bg-red-600 transition focus:ring-1 focus:ring-red-600 focus:!outline-none"
+                                    onClick={() => {
+                                        navigate("/");
+                                    }}                                  
+                                >
+                                    Cancel
                                 </button>
                             </form>
                         </div>
                     </div>
-                    </div>
+                </div>
             </div>
-            
-            
         </>
-        
     )
-
 };
+
 export default Registration;
