@@ -12,13 +12,6 @@ export default function Sidebar(currentPage){
         //}
         navigate('/')
     }
-    const handleNavigate = () => {
-  if (user?.user_type === 'Admin') {
-    navigate('/admin_search-alumni');
-  } else {
-    navigate('/search-alumni');
-  }
-};
     return(
         <>
             <div
@@ -107,7 +100,7 @@ export default function Sidebar(currentPage){
                 Profile
                 </div>
                 <div 
-                onClick={handleNavigate}
+                // onClick=
                 role="button"
                 class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-emerald-900">
                 <div class="grid mr-4 place-items-center">

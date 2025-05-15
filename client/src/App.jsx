@@ -13,7 +13,6 @@ import ViewAnnouncementDetails from './components/sections/ViewAnnouncement'
 import { BrowserRouter,Routes, Route } from 'react-router-dom'
 import { Admin_main } from './components/sections/Admin_main'
 import { Results_page_accounts} from './components/sections/Results_accounts'
-import { Results_page_accounts_admin} from './components/sections/Results_accounts_admin'
 import { Results_page_jobs } from './components/sections/Results_job'
 import { Unauthorized_jobs_results_page } from './components/sections/Unauthorized_jobs_results'
 
@@ -42,7 +41,6 @@ function App() {
 
             <Route element={<RoleRoute allowedRoles={['Admin']}/>}>
               <Route path="/admin_main" element={<Admin_main/>} />
-              <Route path="/admin_search-alumni" element={<Results_page_accounts_admin/>} />
             </Route>
 
             <Route element={<RoleRoute allowedRoles={['Admin', 'Alumni']}/>}>
