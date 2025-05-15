@@ -1,4 +1,3 @@
 node_modules/
 controllers/auth/.env
 .env
-uploads/

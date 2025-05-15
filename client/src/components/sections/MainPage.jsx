@@ -191,7 +191,7 @@ export default function MainPage() {
                         style={{
                         backgroundImage: `url(${
                             events[currentEventIndex]?.files?.[0]
-                            ? `http://localhost:5050/uploads/${events[currentEventIndex].files[0]}`
+                            ? `http://localhost:5050/uploads/${events[currentEventIndex].files[0].serverFilename}`
                             : default_eventbg
                         })`
                         }}

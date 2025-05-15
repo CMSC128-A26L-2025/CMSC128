@@ -61,6 +61,13 @@ export const Unauthorized_jobs_results_page = () => {
 
   return (
     <>
+      <div
+        className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <Sidebar />
+      </div>
       <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
         {isLoading ? (
           <div className="min-w-screen min-h-screen bg-gray-200 flex justify-center items-center">

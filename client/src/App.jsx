@@ -17,14 +17,14 @@ import { Results_page_accounts_admin} from './components/sections/Results_accoun
 import { Results_page_jobs } from './components/sections/Results_job'
 import { Unauthorized_jobs_results_page } from './components/sections/Unauthorized_jobs_results'
 
-import { Create_Event } from './components/sections/Create_event'
+import { CreateEvent } from './components/sections/CreateEvent'
 import { Post_Job } from './components/sections/JobPost'
 
 import { Results_page_events } from './components/sections/Results_event'
 import { AuthProvider } from './auth/AuthContext'
 import { RoleRoute } from './auth/ProtectedRoutes'
 import ProfilePage from './components/sections/ProfilePage'
-
+import TransactionPage from './components/sections/TransactionPage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -53,9 +53,10 @@ function App() {
               <Route path="/event-details/:id" element={<ViewEventDetails/>} />
               <Route path="/announcement-details/:id" element={<ViewAnnouncementDetails/>} />
               <Route path="/search-alumni" element={<Results_page_accounts/>} />
-              <Route path="/create_event" element={<Create_Event/>} />
+              <Route path="/create_event" element={<CreateEvent/>} />
               <Route path="/post_job" element={<Post_Job/>} />
               <Route path="/profile" element={<ProfilePage/>} />
+              <Route path='/donate/:id' element={<TransactionPage/>}/>
             </Route>
 
           </Routes>

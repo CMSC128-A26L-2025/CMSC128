@@ -3,6 +3,13 @@ import { Alumni } from './User.js';
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
+const fileObjectSchema = new mongoose.Schema({
+    name: { type: String },
+    size: { type: Number },
+    type: { type: String },
+    serverFilename: { type: String }
+}, { _id: false });
+
 const eventSchema = new Schema({
     event_name: { type: String, required: true },
     event_description: { type: String },
@@ -11,15 +18,11 @@ const eventSchema = new Schema({
     created_by: { type: Schema.Types.ObjectId, ref: 'Admin', required: true },
     attendees: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Alumni' }],
     link: { type: String },
-    files: [
-        {
-          name: String,
-          size: Number,
-          type: String,
-          lastModified: Number,
-          serverFilename: String, // optional
-        },
-      ],
+    donatable: { type: Boolean },
+    files: {
+        type: [fileObjectSchema],
+        default: []
+    },
 });
 
 eventSchema.index({ event_name: 1 });

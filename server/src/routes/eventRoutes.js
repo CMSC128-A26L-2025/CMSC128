@@ -10,7 +10,9 @@ router.get('/all', validateToken, authorizeRoles(["Admin", "Alumni"]), eventCont
 router.get('/read-sort', validateToken, authorizeRoles(["Admin", "Alumni"]), eventController.readSort);
 router.get('/find-event/:id', validateToken, authorizeRoles(["Admin", "Alumni"]), eventController.findEventById);
 router.get("/admin-page-events", validateToken, authorizeRoles(["Admin"]), eventController.adminPageEvents);
-router.post("/create", upload.array('files[]'), eventController.create);
-router.post("/:event_id/upload", upload.array('files[]'), eventController.uploadEventFiles);
-router.get('/:event_id/files', eventController.getEventFiles);
+
+router.post("/create", validateToken, authorizeRoles(["Admin"]),upload.array('files[]'), eventController.create);
+router.post("/:_id/upload", validateToken, authorizeRoles(["Admin"]), upload.array('files[]'), eventController.uploadEventFiles);
+router.get('/:_id/files', validateToken, authorizeRoles(["Admin", "Alumni"]), eventController.getEventFiles);
+
 export default router

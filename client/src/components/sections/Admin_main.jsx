@@ -165,18 +165,20 @@ export const Admin_main = () => {
                 </thead>
                 <tbody>
                   {filteredData.map((item, idx) => (
-                    <tr key={idx} className="bg-white border-b">
+                    <tr key={idx} className="bg-white hover:bg-gray-200 transition-colors duration-200 "
+                      onClick={console.log("testing")}
+                    >
                       {activeTab === "Events" && (
-                        <>
-                        <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
-                          <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
-                          <td className="px-4 py-4">{item.date}</td>
-                          <td className="px-4 py-4">{item.createdBy}</td>
-                          <td className="flex">
-                            <div>test</div>
-                            <div>test</div>
-                          </td>
-                        </>
+                          <>
+                          <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
+                            <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
+                            <td className="px-4 py-4">{item.date}</td>
+                            <td className="px-4 py-4">{item.createdBy}</td>
+                            <td className="flex">
+                              <div>test</div>
+                              <div>test</div>
+                            </td>
+                          </>
                       )}
                       {activeTab === "Jobs" && (
                         <>

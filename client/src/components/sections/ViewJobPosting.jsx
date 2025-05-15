@@ -19,41 +19,13 @@ export default function ViewJobDetails() {
     useEffect(() => {
        const fetchedJob = async () => {
             try {
-                const response = await authAxios.get(`http://localhost:5050/jobs/find-job/${id}`);
+                const response = await authAxios.get(`/jobs/find-job/${id}`);
 
                 setJob(response.data);
                 console.log("Fetched Job:", response.data);
 
             } catch (error) {
-                if (error.response?.status === 401 || error.response?.status === 403) {
-                    console.log("Token invalid/expired. Attempting refresh...");
-
-                    try {
-                        const refreshResponse = await axios.get("http://localhost:5050/auth/refresh", { withCredentials: true });
-
-
-                        if (refreshResponse.data.accessToken) {
-                            const newToken = refreshResponse.data.accessToken;
-                            localStorage.setItem("accessToken", newToken);
-
-                            console.log("Retrying job fetch with new token...");
-                            const retryResponse = await axios.get(`http://localhost:5050/jobs/find-job/${id}`, {
-                                headers: { Authorization: `Bearer ${newToken}` },
-                                withCredentials: true
-                            });
-
-                            setJob(retryResponse.data);
-
-                        } else {
-                            navigate("/login");
-                        }
-                    } catch (refreshError) {
-                        console.error("Token refresh failed:", refreshError);
-                        navigate("/login");
-                    }
-                } else {
-                    console.error("Error fetching job:", error);
-                }
+                console.error("Error fetching job:", error);
             }
         }
 

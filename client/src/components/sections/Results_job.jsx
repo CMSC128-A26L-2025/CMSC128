@@ -11,6 +11,7 @@ import { ScrollToTop } from "../../utils/helper";
 import axios from "axios";
 import { useAuth } from "../../auth/AuthContext";
 import Sidebar from "../Sidebar";
+
 export const Results_page_jobs = () => {
   const navigate = useNavigate();
   const { authAxios, user } = useAuth();
@@ -18,7 +19,7 @@ export const Results_page_jobs = () => {
   const [sortBy, setSortBy] = useState("");
   const [bookmarkedIds, setBookmarkedIds] = useState([]);
   const [jobs, setJobs] = useState([]);
-  const [jobButton, setjobButton] = useState(false)
+  const [jobButton, setjobButton] = useState(true)
   const [isLoading, setIsLoading] = useState(true);
   const [jobCount, setJobCount] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
@@ -40,21 +41,19 @@ export const Results_page_jobs = () => {
 
 useEffect(() => {
   const fetchJobs = async () => {
+      setIsLoading(true);
       try {
-          console.log("Fetching jobs...");
-          const response = await authAxios.get(`jobs/job-results?sortBy=${sortBy}`);
+        console.log("Fetching jobs...");
+        const response = await authAxios.get(`jobs/job-results?sortBy=${sortBy}`);
 
-          setJobs(response.data);
-          setJobCount(response.data.length);
-          setIsLoading(false);
-          if (jobs.length === 0){
-            setjobButton(true)
-          }
+        setJobs(response.data);
+        setJobCount(response.data.length);
 
-          console.log("Job Count:", response.data.length);
+        console.log("Job Count:", response.data.length);
       } catch (error) {
-          console.error("Error fetching jobs:", error);
-          setIsLoading(false); 
+        console.error("Error fetching jobs:", error);
+      } finally {
+        setIsLoading(false);
       }
   };
 
@@ -98,7 +97,7 @@ useEffect(() => {
       ) : jobs.length === 0 ? (
         <div className="min-w-screen min-h-screen bg-gray-200 px-10 py-20 pb-30 flex flex-col justify-center items-center text-6xl text-emerald-800 font-extrabold">
           <svg
-       xmlns="http://www.w3.org/2000/svg"
+      xmlns="http://www.w3.org/2000/svg"
           className="w-24 h-24 text-black-400 mb-4"
           fill="none"
           viewBox="0 0 24 24"
@@ -161,7 +160,7 @@ useEffect(() => {
                 {jobs.map((job) => (
                   <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden">
                     <Link to={`/job-details/${job._id}`}>
-                      <img src={`http://localhost:5050/uploads/${job.files[0]}` || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
+                      <img src={`http://localhost:5050/uploads/${job.files[0].serverFilename}` || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
                     </Link>
                     <div className="p-4">
                       

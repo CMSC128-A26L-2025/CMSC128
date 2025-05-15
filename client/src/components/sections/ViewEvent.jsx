@@ -68,7 +68,9 @@ export default function ViewEventDetails() {
         }
         ScrollToTop();
     }, [id]);
+    const  handleRSVP=()=>{
 
+    }
     if (!event) return <div>Event not found</div>;
 
     return (
@@ -87,8 +89,8 @@ export default function ViewEventDetails() {
                 <div className="min-h-[85vh] bg-cover bg-center text-white flex justify-center items-center px-4 sm:px-8 md:px-16 pb-10 w-full"
                     style={{
                         backgroundImage: `url(${
-                        event?.files?.[0]?.trim()
-                            ? `http://localhost:5050/uploads/${event.files[0]}`
+                        typeof event?.files?.[0] === 'string' && event.files[0].trim()
+                            ? `http://localhost:5050/uploads/${event.files[0].trim()}`
                             : default_eventbg
                         })`
                     }}
@@ -123,12 +125,12 @@ export default function ViewEventDetails() {
                             {true && (
                             <div className="mt-10 flex justify-center lg:justify-start">
                                 <div className="grid grid-cols-2 gap-4 sm:gap-x-10">
-                                <Link to="/donate">
+                                <Link to={`/donate/${event.id}`}>
                                     <button className="transition-transform duration-300 ease-in-out hover:scale-110 bg-[#145C44] hover:ring-2 text-white font-bold h-[45px] sm:h-[55px] w-[180px] px-4 py-2 rounded-md">
                                     Donate
                                     </button>
                                 </Link>
-                                <Link to="/donate">
+                                <Link onClick={handleRSVP}>
                                     <button className="transition-transform duration-300 ease-in-out hover:scale-110 bg-[#891839] hover:ring-2 text-white font-bold h-[45px] sm:h-[55px] w-[200px] px-4 py-2 rounded-md">
                                     Will be Attending
                                     </button>
