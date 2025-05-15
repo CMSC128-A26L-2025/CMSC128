@@ -13,6 +13,7 @@ import Error_Message from "../error_message";
 import { useParams } from 'react-router-dom';
 import { useAuth } from "../../auth/AuthContext";
 import Sidebar from "../Sidebar";
+const default_eventbg = "../../assets/default_eventbg.jpg";
 export default function MainPage() {
     const {authAxios, user} = useAuth();
     const {user_id} = useParams(); //Contains the User Id 
