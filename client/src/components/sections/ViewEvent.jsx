@@ -15,7 +15,35 @@ export default function ViewEventDetails() {
     const [isLoading, setIsLoading] = useState(true);
     const { authAxios, user } = useAuth();
     const navigate = useNavigate();
-    // console.log(id);
+const [upcomingEvents, setUpcomingEvents] = useState([
+  {
+    event_id: "1",
+    event_name: "Tech Innovations Expo",
+    event_date: "2025-05-24",
+    venue: "UPLB DL Umali Hall",
+    event_description:
+      "An expo showcasing the latest innovations in technology, hosted by leading experts and startup founders.",
+    files: ["tech_expo.jpg"],
+  },
+  {
+    event_id: "2",
+    event_name: "Career Fair 2025",
+    event_date: "2025-06-10",
+    venue: "NCAS Auditorium",
+    event_description:
+      "Meet potential employers and learn more about exciting career opportunities.",
+    files: ["career_fair.png"],
+  },
+  {
+    event_id: "3",
+    event_name: "Alumni Homecoming Gala",
+    event_date: "2025-07-01",
+    venue: "Baker Hall",
+    event_description:
+      "A night of celebration and networking for all UPLB alumni.",
+    files: ["homecoming.jpg"],
+  },
+]);
 
 
     useEffect(() => {

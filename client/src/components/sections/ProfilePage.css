@@ -1,5 +1,9 @@
 /* ProfilePage Custom Styles */
 
+.tile-content {
+  color: black; 
+}
+
 button:focus {
     outline: none;
     box-shadow: none;
@@ -106,6 +110,7 @@ button:focus {
     background: #ffffff;
     border: none;
     border-radius: 1.5rem;
+    
     padding: 1rem;
 }
 
@@ -166,9 +171,10 @@ button:focus {
 }
 
 .react-calendar__tile {
-    aspect-ratio: 1 / 0.5;
+    aspect-ratio: 1 / 0.75;
     padding: 8px;
     position: relative;
+    
 }
 
 .event-day {
@@ -212,7 +218,24 @@ button:focus {
     background-color: #891839 !important;
     color: white !important;
     border-radius: 8px;
-    position: relative; /* important so absolute inside works */
-    overflow: hidden; /* optional for clean corners */
+    position: relative; 
+    overflow: hidden; 
   }
-  
+
+.highlight-event abbr {
+  color: white !important;
+}
+
+.react-calendar__tile abbr {
+  color: black;
+  font-weight: 600;
+}
+
+.popup-event-item{
+  color: black !important;
+}
+
+.popup-event-item:hover {
+  background-color: #891839;
+  color: white !important;
+}

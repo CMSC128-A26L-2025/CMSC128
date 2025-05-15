@@ -39,8 +39,9 @@ export default function ProfilePage() {
   const navigate = useNavigate();
   const { authAxios, user } = useAuth();
   const [profileData, setProfileData] = useState(null);
-  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  //const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [jobApplications, setJobApplications] = useState([]);
+ 
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({});
   const [activeTab, setActiveTab] = useState('pending');
@@ -48,17 +49,27 @@ export default function ProfilePage() {
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const [isHoveringTile, setIsHoveringTile] = useState(false);
   const [isHoveringPopup, setIsHoveringPopup] = useState(false);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
   const [bookmarkedJobs, setBookmarkedJobs] = useState([]);
   const [jobs, setJobs] = useState([]);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+
+    const mockEvents = [
+    { event_id: 1, event_name: "Tech Conference", event_date: "2025-05-25" },
+    { event_id: 2, event_name: "Job Fair", event_date: "2025-06-20" },
+    { event_id: 3, event_name: "Career Expo", event_date: "2025-05-30" },
+  ];
+
   useEffect(() => {
     document.documentElement.classList.remove('dark');
     ScrollToTop();
     fetchProfileData();
   }, [authAxios, user?._id]);
+
+  const upcomingEvents = mockEvents.filter(event => new Date(event.event_date) >= new Date()); //basically ito ung mga event na RSVP ni user
 
   const fetchProfileData = async () => {
     setLoading(true);
@@ -177,7 +188,7 @@ export default function ProfilePage() {
         </section>
 
         <section className="bg-white rounded-3xl shadow-lg p-8 relative">
-          <h3 className="text-3xl font-bold text-[#891839] mb-6">Upcoming Events</h3>
+          <h3 className="text-3xl font-bold text-[#891839] mb-6">Upcoming RSVP'd Events</h3>
           <div className="custom-calendar-wrapper">
             <Calendar
               tileContent={({ date }) => {
@@ -219,8 +230,8 @@ export default function ProfilePage() {
                 }}
                 style={{
                   position: 'fixed',
-                  top: hoverPosition.y + 10,
-                  left: hoverPosition.x + 10,
+                  top: hoverPosition.y ,
+                  left: hoverPosition.x ,
                   background: 'white',
                   padding: '8px',
                   borderRadius: '8px',
@@ -244,6 +255,7 @@ export default function ProfilePage() {
             )}
           </div>
         </section>
+
 
       <section className="bg-white rounded-3xl shadow-lg p-8">
         <h3 className="text-3xl font-bold text-[#891839] mb-6 text-center">Bookmarked Jobs</h3>
