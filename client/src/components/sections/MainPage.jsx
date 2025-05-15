@@ -13,10 +13,7 @@ import Error_Message from "../error_message";
 import { useParams } from 'react-router-dom';
 import { useAuth } from "../../auth/AuthContext";
 import Sidebar from "../Sidebar";
-
 const default_eventbg = "../../assets/default_eventbg.jpg";
-const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5050";
-
 export default function MainPage() {
     const {authAxios, user} = useAuth();
     const {user_id} = useParams(); //Contains the User Id 
