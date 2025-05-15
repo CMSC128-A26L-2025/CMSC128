@@ -25,7 +25,7 @@ import { AuthProvider } from './auth/AuthContext'
 import { RoleRoute } from './auth/ProtectedRoutes'
 import ProfilePage from './components/sections/ProfilePage'
 import TransactionPage from './components/sections/TransactionPage'
-
+import { CreateAnnouncement } from './components/sections/Create_announcement'
 function App() {
   const [count, setCount] = useState(0)
   const [theme, setTheme] = useState("dark");
@@ -57,6 +57,7 @@ function App() {
               <Route path="/post_job" element={<Post_Job/>} />
               <Route path="/profile" element={<ProfilePage/>} />
               <Route path='/donate/:id' element={<TransactionPage/>}/>
+              <Route path='/create_announcement' element={<CreateAnnouncement/>}/>
             </Route>
 
           </Routes>

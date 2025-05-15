@@ -14,12 +14,6 @@ router.put('/edit-profile/:id', validateToken, authorizeRoles(["Alumni", "Admin"
 // delete by email
 router.delete('/email/:email', alumniController.deleteByEmail);
 
-// Create RSVP (Alumni confirming their attendance)
-router.post('/alumni/rsvp', validateToken, authorizeRoles(['Alumni']), createRSVP);
-
-// Edit RSVP
-router.put('alumni/rsvp/:eventID', validateToken, authorizeRoles(['Alumni']), editRSVP);
-
 // View RSVPs
 router.get('alumni/view-all-rsvp', validateToken, authorizeRoles(['Alumni']), viewRSVP);
 

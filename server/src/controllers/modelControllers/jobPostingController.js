@@ -1,5 +1,7 @@
 import { JobPosting } from "../../models/Job_Posting.js";
 import { User } from "../../models/User.js";
+import Communication from "../../models/Communication.js";
+import Notification from "../../models/Notification.js";
 import { createCRUDController } from "../middlewareControllers/createCRUDController/index.js";
 import {
     uploadFilesForModel,
@@ -55,6 +57,32 @@ export const jobPostingController = {
 
             const newJobPosting = new JobPosting(jobDocument);
             const savedJobPosting = await newJobPosting.save();
+
+            if (savedJobPosting.status === 'approved') {
+                try {
+                    const communicationContent = `A new job opportunity has been posted: "${savedJobPosting.job_title}" at ${savedJobPosting.company}. Apply now! ${savedJobPosting.application_link}`;
+                    const newCommunication = new Communication({
+                        type: "job_posting",
+                        title: `New Job: ${savedJobPosting.job_title} at ${savedJobPosting.company}`,
+                        content: communicationContent,
+                        posted_by: savedJobPosting.approved_by || savedJobPosting.posted_by,
+                    });
+                    const savedCommunication = await newCommunication.save();
+
+                    const alumniUsers = await User.find({ user_type: "Alumni" }).select('_id');
+                    if (alumniUsers.length > 0) {
+                        const notifications = alumniUsers.map(alumnus => ({
+                            user: alumnus._id,
+                            announcement: savedCommunication._id,
+                            status: "unread",
+                        }));
+                        await Notification.insertMany(notifications);
+                        console.log(`Notifications created for ${alumniUsers.length} alumni for job: ${savedJobPosting.job_title}`);
+                    }
+                } catch (notificationError) {
+                    console.error("Error creating notifications for approved job posting:", notificationError);
+                }
+            }
 
             res.status(201).json(savedJobPosting);
 
@@ -137,6 +165,36 @@ export const jobPostingController = {
             job.approval_date = new Date();
             job.status = "approved";
             await job.save();
+
+            try {
+                if (!updatedJobPosting.approved_by) {
+                    updatedJobPosting.approved_by = req.user?.id;
+                    updatedJobPosting.approval_date = new Date();
+                    await updatedJobPosting.save();
+                }
+
+                const communicationContent = `A new job opportunity has been posted: "${updatedJobPosting.job_title}" at ${updatedJobPosting.company}. Apply now! ${updatedJobPosting.application_link}`;
+                const newCommunication = new Communication({
+                    type: "job_posting",
+                    title: `Job Approved: ${updatedJobPosting.job_title} at ${updatedJobPosting.company}`,
+                    content: communicationContent,
+                    posted_by: updatedJobPosting.approved_by || updatedJobPosting.posted_by,
+                });
+                const savedCommunication = await newCommunication.save();
+
+                const alumniUsers = await User.find({ user_type: "Alumni" }).select('_id');
+                if (alumniUsers.length > 0) {
+                    const notifications = alumniUsers.map(alumnus => ({
+                        user: alumnus._id,
+                        announcement: savedCommunication._id,
+                        status: "unread",
+                    }));
+                    await Notification.insertMany(notifications);
+                    console.log(`Notifications created for ${alumniUsers.length} alumni for newly approved job: ${updatedJobPosting.job_title}`);
+                }
+            } catch (notificationError) {
+                console.error("Error creating notifications for approved job posting (on update):", notificationError);
+            }
 
             res.status(200).json({message: "Job approved successfully"});
         }

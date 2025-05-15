@@ -1,8 +1,14 @@
 import { useState } from "react";
 import Navbar from "../header";
 import Footer from "../footer";
-
+import gcash_icon from "../../assets/GCash-Logo.png"
+import paymaya_icon from "../../assets/1200px-PayMaya_Logo.png"
+import Sidebar from "../Sidebar";
+import { useAuth } from "../../auth/AuthContext";
 export default function TransactionPage() {
+  const { authAxios, user} = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   const [form, setForm] = useState({
     name: "",
     cardNumber: "",
@@ -48,12 +54,19 @@ export default function TransactionPage() {
     <div className="w-screen min-h-screen flex flex-col overflow-x-hidden bg-white">
       {/* Navbar */}
       <div className="z-50">
-        <Navbar />
+        <Navbar toggleSidebar={toggleSidebar} />
       </div>
+      <div
+          className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+              sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+      >
+          <Sidebar/>
+      </div>
+      <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
 
-      {/* Maroon separator */}
       <div className="w-full h-[4px] bg-[#891839]"></div>
-
+      
       {/* Main Content */}
       <div className="flex flex-col md:flex-row flex-grow w-full">
         {/* Left: Event Details */}
@@ -129,16 +142,16 @@ export default function TransactionPage() {
             <div className="text-center mt-4 text-gray-600">or pay with</div>
             <div className="flex justify-center space-x-4 mt-4">
               <button type="button" className="hover:scale-105 transition-transform">
-                <img src="public/assets/gcash.png" alt="GCash" className="h-10" />
+                <img src={gcash_icon} alt="GCash" className="h-10" />
               </button>
               <button type="button" className="hover:scale-105 transition-transform">
-                <img src="public/assets/paymaya.png" alt="PayMaya" className="h-10" />
+                <img src={paymaya_icon} alt="PayMaya" className="h-10" />
               </button>
             </div>
           </form>
         </div>
       </div>
-
+      </div>
       {/* Footer */}
       <Footer />
     </div>

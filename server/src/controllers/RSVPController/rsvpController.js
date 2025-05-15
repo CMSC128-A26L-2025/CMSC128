@@ -1,19 +1,29 @@
 import RSVP from "../../models/RSVP.js"
+import { Event } from "../../models/Event.js"
 
 export const createRSVP = async (req, res) => {
     try {
-        const { event, status } = req.body;
+        const { eventID } = req.params;
+        const { status } = req.body;
+        const alumniID = req.user.userId; // get user id of currently logged in user
         // get user id of currently logged in user
-        const alumniID = req.user._id;
+        console.log(eventID, status, alumniID);
 
-        const existingRSVP = await RSVP.findOne({ event, alumni: alumniID });
+
+        const existingRSVP = await RSVP.findOne({ event: eventID, alumni: alumniID });
 
         // check for any existing RSVPs of alumnus for chosen event
         if (existingRSVP) {
             return res.status(400).json({ message: "You've already RSVP'd for this event." });
         }
 
-        const newRSVP = await RSVP.create({ event, alumni: alumniID, status });
+        // Add alumni to event's attendees array if not already present
+        await Event.findByIdAndUpdate(
+            eventID,
+            { $addToSet: { attendees: alumniID } }
+        );
+
+        const newRSVP = await RSVP.create({ event: eventID, alumni: alumniID, status });
         res.status(201).json(newRSVP);
 
 

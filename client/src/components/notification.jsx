@@ -1,75 +1,135 @@
-import { useState } from "react";
+import React, { useState, useEffect, useCallback,useRef } from "react";
 import Notification_View from "./notification_view";
-export default function Notification({setVisible,uid}) {
-  const notifs= [
-    {
-     
-      title: "ICS Week123",
-      message: "Good Morning,\nLorem ipsum dolor sit amet. Et commodi sint est enim nemo est optio magnam et provident optio et voluptates beatae sit suscipit iure? \nEa magnam labore qui ullam deserunt in eligendi dicta aut suscipit optio nam rerum iste! Et accusantium pariatur hic neque dicta eos necessitatibus asperiores ea corrupti sapiente quo illo nisi.Lorem ipsum dolor sit amet. Et commodi sint est enim nemo est optio magnam et provident optio et voluptates beatae sit suscipit iure? \nEa magnam labore qui ullam deserunt in eligendi dicta aut suscipit optio nam rerum iste! Et accusantium pariatur hic neque dicta eos necessitatibus asperiores ea corrupti sapiente quo illo nisi.Lorem ipsum dolor sit amet. Et commodi sint est enim nemo est optio magnam et provident optio et voluptates beatae sit suscipit iure? \nEa magnam labore qui ullam deserunt in eligendi dicta aut suscipit optio nam rerum iste! Et accusantium pariatur hic neque dicta eos necessitatibus asperiores ea corrupti sapiente quo illo nisi.Lorem ipsum dolor sit amet. Et commodi sint est enim nemo est optio magnam et provident optio et voluptates beatae sit suscipit iure? \nEa magnam labore qui ullam deserunt in eligendi dicta aut suscipit optio nam rerum iste! Et accusantium pariatur hic neque dicta eos necessitatibus asperiores ea corrupti sapiente quo illo nisi.Lorem ipsum dolor sit amet. Et commodi sint est enim nemo est optio magnam et provident optio et voluptates beatae sit suscipit iure? \nEa magnam labore qui ullam deserunt in eligendi dicta aut suscipit optio nam rerum iste! Et accusantium pariatur hic neque dicta eos necessitatibus asperiores ea corrupti sapiente quo illo nisi.Lorem ipsum dolor sit amet. Et commodi sint est enim nemo est optio magnam et provident optio et voluptates beatae sit suscipit iure? \nEa magnam labore qui ullam deserunt in eligendi dicta aut suscipit optio nam rerum iste! Et accusantium pariatur hic neque dicta eos necessitatibus asperiores ea corrupti sapiente quo illo nisi.",
-      read:1,
-      date: "2025-03-14T08:30:00.000+00:00"
-    },
-    {
-      
-      title: "ICS Week",
-      message: "Good Morning ,asdasdasdasdsda",
-      read:1,
-      date: "2025-03-14T09:00:00.000+00:00"
-    },
-    {
-      title: "ICS Week",
-      message: "Good Morning ,asdasdasdasdsda",
-      read:1,
-      date: "2025-03-14T10:15:00.000+00:00"
-    },
-    {
-      title: "Maintenance at xx/xx/xxxx",
-      message: "Good Morning ,asdasdasdasdsda",
-      read:0,
-      date: "2025-03-14T12:45:00.000+00:00"
-    },
-    {
-      title: "Maintenance at xx/xx/xxxx",
-      message: "Good Morning ,asdasdasdasdsda",
-      read:0,
-      date: "2025-03-14T02:00:00.000+00:00"
-    },
-    {
-      title: "Maintenance at xx/xx/xxxx",
-      message: "Good Morning ,asdasdasdasdsda",
-      read:0,
-      date: "2025-03-14T13:00:00.000+00:00"
-    }
-    
+import { useAuth } from "../auth/AuthContext";
+
+export default function Notification({ setVisible }) {
+  const { authAxios, user } = useAuth();
+  const [ notifications, setNotifications ] = useState([]);
+  const [ isLoading, setIsLoading ] = useState(true);
+  const [ error, setError ] = useState(null);
   
-  ];
-  
-  const [notification, setNotification]=useState(notifs);
-  const [notification_view, setNotification_view]=useState(false);
-  const [notification_var, setNotification_var]=useState("");
-  const fetchNotification=()=>{
-    //Fetch the notification or mail in
-  }
-  const refetch=()=>{
-    setNotification()
-  }
+  const [isNotificationViewVisible, setIsNotificationViewVisible] = useState(false); // For modal visibility
+  const [currentNotificationForView, setCurrentNotificationForView] = useState(null); // Data for Notification_View
+
+  const fetchUnreadNotifications = useCallback(async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+          const response = await authAxios.get('/notifications/unread');
+          setNotifications(response.data || []);
+      } catch (err) {
+          console.error("Failed to fetch notifications:", err);
+          setError(err.response?.data?.message || "Failed to load notifications.");
+          setNotifications([]);
+      } finally {
+          setIsLoading(false);
+      }
+  }, [authAxios, user]);
+
+  useEffect(() => {
+    fetchUnreadNotifications();
+  }, [fetchUnreadNotifications]);
+
+  const handleMarkAsRead = async (notificationId) => {
+    try {
+        const response = await authAxios.patch(`/notifications/${notificationId}/read`);
+
+        setNotifications(prevNotifications =>
+            prevNotifications.map(notif => {
+                if (notif._id === notificationId) {
+                    const updatedNotifData = {
+                        ...notif,
+                        status: 'read',
+                        isRead: true, 
+                        ...response.data, 
+                        announcement: notif.announcement
+                    };
+                    return updatedNotifData;
+                }
+                return notif;
+            })
+        );
+
+        if (selectedNotificationInfo && selectedNotificationInfo._id === notificationId) {
+            setSelectedNotificationInfo(prevInfo => ({
+                ...prevInfo,
+                status: 'read',
+                isRead: true,
+                announcement: prevInfo.announcement
+            }));
+        }
+      } catch (err) {
+          console.error("Failed to mark notification as read:", err);
+      }
+  };
+
+  const handleDeleteNotification = async (notificationId, e) => {
+      e.stopPropagation();
+      if (window.confirm("Are you sure you want to delete this notification?")) {
+          try {
+              await authAxios.delete(`/notifications/${notificationId}`);
+              setNotifications(prevNotifications =>
+                  prevNotifications.filter(notif => notif._id !== notificationId)
+              );
+              if (currentNotificationForView && currentNotificationForView._id === notificationId) {
+                  setIsNotificationViewVisible(false);
+                  setCurrentNotificationForView(null);
+              }
+          } catch (err) {
+              console.error("Failed to delete notification:", err);
+              alert(err.response?.data?.message || "Could not delete notification.");
+          }
+      }
+  };
+
+  const handleNotificationItemClick = (notificationItem) => {
+      setCurrentNotificationForView(notificationItem);
+      setIsNotificationViewVisible(true);
+      if (notificationItem.status === 'unread') {
+          handleMarkAsRead(notificationItem._id);
+      }
+  };
+
+  const refetchNotifications = () => {
+      fetchUnreadNotifications();
+  };
+  const modalRef = useRef(null);
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setVisible]);
+
   return (
-    
     <div className="fixed inset-0 flex justify-end items-start z-70 p-8 bg-black/50">
-      {notification_view && (
-      <Notification_View notification_info={notification_var} setNotification_view={setNotification_view} ></Notification_View>
-      
+      {isNotificationViewVisible && currentNotificationForView && (
+          <Notification_View
+              notification_info={currentNotificationForView}
+              setNotification_view={setIsNotificationViewVisible}
+          />
+
       )}
-      
+
       {/* Modal content */}
-     <div className="relative bg-white rounded-lg shadow-lg w-[30vw]">
-         {/* Modal header */}
+      <div ref={modalRef} className="relative bg-white rounded-lg shadow-lg w-[30vw]">
+        {/* Modal header */}
+        
         <div className="flex items-center justify-between p-4 border-b border-gray-200 rounded-t">
           <h2 className="text-emerald-800 text-4xl font-extrabold">Notifications</h2>
           <button
             onClick={() => setVisible(false)}
             type="button"
-            className="text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-300 dark:hover:text-black rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
+            className="text-gray-400 hover:bg-gray-200 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
           >
             <svg
               className="w-3 h-3"
@@ -91,7 +151,6 @@ export default function Notification({setVisible,uid}) {
         </div>
 
         {/* Modal body */}
-          
           <div className="h-[72vh] w-auto overflow-y-auto space-y-1  py-1 bg-white rounded-lg shadow-inner 
                                     [&::-webkit-scrollbar]:w-2
                                     [&::-webkit-scrollbar-track]:rounded-full
@@ -100,54 +159,59 @@ export default function Notification({setVisible,uid}) {
                                 [&::-webkit-scrollbar-thumb]:bg-gray-300
                                 dark:[&::-webkit-scrollbar-track]:bg-neutral-700
                                 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 px-1">
-          {notification.map((notifications, index) =>{
-           return(
-            <div
-            onClick={() => {
-              
-              setNotification_var(notifications);
-              setNotification_view(true);
-              
-              
-            }}
-            key={index}
-            className=" group p-6 text-center text-xl text-black hover:bg-neutral-400 rounded-b-lg transition-colors">
-             <div className=" flex justify-between items-center bg-transparent  ">
-              <div className="grid grid-cols-1">
-                <span className="!text-black text-left font-bold">{notifications.title}</span>
-                <span className="text-gray-400 !text-sm group-hover:text-white text-start "> 
-                  {new Date(notifications.date).toLocaleString('en-US', {
-                    timeZone: 'UTC',
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true
-                  })}
-                </span>
-              </div>
-              
-              {notifications.read == 1 && (
-                <div className="text-emerald-800">
-                  
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                  <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />
-                  </svg>
-
+            {!isLoading && error && (
+                <div className="p-4 text-center text-red-600">
+                    <p>{error}</p>
+                    <button onClick={refetchNotifications} className="mt-2 text-sm text-blue-500 hover:underline">Try again</button>
                 </div>
-              )}
-             </div>
-              
-              
-              
-            </div>
-           )
-            
-
-          })}
+            )}
+            {!isLoading && !error && notifications.length === 0 && (
+                <p className="text-gray-500 text-center py-10">You have no unread notifications.</p>
+            )}
+            {!isLoading && !error && notifications.length > 0 && (
+                <ul className="space-y-1">
+                    {notifications.map((notificationItem) => (
+                        <li
+                            key={notificationItem._id}
+                            onClick={() => handleNotificationItemClick(notificationItem)}
+                            className={`group p-3 sm:p-4 rounded-lg transition-all duration-150 cursor-pointer flex justify-between items-center
+                                        ${notificationItem.status === 'read' ? 'bg-gray-100 hover:bg-gray-200' : 'bg-white hover:bg-emerald-50 shadow-sm'}`}
+                        >
+                            <div className="flex-grow">
+                                <div className="flex items-center">
+                                    {notificationItem.status === 'unread' && (
+                                        <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full mr-2.5 flex-shrink-0" title="Unread"></span>
+                                    )}
+                                    <span className={`font-semibold text-sm sm:text-base ${notificationItem.status === 'read' ? 'text-gray-600' : 'text-emerald-800'}`}>
+                                        {notificationItem.announcement?.title || "Notification"}
+                                    </span>
+                                </div>
+                                <p className={`text-xs sm:text-sm mt-1 line-clamp-2 ${notificationItem.status === 'read' ? 'text-gray-500' : 'text-gray-600'}`}>
+                                    {notificationItem.announcement?.content || "No content available."}
+                                </p>
+                                <span className="text-gray-400 text-xs group-hover:text-gray-500 mt-1.5 block">
+                                    {new Date(notificationItem.createdAt).toLocaleString('en-US', {
+                                        year: 'numeric', month: 'short', day: 'numeric',
+                                        hour: '2-digit', minute: '2-digit', hour12: true
+                                    })}
+                                </span>
+                            </div>
+                            <button
+                                onClick={(e) => handleDeleteNotification(notificationItem._id, e)}
+                                title="Delete Notification"
+                                className="ml-2 p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-100 rounded-full opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 flex-shrink-0"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
+                                    <path fillRule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75H4.5a.75.75 0 0 0 0 1.5h11a.75.75 0 0 0 0-1.5H14A2.75 2.75 0 0 0 11.25 1H8.75ZM10 4.5a.75.75 0 0 0-1.5 0v9.546l-.401-.401a.75.75 0 1 0-1.06 1.061l1.5 1.5a.75.75 0 0 0 1.06 0l1.5-1.5a.75.75 0 1 0-1.06-1.06l-.401.401V4.5Z" clipRule="evenodd" />
+                                    <path d="M5.582 8.052a.75.75 0 0 1 .53-.22h7.776a.75.75 0 0 1 .53.22l.759.759A3.25 3.25 0 0 1 16 11.75v.5a2.75 2.75 0 0 1-2.75 2.75H6.75A2.75 2.75 0 0 1 4 12.25v-.5a3.25 3.25 0 0 1 .832-2.94l.75-.758Z" />
+                                </svg>
+                                <span className="sr-only">Delete</span>
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            )}
           </div>
-        
       </div>
     </div>
   );

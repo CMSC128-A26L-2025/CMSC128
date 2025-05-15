@@ -1,4 +1,7 @@
 import { Event } from '../../models/Event.js';
+import { User } from '../../models/User.js';
+import Communication from '../../models/Communication.js';
+import Notification from '../../models/Notification.js';
 import { createCRUDController } from '../middlewareControllers/createCRUDController/index.js';
 import {
     uploadFilesForModel,
@@ -60,6 +63,31 @@ export const eventController = {
 
             const newEvent = new Event(eventDocument);
             const savedEvent = await newEvent.save();
+
+            try {
+                const communicationContent = `A new event has been posted: "${savedEvent.event_name}". Join us on ${savedEvent.event_date.toLocaleDateString()} at ${savedEvent.venue}. ${savedEvent.link ? 'More details: ' + savedEvent.link : ''}`;
+                const newCommunication = new Communication({
+                    type: "event",
+                    title: `New Event: ${savedEvent.event_name}`,
+                    content: communicationContent,
+                    posted_by: savedEvent.created_by,
+                });
+                const savedCommunication = await newCommunication.save();
+
+                const alumniUsers = await User.find({ user_type: "Alumni" }).select('_id');
+
+                if (alumniUsers.length > 0) {
+                    const notifications = alumniUsers.map(alumnus => ({
+                        user: alumnus._id,
+                        announcement: savedCommunication._id,
+                        status: "unread",
+                    }));
+                    await Notification.insertMany(notifications);
+                    console.log(`Notifications created for ${alumniUsers.length} alumni for event: ${savedEvent.event_name}`);
+                }
+            } catch (notificationError) {
+                console.error("Error creating notifications for new event:", notificationError);
+            }
 
             res.status(201).json(savedEvent);
 

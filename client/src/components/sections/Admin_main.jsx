@@ -2,11 +2,9 @@ import Navbar_admin from "../header_admin";
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 import Request_Confirmation from "../request_confirmation";
-import Speed_Dial_Admin from "../Speed_Dial_Admin";
 import { useAuth } from "../../auth/AuthContext.jsx";
-import yes from "../../assets/Check_round_fill.svg"
-import no from "../../assets/Close_round_fill.svg"
 import Sidebar from "../Sidebar.jsx";
+import { TrashIcon,CheckIcon,XMarkIcon} from '@heroicons/react/24/solid';
 export const Admin_main = () => {
     const navigate = useNavigate()
     const { authAxios, user} = useAuth();
@@ -61,7 +59,7 @@ export const Admin_main = () => {
     const [req_modalOpen, setreq_modalOpen] =useState(false); 
     const [message_modal, setmessage_modal] =useState(0);
     const [request_id, setrequestID]= useState(0);
-    
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -85,6 +83,15 @@ export const Admin_main = () => {
       }
       return [];
     };
+    const handleDeleteEvent =({id})=>{
+
+    }
+    const handleRejectReq =({id})=>{
+
+    }
+    const handleAcceptReq =({id})=>{
+      
+    }
     const filteredData = getCategoryData();
     return(
         
@@ -145,7 +152,7 @@ export const Admin_main = () => {
                         <th className="px-4 py-3">Event Name</th>
                         <th className="px-4 py-3">Event Date</th>
                         <th className="px-4 py-3">Created By</th>
-                        <th className="px-4 py-3 "></th>
+                        <th className="px-4 py-3 ">Action</th>
                       </>
                     )}
                     {activeTab === "Jobs" && (
@@ -153,12 +160,14 @@ export const Admin_main = () => {
                         <th className="px-4 py-3">ID</th>
                         <th className="px-4 py-3">Job Title</th>
                         <th className="px-4 py-3">Company</th>
+                        <th className="px-4 py-3 ">Action</th>
                       </>
                     )}
                     {activeTab === "Job Requests" && (
                       <>
                         <th className="px-4 py-3">Job Title</th>
                         <th className="px-4 py-3">Requested By</th>
+                        <th className="px-4 py-3">Action</th>
                       </>
                     )}
                   </tr>
@@ -166,7 +175,7 @@ export const Admin_main = () => {
                 <tbody>
                   {filteredData.map((item, idx) => (
                     <tr key={idx} className="bg-white hover:bg-gray-200 transition-colors duration-200 "
-                      onClick={console.log("testing")}
+                    
                     >
                       {activeTab === "Events" && (
                           <>
@@ -174,9 +183,14 @@ export const Admin_main = () => {
                             <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
                             <td className="px-4 py-4">{item.date}</td>
                             <td className="px-4 py-4">{item.createdBy}</td>
-                            <td className="flex">
-                              <div>test</div>
-                              <div>test</div>
+                            <td className="px-4 py-4 pl-6">
+                              <button
+                                onClick={() => handleDeleteEvent(item.id)}
+                                className="bg-[#891839] hover:bg-red-600 text-white p-2 rounded-lg transition duration-200 flex items-center justify-center"
+                                aria-label="Delete"
+                              >
+                                <TrashIcon className="h-5 w-5" />
+                              </button>
                             </td>
                           </>
                       )}
@@ -185,12 +199,38 @@ export const Admin_main = () => {
                             <td className="px-4 py-4 font-medium text-gray-900">{item.id}</td>
                           <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
                           <td className="px-4 py-4">{item.company}</td>
+                          <td className="px-4 py-4 pl-6">
+                              <button
+                                onClick={() => handleDeleteEvent(item.id)}
+                                className="bg-[#891839] hover:bg-red-600 text-white p-2 rounded-lg transition duration-200 flex items-center justify-center"
+                                aria-label="Delete"
+                              >
+                                <TrashIcon className="h-5 w-5" />
+                              </button>
+                            </td>
                         </>
                       )}
                       {activeTab === "Job Requests" && (
                         <>
                           <td className="px-4 py-4 font-medium text-gray-900">{item.name}</td>
                           <td className="px-4 py-4">{item.from}</td>
+                          <td className="px-4 py-4 flex items-center gap-2">
+                            <button
+                              onClick={() => handleAcceptReq(item.id)}
+                              className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition duration-200"
+                              aria-label="Approve"
+                            >
+                              <CheckIcon className="h-5 w-5" />
+                            </button>
+
+                            <button
+                              onClick={() => handleRejectReq(item.id)}
+                              className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition duration-200"
+                              aria-label="Reject"
+                            >
+                              <XMarkIcon className="h-5 w-5" />
+                            </button>
+                          </td>
                         </>
                       )}
                     </tr>
@@ -211,7 +251,7 @@ export const Admin_main = () => {
                     <div>
                         <Request_Confirmation request_response={message_modal} setVisible={setreq_modalOpen} id={request_id} refetch={fetchData}></Request_Confirmation>
                     </div>
-                )}
+            )}
         
         </>
     );

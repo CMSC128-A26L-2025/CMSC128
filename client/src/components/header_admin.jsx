@@ -9,7 +9,7 @@ import humanIcon from "../assets/Human Icon.png";
 import { useAuth } from "../auth/AuthContext";
 
 const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5050";
-
+import { MegaphoneIcon } from '@heroicons/react/24/solid';
 import axios from "axios";
 export default function Navbar_admin({toggleSidebar}) {
   const { authAxios, user } = useAuth();
@@ -103,7 +103,7 @@ export default function Navbar_admin({toggleSidebar}) {
               class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-2xl border border-gray-30 resize-none h-[40vh]"
               placeholder="Write your message here..."></textarea>
               <p className="text-sm text-gray-500 mt-1">
-                {formData.description.length}/500 characters
+                {formData.content.length}/500 characters
               </p>
             </div>
             {console.log(formData)}
@@ -126,13 +126,20 @@ export default function Navbar_admin({toggleSidebar}) {
       )}
         {/* Right - Make an Announcement, Notification & Profile Icons */}
         <div className="absolute top-1 right-4 flex items-center space-x-5">
-            <button onClick={()=>setIsOpen(true)}
-            className="bg-[#891839] rounded-lg pr-5 pl-2 py-1 font-semibold text-left text-sm flex justify-center h-12">
-                <img src={speakerIcon} draggable="false" className="w-10 h-10 py-1"></img>
-                <div className="pl-5">
-                Make an <br></br> Announcement
-                </div>
+          <Link
+          to="/create_announcement"
+            >
+            <button
+             
+              className="flex items-center gap-2 bg-[#891839] text-white px-3 py-1.5 rounded-md hover:bg-[#a1284f] transition duration-200 shadow-md"
+            >
+              <div className="bg-white/20 p-1 rounded-md">
+                <MegaphoneIcon className="w-4 h-4 text-white" aria-hidden="true" />
+              </div>
+              <span className="text-xs font-medium">Make an Announcement</span>
             </button>
+          </Link>
+
             {/* Notification Icon */}   
             <div 
                 onClick={()=>{
