@@ -14,6 +14,7 @@
     "@heroicons/react": "^2.2.0",
     "@tailwindcss/vite": "^4.0.17",
     "axios": "^1.8.4",
+    "bson-objectid": "^2.0.4",
     "flowbite-react": "^0.11.7",
     "framer-motion": "^12.9.2",
     "react": "^19.0.0",

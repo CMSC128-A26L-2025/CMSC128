@@ -1,23 +1,18 @@
-// routes/fileRouter.js
-import express from 'express';
-import path from 'path';
-import fs from 'fs';
-import upload from '../middleware/fileMiddleware.js';
+import express from "express";
+import upload from "../middleware/fileMiddleware.js";
+import {
+  uploadFilesForModel,
+  getFilesForModel,
+  downloadFile,
+  deleteFileFromModel
+} from "../controllers/fileController/fileController.js";
 
 const router = express.Router();
-const uploadsDir = path.resolve('uploads');
 
-router.post('/upload', upload.single('file'), (req, res) => {
-  res.json({ message: 'File uploaded successfully!', filename: req.file.filename });
-});
-
-router.get('/download/:filename', (req, res) => {
-  const filepath = path.join(uploadsDir, req.params.filename);
-  if (fs.existsSync(filepath)) {
-    res.download(filepath);
-  } else {
-    res.status(404).send('File not found');
-  }
-});
+// Upload files to any model with a files field
+router.post("/:modelName/:id/upload", upload.array("files[]"), uploadFilesForModel);
+router.get("/:modelName/:id/files[]", getFilesForModel);
+router.get("/download/:filename", downloadFile);
+router.delete("/:modelName/:id/file/:filename", deleteFileFromModel);
 
 export default router;

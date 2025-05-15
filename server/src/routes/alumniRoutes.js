@@ -23,6 +23,7 @@ router.put('alumni/rsvp/:eventID', validateToken, authorizeRoles(['Alumni']), ed
 // View RSVPs
 router.get('alumni/view-all-rsvp', validateToken, authorizeRoles(['Alumni']), viewRSVP);
 
-router.get('/search', alumniSearch);
+// alumni-search
+router.get('/search', validateToken, authorizeRoles(['Alumni'], ['Admin']), alumniSearch);
 
 export default router;

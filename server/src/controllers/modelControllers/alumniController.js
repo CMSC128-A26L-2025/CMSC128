@@ -129,8 +129,6 @@ export const alumniSearch = async (req, res) => {
         { $sort: { lastname: 1 } },
       ]);
   
-      console.log("Aggregation Results:", alumni); // Debug aggregation results
-  
       if (alumni.length === 0) {
         return res.status(404).json({ message: 'No alumni match the search criteria.' });
       }

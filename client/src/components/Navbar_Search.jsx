@@ -5,13 +5,15 @@ import Notification from "./notification";
 import uplbLogo from "../assets/uplblogo.png";
 import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
+import { CiFilter } from "react-icons/ci";
+import { MdFilterAlt } from "react-icons/md";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid"; // Search icon
 import { Range } from "react-range"; // Import react-range
 
 const GRADUATION_YEAR_MIN = 1900;
 const GRADUATION_YEAR_MAX = 2025;
 
-export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, user_id }) {
+export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, toggleSidebar }) {
   const [localFilters, setLocalFilters] = useState({
     degree: "",
     jobTitle: "",
@@ -68,13 +70,25 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, u
           <Notification setVisible={setnotification_modal}></Notification>
         </div>
       )}
-      <nav className="bg-white w-full py-1 fixed top-0 left-0 z-20 shadow-md">
+      <nav className="bg-white w-full py-1 fixed top-0 left-0 z-60 shadow-md">
         {/* Flexbox for proper alignment */}
         <div className="container flex justify-between items-center py-1 px-4">
           {/* Left - Logo */}
-          <Link to={`/home`}>
-            <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
-          </Link>
+           <div className="flex">
+              <a
+              href="#"
+                onClick={toggleSidebar}
+                className="flex justify-center items-center  !text-black pr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+                
+              </a>
+                {/* Left - Logo */}
+              <Link to={`/home`}>
+                <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" draggable="false" />
+              </Link>
+            </div>
 
           {/* Middle - Search Bar */}
           <div className="flex-1 flex justify-center" style={{ marginLeft: "200px" }}>
@@ -91,7 +105,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, u
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer text-xl"
                 onClick={() => setFilterMenuOpen(!filterMenuOpen)}
               >
-                {filterMenuOpen ? "▲" : "☰"}
+                {filterMenuOpen ? <MdFilterAlt size={21}/> : <CiFilter />}
               </span>
             </form>
           </div>
@@ -105,7 +119,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, u
               }}
               className="cursor-pointer"
             >
-              <img src={notifications} className="w-10 h-10" alt="Notifications" />
+              <img src={notifications} className="w-10 h-10" draggable="false" alt="Notifications" />
             </div>
 
             {/* Profile Icon */}
@@ -114,7 +128,7 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, u
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                 className="w-10 h-10 bg-none flex items-center justify-center rounded-full cursor-pointer"
               >
-                <img src={humanIcon} className="w-10 h-10" alt="Profile" />
+                <img src={humanIcon} className="w-10 h-10" draggable="false" alt="Profile" />
               </div>
 
               {profileMenuOpen && (
@@ -147,44 +161,56 @@ export default function Navbar_search({ searchTerm, setSearchTerm, setFilters, u
           {/* Graduation Year and Skills */}
           <div className="flex gap-6 mb-6 text-left">
             <div className="w-1/2">
-              <label className="block text-lg font-medium mb-2 text-gray-700">Graduation Year</label>
-              <div className="flex flex-col space-y-2">
-                <div className="flex justify-between text-sm text-gray-600">
-                  <span>{localFilters.startYear}</span>
-                  <span>{localFilters.endYear}</span>
+              <label className="block text-lg font-medium mb-4 text-gray-700">Graduation Year Range</label>
+
+              <div className="flex gap-4">
+                {/* Start Year Dropdown */}
+                <div className="flex flex-col w-1/2">
+                  <label className="text-sm text-gray-600 mb-1">Start Year</label>
+                  <select
+                    value={localFilters.startYear}
+                    onChange={(e) => setLocalFilters({ ...localFilters, startYear: Number(e.target.value) })}
+                    className="border text-gray-600 rounded-md px-2 py-1"
+                  >
+                    {Array.from({ length: GRADUATION_YEAR_MAX - GRADUATION_YEAR_MIN + 1 }, (_, i) => {
+                      const year = GRADUATION_YEAR_MIN + i;
+                      return (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </div>
-                <Range
-                  step={1}
-                  min={GRADUATION_YEAR_MIN}
-                  max={GRADUATION_YEAR_MAX}
-                  values={[localFilters.startYear, localFilters.endYear]}
-                  onChange={handleRangeChange}
-                  renderTrack={({ props, children }) => {
-                    const { key, ...restProps } = props; // Destructure key from props
-                    return (
-                      <div
-                        key={key} // Pass key directly
-                        {...restProps} // Spread the rest of the props
-                        className="h-2 bg-gray-300 rounded-md"
-                        style={{ ...restProps.style, width: "100%" }}
-                      >
-                        {children}
-                      </div>
-                    );
-                  }}
-                  renderThumb={({ props }) => {
-                    const { key, ...restProps } = props; // Destructure key from props
-                    return (
-                      <div
-                        key={key} // Pass key directly
-                        {...restProps} // Spread the rest of the props
-                        className="h-4 w-4 bg-[#891839] rounded-full shadow-md"
-                      />
-                    );
-                  }}
-                />
+
+                {/* End Year Dropdown */}
+                <div className="flex text-gray-600 flex-col w-1/2">
+                  <label className="text-sm text-gray-600 mb-1">End Year (optional)</label>
+                  <select
+                    value={localFilters.endYear}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setLocalFilters({
+                        ...localFilters,
+                        endYear: value ? Number(value) : GRADUATION_YEAR_MAX,
+                      });
+                    }}
+                    className="border rounded-md px-2 py-1"
+                  >
+                    <option value="">(Default: {GRADUATION_YEAR_MAX})</option>
+                    {Array.from({ length: GRADUATION_YEAR_MAX - GRADUATION_YEAR_MIN + 1 }, (_, i) => {
+                      const year = GRADUATION_YEAR_MIN + i;
+                      return (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
               </div>
             </div>
+
 
             <div className="w-1/2">
               <label className="block text-lg font-medium mb-2 text-gray-700">Skills</label>

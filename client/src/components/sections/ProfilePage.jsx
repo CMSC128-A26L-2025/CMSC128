@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import Navbar from '../header';
 import Footer from '../footer';
 import { ScrollToTop } from '../../utils/helper';
 import { motion } from 'framer-motion';
-import { useAuth } from '../../AuthContext';
+import { useAuth } from '../../auth/AuthContext';
 import './ProfilePage.css';
-
+import Sidebar from '../Sidebar';
 export default function ProfilePage() {
   // const mockEvents = [
   //   { event_id: 1, event_name: "Tech Conference", event_date: "2025-05-15" },
@@ -50,7 +50,9 @@ export default function ProfilePage() {
   const [isHoveringPopup, setIsHoveringPopup] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Sidebar toggle state
+  const [bookmarkedJobs, setBookmarkedJobs] = useState([]);
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   useEffect(() => {
     document.documentElement.classList.remove('dark');
     ScrollToTop();
@@ -67,6 +69,7 @@ export default function ProfilePage() {
       setProfileData(response.data);
       setUpcomingEvents(response.data.events_attended);
       setJobApplications(response.data.job_postings);
+      setBookmarkedJobs(response.data.bookmarked_jobs);
       setEditableData({
         contact_number: response.data?.contact_number || '',
         address: response.data?.address || '',
@@ -105,8 +108,16 @@ export default function ProfilePage() {
   return (
     <div className="fixed inset-0 overflow-y-auto bg-[#891839]">
       <div className="fixed top-0 w-full z-50">
-        <Navbar user_id={user._id} />
+        <Navbar toggleSidebar={toggleSidebar} />
       </div>
+      <div
+          className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+      >
+          <Sidebar/>
+      </div>
+      <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
 
       <motion.main
         className="pt-24 px-4 md:px-6 lg:px-8 w-full max-w-5xl mx-auto space-y-12"
@@ -223,8 +234,28 @@ export default function ProfilePage() {
           </div>
         </section>
 
+      <section className="bg-white rounded-3xl shadow-lg p-8">
+        <h3 className="text-3xl font-bold text-[#891839] mb-6 text-center">Bookmarked Jobs</h3>
+        {bookmarkedJobs.length === 0 ? (
+          <p className="text-gray-300 text-center">No bookmarked jobs.</p>
+        ) : (
+          <ul className="space-y-4">
+            {bookmarkedJobs.map((job) => (
+              <li key={job._id} className="border-2 border-[#891839] rounded-2xl p-6 hover:bg-[#891839] hover:text-white transition">
+                <h4 className="font-bold text-2xl mb-1">{job.job_title || 'No title'}</h4>
+                <p className="text-md">{job.company || 'No company'} - {job.location || 'No location'}</p>
+                <p className="text-sm text-gray-400">
+                  Posted on {job.date_posted ? new Date(job.date_posted).toLocaleDateString() : 'Unknown date'}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+
         <section className="bg-white rounded-3xl shadow-lg p-8 mb-16">
-          <h3 className="text-3xl font-bold text-[#891839] mb-6 text-center">Job Applications</h3>
+          <h3 className="text-3xl font-bold text-[#891839] mb-6 text-center">Job Postings Application</h3>
           <div className="flex justify-center space-x-4 mb-6">
             {['pending', 'approved', 'rejected'].map((status) => (
               <button 
@@ -236,10 +267,10 @@ export default function ProfilePage() {
               </button>
             ))}
           </div>
-          <JobList jobs={filteredJobs} />
+          {/* <JobList jobs={filteredJobs} /> */}
         </section>
       </motion.main>
-
+      </div>
       <Footer />
     </div>
   );

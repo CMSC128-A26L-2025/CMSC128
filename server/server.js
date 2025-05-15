@@ -9,6 +9,7 @@ import fileRoutes from './src/routes/fileRoutes.js';
 import eventRoutes from './src/routes/eventRoutes.js';
 import jobPostingRoutes from './src/routes/jobPostingRoutes.js'
 import notificationRoutes from './src/routes/notificationRoutes.js';
+import communicationRoutes from './src/routes/communicationRoutes.js';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -41,6 +42,8 @@ app.use("/auth", authRoutes);
 app.use("/file", fileRoutes);
 app.use("/events", eventRoutes);
 app.use("/notifications", notificationRoutes);
+app.use("/announcement", communicationRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // temporary default route -- remove when connecting to frontend
 app.get('/', (req, res) => {

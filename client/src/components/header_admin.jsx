@@ -1,32 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import speakerIcon from '/assets/Speaker_Icon.svg';
 import Notification from "./notification";
 import { useNavigate } from 'react-router-dom'
 import uplbLogo from "../assets/uplblogo.png";
-import notifications from "/assets/notifications.png";
-import humanIcon from "/assets/Human Icon.png";
-export default function Navbar_admin() {
+import notifications from "../assets/notifications.png";
+import humanIcon from "../assets/Human Icon.png";
+import { useAuth } from "../auth/AuthContext";
+
+import axios from "axios";
+export default function Navbar_admin({toggleSidebar}) {
+  const { authAxios, user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate()
   const  [notification_modal, setnotification_modal] = useState(false)
+  const [announcementModal, setAnnouncementModal] = useState(false);
   const [formData, setFormData] = useState({
+    type:"announcement",
     title:"",
     read:false,
-    description:"",
+    content:"",
+    posted_by:user?._id
   })
 
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const handleSend=(e)=>{
-    
-    // await send= NULL;
-    const send=0; //temporary var
-    if (send.success){ // Successful sending
+  const handleSend=async (e)=>{
+    try{
+      const res = await axios.post("http://localhost:5050/announcement/create", formData);
       console.log("Successfully sent to all users");
       setIsOpen(false);
-    }else{ //Sending Failed
-
     }
+    catch(err){
+      console.error("Error creating announcement", err);
+      alert("Submission failed.");
+    }
+    
+
     // setIsOpen(false); Remove after implementing the proper backend stuff
   }
   const handleLogout=()=>{
@@ -36,6 +45,11 @@ export default function Navbar_admin() {
     //}
     navigate('/')
   }
+
+  useEffect(()=>{
+    console.log(formData)
+  },[formData]);
+
   return (
     <>
     {notification_modal &&(
@@ -43,13 +57,25 @@ export default function Navbar_admin() {
               <Notification setVisible={setnotification_modal}></Notification>
             </div>
           )}
-    <nav className="bg-white w-full py-1 fixed top-0 left-0 z-20">
+    <nav className="bg-white w-full py-1 fixed top-0 left-0 z-60">
       {/* Flexbox for proper alignment */}
       <div className="container flex justify-between items-center py-1 px-4">
         {/* Left - Logo */}
-        <a href="/">
-          <img src="/assets/uplblogo.png" className="bg-none w-40 h-auto" alt="UPLB Logo" />
-        </a>
+        <div className="flex">
+          <a
+            href="#"
+            onClick={toggleSidebar}
+            className="flex justify-center items-center  !text-black pr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+              
+          </a>
+            {/* Left - Logo */}
+          <Link to="/admin_main">
+            <img src={uplbLogo} className="bg-none w-40 h-auto" alt="UPLB Logo" />
+          </Link>
+        </div>
         {/* Modal for Sending An Announcement */}
         {isOpen && (
         <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
@@ -68,10 +94,15 @@ export default function Navbar_admin() {
               placeholder="Title"></textarea>
             
               <textarea 
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              id="message" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-2xl border border-gray-30 resize-none h-[40vh]"
+              value={formData.content}
+              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+              id="message" 
+              maxLength={500}
+              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-2xl border border-gray-30 resize-none h-[40vh]"
               placeholder="Write your message here..."></textarea>
+              <p className="text-sm text-gray-500 mt-1">
+                {formData.description.length}/500 characters
+              </p>
             </div>
             {console.log(formData)}
             <div className="grid grid-cols-2 absolute bottom-4 right-4 gap-x-4">
@@ -95,7 +126,7 @@ export default function Navbar_admin() {
         <div className="absolute top-1 right-4 flex items-center space-x-5">
             <button onClick={()=>setIsOpen(true)}
             className="bg-[#891839] rounded-lg pr-5 pl-2 py-1 font-semibold text-left text-sm flex justify-center h-12">
-                <img src={speakerIcon} className="w-10 h-10 py-1"></img>
+                <img src={speakerIcon} draggable="false" className="w-10 h-10 py-1"></img>
                 <div className="pl-5">
                 Make an <br></br> Announcement
                 </div>
@@ -107,7 +138,7 @@ export default function Navbar_admin() {
                 }}
                 className="cursor-pointer"
                 >
-                  <img src={notifications} className="w-10 h-10" alt="Notifications" />
+                  <img src={notifications} className="w-10 h-10" draggable="false" alt="Notifications" />
               </div>
 
             {/* Profile Icon inside Circle */}
@@ -116,7 +147,7 @@ export default function Navbar_admin() {
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                 className="w-10 h-10 bg-none flex items-center justify-center rounded-full cursor-pointer"
               >
-                <img src={humanIcon} className="w-10 h-10" alt="Profile" />
+                <img src={humanIcon} className="w-10 h-10" draggable="false" alt="Profile" />
               </div>
 
               {profileMenuOpen && (
@@ -130,7 +161,7 @@ export default function Navbar_admin() {
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="block w-full px-4 py-2 !text-gray-700 hover:bg-[#891839] hover:!text-white focus:!outline-none"
+                    className="block w-full px-4 py-2 !text-gray-700 hover:bg-[#891839] hover:!text-white focus:!outline-none cursor-pointer"
                   >
                     Logout
                   </button>

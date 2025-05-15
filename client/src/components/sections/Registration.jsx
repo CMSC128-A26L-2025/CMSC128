@@ -48,7 +48,7 @@ const Registration = () => {
                 <Navbar_landing></Navbar_landing>
             </div> 
             
-            <div className="bg-[url('/assets/Building.png')] bg-cover bg-center w-full h-full flex flex-col justify-between pb-20">
+            <div className="bg-[url('src/assets/Building.png')] bg-cover bg-center w-full h-full flex flex-col justify-between pb-20 pt-10">
                 <div className="grid grid-cols-1 gap-y-5 pt-16">
                     <h1 className=" !text-7xl font-bold text-white ">ARTEMIS</h1>       
                     <div className="flex justify-center">
@@ -134,7 +134,7 @@ const Registration = () => {
                                 {/* Register Button */}
                                 <button
                                     type="register"
-                                    className="font-semibold w-full bg-[#085740] p-2 rounded-md hover:bg-green-600 transition focus:ring-1 focus:ring-green-600"
+                                    className="font-semibold w-full bg-[#085740] p-2 rounded-md hover:bg-green-600 transition focus:ring-1 focus:ring-green-600 focus:!outline-none cursor-pointer"
                                     
                                 >
                                     Register

@@ -4,35 +4,64 @@ import { IoIosArrowBack } from "react-icons/io";
 import { FaLocationDot } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { ScrollToTop } from "../../utils/helper";
-import { jobList } from "../../utils/models";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 import Navbar from "../header";
 import Footer from "../footer";
+import axios from "axios";
 
 export default function ViewJobDetails() {
     const { id } = useParams();
     const [job, setJob] = useState(null);
-    const { authAxios, user } = useAuth();
+    const { authAxios } = useAuth();
     const navigate = useNavigate();
-
-    // useEffect(() => {
-    //     const fetchedJob = jobList.find((job) => job.job_id === parseInt(id));
-    //     if (fetchedJob) {
-    //         setJob(fetchedJob);
-    //     }
-    //     ScrollToTop();
-    // }, [id]);
+    console.log(id);
 
     useEffect(() => {
-        const fetchedJob = async () => {
+       const fetchedJob = async () => {
             try {
-                const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/jobs/find-job/${id}`);
+                const response = await authAxios.get(`http://localhost:5050/jobs/find-job/${id}`);
 
                 setJob(response.data);
+                console.log("Fetched Job:", response.data);
+
             } catch (error) {
-                console.error("Error fetching job posting: ", error)
+                if (error.response?.status === 401 || error.response?.status === 403) {
+                    console.log("Token invalid/expired. Attempting refresh...");
+
+                    try {
+                        const refreshResponse = await axios.get("http://localhost:5050/auth/refresh", { withCredentials: true });
+
+
+                        if (refreshResponse.data.accessToken) {
+                            const newToken = refreshResponse.data.accessToken;
+                            localStorage.setItem("accessToken", newToken);
+
+                            console.log("Retrying job fetch with new token...");
+                            const retryResponse = await axios.get(`http://localhost:5050/jobs/find-job/${id}`, {
+                                headers: { Authorization: `Bearer ${newToken}` },
+                                withCredentials: true
+                            });
+
+                            setJob(retryResponse.data);
+
+                        } else {
+                            navigate("/login");
+                        }
+                    } catch (refreshError) {
+                        console.error("Token refresh failed:", refreshError);
+                        navigate("/login");
+                    }
+                } else {
+                    console.error("Error fetching job:", error);
+                }
             }
         }
+
+        console.log(fetchedJob)
+        if (fetchedJob) {
+            setJob(fetchedJob);
+        }
+        ScrollToTop();
     }, [id]);
 
     if (!job) return <div>Job not found</div>;

@@ -1,27 +1,87 @@
 import Navbar_admin from "../header_admin";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Speed_Dial_Admin from "../Speed_Dial_Admin";
 import { Datepicker, ThemeProvider} from "flowbite-react";
 import { useParams } from 'react-router-dom';
-
+import axios from "axios";
+import objectId from 'bson-objectid';
+import { useAuth } from '../../auth/AuthContext';
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 export const Create_Event = () => {
-    
-  
+    const fileInputRef = useRef(null);
+    const { authAxios, user } = useAuth();
     const [formData, setFormData] = useState({
-        event_id: "",
+        event_id: objectId().toHexString(),
         event_name:"",
         event_description:"",
-        event_date:"",
+        event_date:new Date(),
         venue:"",
-        created_by: "",
+        created_by: `${user?._id}`,
         attendees: [],
         donatable:false,
-        image:null,
+        files:[],
 
     });
-    const handleSubmit=()=>{
+    const [files, setFiles] = useState([]);
+    const [actualFiles, setActualFiles] = useState([]); // Store actual file objects
+    
+     
 
-    }
+
+        const handleFileChange = (e) => {
+            const selectedFiles = Array.from(e.target.files);
+            const imageTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+          
+            const validFiles = [];
+            const errors = [];
+          
+            selectedFiles.forEach(file => {
+              if (!imageTypes.includes(file.type)) {
+                errors.push(`${file.name} is not a supported image file.`);
+              } else if (file.size > MAX_FILE_SIZE) {
+                errors.push(`${file.name} exceeds the 10MB size limit.`);
+              } else {
+                validFiles.push(file);
+              }
+            });
+          
+            if (errors.length > 0) {
+              alert(errors.join('\n')); // Or use a toast/modal/etc.
+              if (fileInputRef.current) fileInputRef.current.value = "";
+              return;
+            }
+          
+            setActualFiles(validFiles);
+        };
+
+    const handleSubmit = async () => {
+        try {
+          const fileFormData = new FormData();
+          actualFiles.forEach(file => fileFormData.append("files[]", file));
+      
+          const file_res = await axios.post(`http://localhost:5050/events/${formData.event_id}/upload`, fileFormData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          
+          const uploadedFiles = file_res.data.files.map(file => file.serverFilename)
+          const eventPostingData = {
+              event_name: formData.event_name,
+              event_description: formData.event_description,
+              event_date: formData.event_date,
+              venue: formData.venue,
+              created_by: formData.created_by,
+              attendees: formData.attendees,
+              link: formData.link,
+              files: uploadedFiles, 
+          }
+      
+          const res = await axios.post("http://localhost:5050/events/create", eventPostingData); // Send as JSON
+          alert("Job posting submitted successfully!");
+        } catch (err) {
+          console.error("Error creating job posting:", err);
+          alert("Submission failed.");
+        }
+    };
     
     
     return(
@@ -57,8 +117,8 @@ export const Create_Event = () => {
                         <label>
                         <Datepicker 
                       
-                        selected={formData.event_date}
-                        onChange={(date) => setFormData({ ...formData, event_date: date })}
+                        value={formData.event_date}
+                        onSelectedDataChanged={(date) => setFormData({ ...formData, event_date: date })}
                         className= "py-4 pr-1"labelTodayButton="Today" labelClearButton="Clear" minDate={new Date()} ></Datepicker>
                         </label> 
                         {console.log(formData)}
@@ -95,8 +155,10 @@ export const Create_Event = () => {
                     Choose Background Image
                 </label>
                 <input
-                    value={formData.image}
-                    onChange={(e) => setFormData({ ...formData, image:e.value})}
+                    multiple 
+                    ref={fileInputRef}
+                    accept="image/*"
+                    onChange={handleFileChange}
                     className="block w-[30vw] text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white file:bg-[#891839] file:text-white file:rounded-lg file:border-0 file:px-4 file:py-2 file:cursor-pointer"
                     id="file_input"
                     type="file"
@@ -104,7 +166,10 @@ export const Create_Event = () => {
                 </div>
                 <div className="py-2 pl-2 flex">
                 <button 
-                    onClick={handleSubmit}
+                
+                    onClick={(e) => {
+                        handleSubmit();
+                    }}
                     className="transition-transform duration-300 ease-in-out hover:scale-110 w-50 bg-[#891839] hover:ring-2  text-white text font-bold py-2 px-6 rounded-md">
                     Submit
                 </button> 

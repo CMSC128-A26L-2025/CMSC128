@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Navbar_search from "../Navbar_Search";
 import axios from "axios";
+import Navbar from "../header";
+import Footer from "../footer";
 
 export const Results_page_accounts_admin = () => {
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
@@ -47,6 +49,9 @@ export const Results_page_accounts_admin = () => {
 
   return (
     <>
+      <div className="fixed top-0 w-full z-50">
+          <Navbar />
+      </div>
       {/* Add Navbar_search */}
       <Navbar_search
         searchTerm={searchTerm}
