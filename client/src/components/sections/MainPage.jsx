@@ -13,7 +13,10 @@ import Error_Message from "../error_message";
 import { useParams } from 'react-router-dom';
 import { useAuth } from "../../auth/AuthContext";
 import Sidebar from "../Sidebar";
+
 const default_eventbg = "../../assets/default_eventbg.jpg";
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5050";
+
 export default function MainPage() {
     const {authAxios, user} = useAuth();
     const {user_id} = useParams(); //Contains the User Id 
@@ -155,6 +158,9 @@ export default function MainPage() {
     // Check if current event is valid before rendering it
     const currentEvent = events.length > 0 ? events[currentEventIndex] : null;
     
+    // Ensure `jobs` is always an array before calling `.slice()` and `.map()`
+    const safeJobs = Array.isArray(jobs) ? jobs : [];
+    
     return (
         <>
             {/* For testing purposes */}
@@ -192,7 +198,7 @@ export default function MainPage() {
                         style={{
                         backgroundImage: `url(${
                             events[currentEventIndex]?.files?.[0]
-                            ? `http://localhost:5050/uploads/${events[currentEventIndex].files[0].serverFilename}`
+                            ? `${apiUrl}/uploads/${events[currentEventIndex].files[0].serverFilename}`
                             : default_eventbg
                         })`
                         }}
@@ -339,11 +345,11 @@ export default function MainPage() {
                                         </div>
                                     </div>
 
-                                    <div className={`grid grid-cols-1 ${jobs.length === 1 ? 'sm:grid-cols-1' : 'sm:grid-cols-2'} gap-6 ${jobs.length === 1 ? 'lg:w-[50%]' : 'lg:w-[2/3]'} mx-auto`}>
-                                        {jobs.slice(0, 2).map((job, index) => (
+                                    <div className={`grid grid-cols-1 ${safeJobs.length === 1 ? 'sm:grid-cols-1' : 'sm:grid-cols-2'} gap-6 ${safeJobs.length === 1 ? 'lg:w-[50%]' : 'lg:w-[2/3]'} mx-auto`}>
+                                        {safeJobs.slice(0, 2).map((job, index) => (
                                             <Link
                                                 key={index}
-                                                 to={`/job-details/${job._id}`}
+                                                to={`/job-details/${job._id}`}
                                                 className="transform transition-transform duration-300 hover:scale-105"
                                             >
                                                 <div className="bg-[#891839] p-3 rounded-3xl flex justify-center h-70 w-full shadow-lg hover:shadow-xl">

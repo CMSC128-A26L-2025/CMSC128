@@ -12,6 +12,9 @@ import axios from "axios";
 import { useAuth } from "../../auth/AuthContext";
 import Sidebar from "../Sidebar";
 
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5050";
+
+
 export const Results_page_jobs = () => {
   const navigate = useNavigate();
   const { authAxios, user } = useAuth();
@@ -160,7 +163,7 @@ useEffect(() => {
                 {jobs.map((job) => (
                   <div key={job._id} className="bg-white rounded-xl shadow-md overflow-hidden">
                     <Link to={`/job-details/${job._id}`}>
-                      <img src={`http://localhost:5050/uploads/${job.files[0].serverFilename}` || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
+                      <img src={`${apiUrl}/uploads/${job.files[0].serverFilename}` || "src/assets/Building.png" } alt={job.job_title} className="w-full h-48 object-cover" />
                     </Link>
                     <div className="p-4">
                       

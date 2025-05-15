@@ -6,6 +6,8 @@ const AuthContext = createContext(null);
 const ACCESS_TOKEN_KEY = 'accessToken';
 const USER_KEY = 'user';
 
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5050";
+
 export const AuthProvider = ({ children }) => {
     // initialize state from localStorage or null if not found
     const [accessToken, setAccessToken] = useState(() => localStorage.getItem(ACCESS_TOKEN_KEY));
@@ -75,7 +77,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (email, password) => {
         setIsLoading(true);
         try {
-            const res = await axios.post(`http://localhost:5050/auth/login`, {
+            const res = await axios.post(`${apiUrl}/auth/login`, {
                 email,
                 password
             }, {
@@ -102,7 +104,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            await axios.post(`http://localhost:5050/auth/logout`, {}, {
+            await axios.post(`${apiUrl}/auth/logout`, {}, {
                 withCredentials: true
             });
         } catch (error) {
@@ -117,7 +119,7 @@ export const AuthProvider = ({ children }) => {
 
     const refreshToken = async () => {
         try {
-            const res = await axios.get(`http://localhost:5050/auth/refresh`, {
+            const res = await axios.get(`${apiUrl}/auth/refresh`, {
                 withCredentials: true
             });
 
@@ -136,7 +138,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     // create axios instance with authorization header
-    const authAxios = axios.create({baseURL: 'http://localhost:5050'} );
+    const authAxios = axios.create({baseURL: '${apiUrl}'} );
 
     // add token to all requests
     authAxios.interceptors.request.use(

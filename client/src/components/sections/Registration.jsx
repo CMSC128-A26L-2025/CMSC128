@@ -3,6 +3,9 @@ import axios from "axios";
 
 import Navbar_landing from "../header_landing";
 import { useNavigate } from 'react-router-dom'
+
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5050";
+
 const Registration = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -23,7 +26,7 @@ const Registration = () => {
 
         // register API call
         try {
-            const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, {
+            const res = await axios.post(`${apiUrl}/auth/register`, {
                 user_id: "TEST01",
                 name: formData.username,
                 email: formData.email,

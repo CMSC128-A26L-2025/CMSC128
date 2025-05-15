@@ -8,6 +8,8 @@ import notifications from "../assets/notifications.png";
 import humanIcon from "../assets/Human Icon.png";
 import { useAuth } from "../auth/AuthContext";
 
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5050";
+
 import axios from "axios";
 export default function Navbar_admin({toggleSidebar}) {
   const { authAxios, user } = useAuth();
@@ -26,7 +28,7 @@ export default function Navbar_admin({toggleSidebar}) {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const handleSend=async (e)=>{
     try{
-      const res = await axios.post("http://localhost:5050/announcement/create", formData);
+      const res = await axios.post(`${apiUrl}/announcement/create`, formData);
       console.log("Successfully sent to all users");
       setIsOpen(false);
     }

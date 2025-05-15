@@ -17,11 +17,13 @@ export default function ViewEventDetails() {
     const navigate = useNavigate();
     console.log(id);
 
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5050";
+
     useEffect(() => {
         const fetchedEvent = async () => {
             try {
                 setIsLoading(true);
-                const response = await authAxios.get(`http://localhost:5050/events/find-event/${id}`);
+                const response = await authAxios.get(`${apiUrl}/events/find-event/${id}`);
 
                 setEvent(response.data);
                 console.log("Fetched Event:", response.data);
@@ -90,7 +92,7 @@ export default function ViewEventDetails() {
                     style={{
                         backgroundImage: `url(${
                         typeof event?.files?.[0] === 'string' && event.files[0].trim()
-                            ? `http://localhost:5050/uploads/${event.files[0].trim()}`
+                            ? `${apiUrl}/uploads/${event.files[0].trim()}`
                             : default_eventbg
                         })`
                     }}
