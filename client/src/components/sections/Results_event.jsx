@@ -12,7 +12,7 @@ export const Results_page_events = ( ) => {
     const navigate = useNavigate();
     const {authAxios, user} = useAuth();
 
-    const [sortBy, setSortBy] = useState("");
+    const [sortBy, setSortBy] = useState("date"); // default value set to "date"
     const [bookmarkedIds, setBookmarkedIds] = useState([]);
     const [events, setEvents] = useState([]);
 
@@ -27,11 +27,15 @@ export const Results_page_events = ( ) => {
         }
     };
 
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5050";
 
     useEffect(() => {
         const fetchEvents = async () => {
+            if (!sortBy) return;
+
             try {
-                const response = await authAxios.get(`${import.meta.env.VITE_API_URL}/events/read-sort?sortBy=${sortBy}`);
+                console.log(`${apiUrl}/events/read-sort?sortBy=${sortBy}`);
+                const response = await authAxios.get(`${apiUrl}/events/read-sort?sortBy=${sortBy}`); // Use dynamic apiUrl variable
 
                 setEvents(response.data);
                 setIsLoading(false);
@@ -41,14 +45,14 @@ export const Results_page_events = ( ) => {
                     console.log("Token invalid/expired. Attempting refresh...");
 
                     try {
-                        const refreshResponse = await axios.get(`${import.meta.env.VITE_API_URL}/auth/refresh`, { withCredentials: true });
+                        const refreshResponse = await axios.get(`${apiUrl}/auth/refresh`, { withCredentials: true });
 
                         if (refreshResponse.data.accessToken) {
                             const newToken = refreshResponse.data.accessToken;
                             localStorage.setItem("accessToken", newToken);
 
                             console.log("Retrying event fetch with new token...");
-                            const retryResponse = await axios.get(`${import.meta.env.VITE_API_URL}/events?sortBy=${sortBy}`, {
+                            const retryResponse = await axios.get(`${apiUrl}/events/read-sort?sortBy=${sortBy}`, {
                                 headers: { Authorization: `Bearer ${newToken}` },
                                 withCredentials: true
                             });
@@ -121,7 +125,7 @@ export const Results_page_events = ( ) => {
                                         {events.map(event => (
                                             <div key={event._id} className="flex flex-col h-full bg-white rounded-xl shadow-md overflow-hidden">
                                                 <Link to={`/event-details/${event._id}`}>
-                                                    <img src={`http://localhost:5050/uploads/${event.files[0]}`} alt={event.event_name} className="w-full h-48 object-cover" />
+                                                    <img src={`${apiUrl}/uploads/${event.files[0]}`} alt={event.event_name} className="w-full h-48 object-cover" />
                                                 </Link>
 
                                                 <div className="p-4 flex flex-col h-full">
