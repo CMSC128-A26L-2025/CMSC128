@@ -7,6 +7,7 @@ import Footer from '../footer';
 import { ScrollToTop } from '../../utils/helper';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../auth/AuthContext';
+import { BsPersonFill } from "react-icons/bs";
 import './ProfilePage.css';
 import Sidebar from '../Sidebar';
 
@@ -142,11 +143,17 @@ export default function ProfilePage() {
       >
         <section className="bg-white rounded-3xl shadow-lg p-8 flex flex-col gap-8">
           <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-            <img 
-              src={profileData?.profile_picture} 
-              alt="Profile" 
-              className="w-28 h-28 rounded-full object-cover border-4 border-[#891839]" 
-            />
+            <div className="w-28 h-28 rounded-full border-4 border-[#891839] flex items-center justify-center bg-gray-100 overflow-hidden">
+              {profileData?.profile_picture ? (
+                <img
+                  src={profileData.profile_picture}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <BsPersonFill className="text-6xl text-[#891839]" />
+              )}
+            </div>
             <div className="text-center md:text-left">
               <h2 className="text-3xl font-bold text-[#891839]">{profileData?.name}</h2>
               <p className="text-gray-600">{profileData?.email}</p>

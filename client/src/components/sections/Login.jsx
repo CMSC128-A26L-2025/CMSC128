@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import Navbar_landing from "../header_landing";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
@@ -8,6 +9,7 @@ import Loading from "../loading";
 const Login = () => {
     const navigate = useNavigate();
     const { login, user, isLoading } = useAuth();
+    const [showPassword, setShowPassword] = useState(false);
 
     const [formData, setFormData] = useState({
         email: "",
@@ -101,15 +103,24 @@ const Login = () => {
                                             placeholder="Email"
                                             required
                                         />
-                                        <input
-                                            type="password"
-                                            name="password"
-                                            value={formData.password}
-                                            onChange={handleChange}
-                                            className="w-full p-2 border-3 border-[#3E3939] rounded-md outline-none focus:ring-1"
-                                            placeholder="Password"
-                                            required
-                                        />
+                                        <div className="relative">
+                                            <input
+                                                type={showPassword ? "text" : "password"}
+                                                name="password"
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                                className="w-full p-2 border-3 border-[#3E3939] rounded-md outline-none focus:ring-1 pr-10"
+                                                placeholder="Password"
+                                                required
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-700 focus:outline-none"
+                                            >
+                                                {showPassword ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
+                                            </button>
+                                        </div>
                                         <button
                                             type="submit"
                                             className="w-full bg-[#891839] text-white font-bold p-2 rounded-md hover:bg-red-700 transition focus:!outline-none cursor-pointer"

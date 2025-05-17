@@ -21,11 +21,13 @@ export const Post_Job = () => {
     const { authAxios, user } = useAuth();
     const [requirementsOptions, setRequirementsOptions] = useState(jobRequiremets.map(req => ({ value: req, label: req })));
     const [selectedRequirements, setSelectedRequirements] = useState([]);
+    
     const [formData, setFormData] = useState({
         job_title: "",
         company: "",
         location: "",
         job_description: "",
+        salary: "",
         requirements: [],
         application_link: "",
         start_date: new Date().toISOString().split('T')[0],
@@ -85,6 +87,7 @@ export const Post_Job = () => {
             submissionFormData.append('company', formData.company);
             submissionFormData.append('location', formData.location);
             submissionFormData.append('job_description', formData.job_description);
+            submissionFormData.append('salary', Number(formData.salary));
             formData.requirements.forEach((req, index) => {
                 submissionFormData.append(`requirements[${index}]`, req);
             });
@@ -114,6 +117,7 @@ export const Post_Job = () => {
                 company: "",
                 location: "",
                 job_description: "",
+                salary: "",
                 requirements: [],
                 application_link: "",
                 start_date: new Date().toISOString().split('T')[0],
@@ -128,6 +132,14 @@ export const Post_Job = () => {
         }
     };
 
+    // Helper to add commas
+    const addCommas = (number) => {
+        if (!number) return '';
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
+    // Helper to remove commas
+    const removeCommas = (value) => value.replace(/,/g, "");
    
 
     return (
@@ -155,7 +167,7 @@ export const Post_Job = () => {
                     <div className="w-full">
                         <div
                             className="flex items-center gap-2 cursor-pointer text-[#145C44] mb-2 mt-20 ml-10 sm:mt-[5vh] lg:mt-[10vh] sm:pt-10 md:pt-10 lg:pt-0"
-                            onClick={() => navigate(-1)}
+                            onClick={() => navigate('/jobs')}
                         >
                             <IoIosArrowBack className="text-sm text-[#145C44]" />
                             <span className="text-sm font-light">Back</span>
@@ -188,7 +200,7 @@ export const Post_Job = () => {
                             ))}
 
                             {/* Requirements */}
-                            <div className="flex flex-row sm:flex-row items-start gap-2">
+                            <div className="flex flex-row sm:flex-row items-center gap-2">
                                 <label className="w-44 text-sm font-medium text-gray-700 text-left pl-15">Requirements</label>
                                 <div className="flex-1 w-full">
                                     <CreatableSelect
@@ -232,6 +244,29 @@ export const Post_Job = () => {
                                         }}
                                     />
                                 </div>
+                            </div>
+                            
+                            {/* Salary */}
+                            <div className="flex items-center gap-4">
+                                <label className="w-42 text-sm font-medium text-gray-700 text-left pl-15">Salary</label>
+                                <div className="flex items-center border border-gray-300 rounded-md p-2 flex-1">
+                                    <span className="text-sm text-gray-700 mr-1 ml-1">₱</span>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter Salary"
+                                        className="flex-1 outline-none text-sm placeholder:text-sm"
+                                        value={addCommas(formData.salary)}
+                                        onChange={(e) => {
+                                            const rawValue = removeCommas(e.target.value);
+                                            if (/^\d*$/.test(rawValue)) {
+                                            setFormData({ ...formData, salary: rawValue });
+                                            }
+                                        }}
+                                        min="0"
+                                        step="any"
+                                    />
+                                </div>
+                                <span className="text-sm text-gray-500">per month</span>
                             </div>
                         </div>
 
@@ -295,7 +330,7 @@ export const Post_Job = () => {
                     <div className="flex flex-col sm:flex-row md:flex-row lg:flex-row justify-end w-full gap-4 mt-5 pl-15 pr-15 mb-8">
                         <button
                             type="button"
-                            onClick={() => navigate(-1)}
+                            onClick={() => navigate('/jobs')}
                             className="bg-[#891839] text-white font-medium px-12 py-2 rounded-md cursor-pointer focus:!outline-none"
                         >
                             Cancel

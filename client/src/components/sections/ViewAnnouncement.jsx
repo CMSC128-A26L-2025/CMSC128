@@ -17,11 +17,29 @@ export default function ViewAnnouncementDetails() {
 
     useEffect(() => {
         setIsLoading(true);
-        const fetchedAnnouncement = announcementList.find((announcement) => announcement.announcement_id === parseInt(id));
+
+        const fetchedAnnouncement = announcementList.find(
+            (announcement) => announcement.announcement_id === parseInt(id)
+        );
+
         if (fetchedAnnouncement) {
-            setAnnouncement(fetchedAnnouncement);
+            const image = new Image();
+            image.src = fetchedAnnouncement.image;
+
+            image.onload = () => {
+                setAnnouncement(fetchedAnnouncement);
+                setIsLoading(false);
+            };
+
+            image.onerror = () => {
+                console.warn("Failed to load announcement image.");
+                setAnnouncement(fetchedAnnouncement);
+                setIsLoading(false);
+            };
+        } else {
             setIsLoading(false);
         }
+
         ScrollToTop();
     }, [id]);
 
