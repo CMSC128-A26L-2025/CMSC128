@@ -15,7 +15,7 @@ const fileObjectSchema = new mongoose.Schema({
 
 // User model
 const userSchema = new Schema({
-    user_id: { type: String, required: true },
+    user_id: { type: String },
     name: { type: String, required: true },
     email: { type: String, match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})*$/, required: true },
     password: { type: String, required: true },
@@ -32,6 +32,15 @@ const userSchema = new Schema({
         default: []
     },
 });
+
+// userSchema.pre('save', function (next) {     //commented out just in case we need to use it later
+//     if (!this.user_id) {
+//         this.user_id = this._id.toString();
+//     }
+//     next();
+// });
+
+
 userSchema.index({ user_type: 1 });
 userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ name: 1 });
