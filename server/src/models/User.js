@@ -17,9 +17,16 @@ const fileObjectSchema = new mongoose.Schema({
 const userSchema = new Schema({
     user_id: { type: String },
     name: { type: String, required: true },
-    email: { type: String, match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})*$/, required: true },
-    password: { type: String, required: true },
-    contact_number: String,
+    email: { type: String,
+        validate: {
+            validator: function (v) {
+                return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})*$/.test(v);
+            },
+            message: props => `${props.value} is not a valid email!`
+        },
+        required: true },
+    password: { type: String, minlength: [8, 'Password must be at least 8 characters long'] , required: [true, 'Password is required'] },
+    contact_number: { type: String, match: [/^\+?[0-9\s\-]{7,15}$/, 'Invalid phone number format'], },
     address: String,
     user_type: {
         type: String,
@@ -46,7 +53,7 @@ userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ name: 1 });
 
 const alumniSchema = new Schema({
-    graduation_year: { type: Number, min: 1940, max: new Date().getFullYear(), required: true },
+    graduation_year: { type: Number, min: [1940, 'Graduation year cannot be earlier than 1940'], max: [new Date().getFullYear(), `Graduation year cannot be in the future`], required: [ true, "Graduation year is required"] },
     degree: { type: String, required: true },
     current_job_title: String,
     company: String,

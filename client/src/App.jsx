@@ -26,6 +26,10 @@ import { RoleRoute } from './auth/ProtectedRoutes'
 import ProfilePage from './components/sections/ProfilePage'
 import TransactionPage from './components/sections/TransactionPage'
 import { CreateAnnouncement } from './components/sections/Create_announcement'
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   const [count, setCount] = useState(0)
   const [theme, setTheme] = useState("dark");
@@ -62,6 +66,16 @@ function App() {
             </Route>
 
           </Routes>
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            pauseOnHover
+            draggable
+            theme="colored"
+          />
         </AuthProvider>
 
       </BrowserRouter>

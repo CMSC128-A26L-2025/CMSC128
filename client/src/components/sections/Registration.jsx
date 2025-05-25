@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 import Navbar_landing from "../header_landing";
 import { useNavigate } from 'react-router-dom'
@@ -58,6 +59,31 @@ const Registration = () => {
     };
 
     const handleSubmit = async () => {
+    if (
+        !formData.username ||
+        !formData.email ||
+        !formData.password ||
+        !formData.confirmPassword ||
+        !formData.degree ||
+        !formData.graduation_year
+    ) 
+    {
+        toast.error("Please fill in all fields.");
+        return;
+    }
+
+    if (formData.password !== formData.confirmPassword) 
+    {
+        toast.error("Passwords do not match.");
+        return;
+    }
+
+    if (formData.password.length < 8) 
+    {
+        toast.error("Password must be at least 8 characters.");
+        return;
+    }
+
     try {
         let uploadedFiles = [];
 
@@ -97,8 +123,11 @@ const Registration = () => {
         navigate(-1);
     } catch (err) {
         console.error("Registration error:", err);
-        const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
-        alert(errorMessage);
+        if (err.response?.data?.errors) {
+            err.response.data.errors.forEach(msg => toast.error(msg));
+        } else {
+            toast.error(err.response?.data?.error || "Registration failed. Please try again.");
+        }
     }
     };
     
