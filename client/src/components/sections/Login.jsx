@@ -4,6 +4,7 @@ import Navbar_landing from "../header_landing";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../auth/AuthContext";
 import Loading from "../loading";
+import { toast } from "react-toastify";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -34,11 +35,24 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         // console.log("Logging in with:", formData);
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(formData.email)) {
+            toast.error("Please enter a valid email address.");
+            return;
+        }
+
+        if (formData.password.length < 8) {
+            toast.error("Password must be at least 8 characters.");
+            return;
+        }
+
         try {
             const result = await login(formData.email, formData.password);
             
             if (result.success) {
-                alert("Login Successful. Redirecting to home page...");
+                toast.success("Login Successful. Redirecting to home page...");
 
                 console.log("User type: ", result.user.user_type);
                 if (result.user.user_type === "Admin") {
@@ -47,11 +61,11 @@ const Login = () => {
                     navigate(`/home`);
                 }
             } else {
-                alert("Login failed. Please check your credentials.");
+                toast.error("Login failed. Please check your credentials.");
             }
         } catch (err) {
             console.error("Login error:", err);
-            alert("Login failed. Please try again.");
+            toast.error("Login failed. Please try again.");
         }
     };
 
