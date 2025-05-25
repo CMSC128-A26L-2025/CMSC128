@@ -7,8 +7,11 @@ import CreatableSelect from "react-select/creatable";
 import { jobRequiremets } from "../../utils/models";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
-import { LuPencil } from "react-icons/lu";
+import { LuBuilding2, LuMapPin, LuLink } from "react-icons/lu";
+import { CiMoneyBill } from "react-icons/ci";
 import { IoIosArrowBack } from "react-icons/io";
+import { HiOutlineCloudUpload, HiOutlineX } from "react-icons/hi";
+import { BsFileText } from "react-icons/bs";
 import Sidebar from "../Sidebar";
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
@@ -63,7 +66,7 @@ export const Post_Job = () => {
         });
     
         if (errors.length > 0) {
-            alert(errors.join('\n')); // Or use a toast/modal/etc.
+            alert(errors.join('\n'));
             if (fileInputRef.current) fileInputRef.current.value = "";
             setActualFiles([])
             return;
@@ -129,15 +132,14 @@ export const Post_Job = () => {
         }
     };
 
-    // Helper to add commas
     const addCommas = (number) => {
         if (!number) return '';
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
-    // Helper to remove commas
     const removeCommas = (value) => value.replace(/,/g, "");
-   
+
+
 
     return (
         <>  
@@ -149,7 +151,7 @@ export const Post_Job = () => {
                 className={`fixed top-0 left-0 h-full bg-gray-800 text-white w-64 z-40 transition-transform duration-300 ${
                     sidebarOpen ? "translate-x-0" : "-translate-x-full"
                 }`}
-                >
+            >
                 <Sidebar />    
             </div>
 
@@ -157,215 +159,260 @@ export const Post_Job = () => {
                 <Loading />
             ) : (
                 <div className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
-                    <form
-                    onSubmit={handleSubmit}
-                    className="bg-gray-100 px-4 sm:px-6 lg:px-10 py-12 flex flex-col items-center gap-8 min-h-screen"
-                >
-                    <div className="w-full">
-                        <div
-                            className="flex items-center gap-2 cursor-pointer text-[#145C44] mb-2 mt-20 ml-10 sm:mt-[5vh] lg:mt-[10vh] sm:pt-10 md:pt-10 lg:pt-0"
-                            onClick={() => navigate(-1)}
-                        >
-                            <IoIosArrowBack className="text-sm text-[#145C44]" />
-                            <span className="text-sm font-light">Back</span>
-                        </div>
-                        <div className="flex items-center text-3xl lg:text-4xl font-bold text-[#145C44] mt-2">
-                            <LuPencil className="mr-2 ml-10"/>
-                            Create a job posting
-                        </div>
-                    </div>
-
-                    {/* Company Name, Job Title, Location, Link */}
-                    <div className="w-full flex flex-col lg:flex-row gap-8">
-                        <div className="w-full lg:w-1/2 flex flex-col gap-4 pt-5 pr-10 md:pr-15">
-                            {[
-                                { label: "Company Name", key: "company", type: "text" },
-                                { label: "Job Title", key: "job_title", type: "text" },
-                                { label: "Location", key: "location", type: "text" },
-                                { label: "Application Link", key: "application_link", type: "text" },
-                            ].map(({ label, key, type }) => (
-                                <div key={key} className="flex items-center gap-4">
-                                    <label className="w-42 text-sm font-medium text-gray-700 text-left pl-15">{label}</label>
-                                    <input
-                                        type={type}
-                                        placeholder={`Enter ${label}`}
-                                        className="flex-1 border border-gray-300 rounded-md p-2 placeholder:text-sm text-sm"
-                                        value={formData[key]}
-                                        onChange={(e) => {setFormData({ ...formData, [key]: e.target.value })}}
-                                    />
+                    <div className="min-h-screen bg-gray-100">
+                        <div className="bg-gray-100">
+                            <div className="max-w-7xl mx-auto px-6 py-8 pt-30">
+                                <div
+                                    className="flex items-center gap-3 cursor-pointer text-[#145C44] mb-4 hover:text-[#0d4a35] transition-colors duration-200"
+                                    onClick={() => navigate(-1)}
+                                >
+                                    <IoIosArrowBack className="text-lg" />
+                                    <span className="text-sm font-medium">Back</span>
                                 </div>
-                            ))}
-
-                            {/* Requirements */}
-                            <div className="flex flex-row sm:flex-row items-center gap-2">
-                                <label className="w-44 text-sm font-medium text-gray-700 text-left pl-15">Requirements</label>
-                                <div className="flex-1 w-full">
-                                    <CreatableSelect
-                                        isMulti
-                                        value={formData.requirements.map(req => ({ value: req, label: req }))}
-                                        options={jobRequiremets}
-                                        className="text-sm"
-                                        styles={{
-                                            control: (base) => ({
-                                                ...base,
-                                                backgroundColor: '#f3f4f6',
-                                                borderColor: '#d1d5db',
-                                                borderWidth: 1,
-                                                boxShadow: 'none',
-                                            }),
-                                            dropdownIndicator: (base) => ({
-                                                ...base,
-                                                color: '#9ca3af',
-                                            }),
-                                            clearIndicator: (base) => ({
-                                                ...base,
-                                                color: '#9ca3af',
-                                            }),
-                                            option: (base) => ({
-                                                ...base,
-                                                backgroundColor: '#ffffff',
-                                                color: '#374151',
-                                                '&:hover': {
-                                                    backgroundColor: '#ebf8ff',
-                                                },
-                                            }),
-                                            multiValue: (base) => ({
-                                                ...base,
-                                                backgroundColor: '#84E1BC',
-                                                color: '#374151',
-                                                borderRadius: '9999px',
-                                                padding: '0 6px',
-                                                paddingRight: '0.25rem',
-                                            }),
-                                            multiValueLabel: (base) => ({
-                                                ...base,
-                                                color: '#046C4E',
-                                            }),
-                                            multiValueRemove: (base) => ({
-                                                ...base,
-                                                borderRadius: '1000px',
-                                                padding: '2px',
-                                                marginLeft: '8px',
-                                                color: '#891839 ',
-                                                cursor: 'pointer',
-                                                '&:hover': {
-                                                backgroundColor: '#84E1BC',
-                                                color: '#E02424',
-                                                },
-                                            }), 
-                                        }}
-                                        onChange={(newValue) => {
-                                            const selected = newValue.map((item) => item.value);
-                                            setFormData(prev => ({ ...prev, requirements: selected }));
-                                        }}
-                                    />
+                                
+                                <div className="flex items-center gap-3 text-left">
+                                    <div>
+                                        <div className="text-4xl md:text-5xl lg:text-5xl font-bold text-[#145C44] leading-tight">
+                                            Create Job Posting
+                                        </div>
+                                        <p className="text-gray-600 pl-1">
+                                            Fill in the details below.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            {/* Salary */}
-                            <div className="flex items-center gap-4">
-                                <label className="w-42 text-sm font-medium text-gray-700 text-left pl-15">Salary</label>
-                                <div className="flex items-center border border-gray-300 rounded-md p-2 flex-1">
-                                    <span className="text-sm text-gray-700 mr-1 ml-1">₱</span>
-                                    <input
-                                        type="text"
-                                        placeholder="Enter Salary"
-                                        className="flex-1 outline-none text-sm placeholder:text-sm"
-                                        value={addCommas(formData.salary)}
-                                        onChange={(e) => {
-                                            const rawValue = removeCommas(e.target.value);
-                                            if (/^\d*$/.test(rawValue)) {
-                                            setFormData({ ...formData, salary: rawValue });
-                                            }
-                                        }}
-                                        min="0"
-                                        step="any"
-                                    />
-                                </div>
-                                <span className="text-sm text-gray-500">per month</span>
-                            </div>
                         </div>
 
-                        <div className="hidden lg:block border-l border-gray-300"></div>
-                        
-                        {/* Background Image */}
-                        <div className="w-full lg:w-1/2 flex flex-col items-center">
-                            <label className="text-sm font-medium text-gray-700 mb-2">
-                                Choose Background Image
-                            </label>
-                            <div className="relative mb-2 w-[380px] h-[260px] bg-gray-200 border border-gray-300 flex items-center justify-center">
-                                {formData.image ? (
-                                    <>
-                                        <img
-                                            src={URL.createObjectURL(formData.image)}
-                                            alt="Preview"
-                                            className="w-full h-full object-cover"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setFormData({ ...formData, image: null });
-                                                if (fileInputRef.current) {
-                                                    fileInputRef.current.value = '';
-                                                }
+                        <form onSubmit={handleSubmit} className="max-w-7xl mx-auto px-6 pt-5 pb-12">
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                <div className="lg:col-span-2 space-y-8">
+                                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+                                        <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                            <div className="w-2 h-8 bg-[#145C44] rounded-full"></div>
+                                            Basic Information
+                                        </h2>
+                                        
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <InputField
+                                                label="Company Name"
+                                                value={formData.company}
+                                                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                                                icon={LuBuilding2}
+                                            />
+                                            
+                                            <InputField
+                                                label="Job Title"
+                                                value={formData.job_title}
+                                                onChange={(e) => setFormData({ ...formData, job_title: e.target.value })}
+                                                icon={BsFileText}
+                                            />
+                                            
+                                            <InputField
+                                                label="Location"
+                                                value={formData.location}
+                                                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                                                icon={LuMapPin}
+                                            />
+                                            
+                                            <div className="group">
+                                                <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                                                    <CiMoneyBill className="w-5 h-5 text-gray-500" />
+                                                    Salary
+                                                </label>
+                                                <div className="relative">
+                                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                        <span className="text-gray-500 font-medium">₱</span>
+                                                    </div>
+                                                    <input
+                                                        type="text"
+                                                        value={addCommas(formData.salary)}
+                                                        onChange={(e) => {
+                                                            const rawValue = removeCommas(e.target.value);
+                                                            if (/^\d*$/.test(rawValue)) {
+                                                                setFormData({ ...formData, salary: rawValue });
+                                                            }
+                                                        }}
+                                                        className="w-full pl-8 pr-20 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#145C44] focus:border-transparent transition-all duration-200 bg-white shadow-sm hover:shadow-md"
+                                                    />
+                                                    <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                                                        <span className="text-gray-400 text-sm">per month</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-6">
+                                            <InputField
+                                                label="Application Link"
+                                                value={formData.application_link}
+                                                onChange={(e) => setFormData({ ...formData, application_link: e.target.value })}
+                                                icon={LuLink}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+                                        <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                            <div className="w-2 h-8 bg-[#145C44] rounded-full"></div>
+                                            Requirements
+                                        </h2>
+                                        
+                                        <CreatableSelect
+                                            isMulti
+                                            value={formData.requirements.map(req => ({ value: req, label: req }))}
+                                            options={jobRequiremets}
+                                            placeholder="Select or create requirements..."
+                                            className="text-sm"
+                                            styles={{
+                                                control: (base, state) => ({
+                                                    ...base,
+                                                    backgroundColor: '#ffffff',
+                                                    borderColor: state.isFocused ? '#145C44' : '#e5e7eb',
+                                                    borderWidth: 1,
+                                                    borderRadius: '12px',
+                                                    padding: '8px',
+                                                    boxShadow: state.isFocused ? '0 0 0 2px rgba(20, 92, 68, 0.1)' : '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+                                                    minHeight: '48px',
+                                                    '&:hover': {
+                                                        borderColor: '#9ca3af',
+                                                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                                    },
+                                                }),
+                                                multiValue: (base) => ({
+                                                    ...base,
+                                                    backgroundColor: '#84E1BC',
+                                                    borderRadius: '8px',
+                                                    padding: '2px 8px',
+                                                }),
+                                                multiValueLabel: (base) => ({
+                                                    ...base,
+                                                    color: '#046C4E',
+                                                    fontWeight: '500',
+                                                }),
+                                                multiValueRemove: (base) => ({
+                                                    ...base,
+                                                    borderRadius: '6px',
+                                                    color: '#dc2626',
+                                                    '&:hover': {
+                                                        backgroundColor: '#fca5a5',
+                                                        color: '#991b1b',
+                                                    },
+                                                }),
+                                                option: (base, state) => ({
+                                                    ...base,
+                                                    backgroundColor: state.isHovered ? '#f0fdf4' : '#ffffff',
+                                                    color: '#374151',
+                                                }),
                                             }}
-                                            className="absolute top-1 right-1 bg-black bg-opacity-50 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-opacity-80 cursor-pointer"
-                                            title="Remove Image"
-                                        >
-                                            ✕
-                                        </button>
-                                    </>
-                                ) : (
-                                    <span className="text-gray-500 text-sm">No image uploaded</span>
-                                )}
+                                            onChange={(newValue) => {
+                                                const selected = newValue.map((item) => item.value);
+                                                setFormData(prev => ({ ...prev, requirements: selected }));
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+                                        <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                            <div className="w-2 h-8 bg-[#145C44] rounded-full"></div>
+                                            Job Description
+                                        </h2>
+                                        
+                                        <textarea
+                                            value={formData.job_description}
+                                            onChange={(e) => setFormData({ ...formData, job_description: e.target.value })}
+                                            placeholder="Describe the job role, responsibilities, and what you're looking for in a candidate..."
+                                            rows={8}
+                                            className="w-full text-gray-700 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#145C44] focus:border-transparent transition-all duration-200 bg-white shadow-sm hover:shadow-md resize-none"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="lg:col-span-1">
+                                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 sticky top-8">
+                                        <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                            <div className="w-2 h-8 bg-[#145C44] rounded-full"></div>
+                                            Background Image
+                                        </h2>
+                                        
+                                        <div className="space-y-4">
+                                            <div className="relative w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center overflow-hidden group">
+                                                {formData.image ? (
+                                                    <>
+                                                        <img
+                                                            src={URL.createObjectURL(formData.image)}
+                                                            alt="Preview"
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setFormData({ ...formData, image: null });
+                                                                if (fileInputRef.current) {
+                                                                    fileInputRef.current.value = '';
+                                                                }
+                                                            }}
+                                                            className="absolute top-3 right-3 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition-colors duration-200 shadow-lg cursor-pointer"
+                                                        >
+                                                            <HiOutlineX className="w-4 h-4" />
+                                                        </button>
+                                                    </>
+                                                ) : (
+                                                    <div className="text-center">
+                                                        <HiOutlineCloudUpload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                                                        <p className="text-gray-500 text-sm font-medium">No image uploaded</p>
+                                                        <p className="text-gray-400 text-xs mt-1">Click below to add an image</p>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <label className="block">
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    ref={fileInputRef}
+                                                    onChange={handleFileChange}
+                                                    className="hidden"
+                                                />
+                                                <div className="w-full px-4 py-3 bg-gradient-to-r from-[#145C44] to-[#0d4a35] text-white rounded-xl cursor-pointer hover:from-[#0d4a35] hover:to-[#145C44] transition-all duration-200 text-center font-medium shadow-lg hover:shadow-xl transform hover:scale-105">
+                                                    Choose Image
+                                                </div>
+                                            </label>
+
+                                            <p className="text-xs text-gray-500 text-center">
+                                                Supported formats: JPEG, PNG, WebP<br />
+                                                Maximum size: 10MB
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                ref={fileInputRef}
-                                className="block w-full max-w-xs text-sm text-gray-900 border border-gray-300 rounded-md file:bg-[#891839] file:text-white file:border-none file:px-4 file:py-2 cursor-pointer"
-                                onChange={handleFileChange}
-                            />
-                        </div>
-                    </div>
 
-                    {/* Description */}
-                    <div className="flex flex-col gap-6 w-full mt-2 pr-15">
-                        <div className="w-full flex flex-col sm:flex-row gap-4 mt-4 pl-12 sm:pl-0 md:pl-0 lg:pl-0">
-                            <label className="sm:w-42 text-sm font-medium text-gray-700 text-left pl-3 sm:pl-15 md:pl-15 lg:pl-15">Job Description</label>
-                            <textarea
-                                placeholder="Enter Job Description"
-                                rows={6}
-                                className="flex-1 border border-gray-300 rounded-md p-2 placeholder:text-sm placeholder:text-gray-400 text-sm text-gray-800"
-                                value={formData.job_description}
-                                onChange={(e) => setFormData({ ...formData, job_description: e.target.value })}
-                            />
-                        </div>
-                    </div>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-end mt-12 mb-15 pt-8 border-t border-gray-200">
+                                <button
+                                    type="button"
+                                    onClick={() => navigate('/jobs')}
+                                    className="px-8 py-3 text-white bg-gradient-to-r from-[#891839] to-[#6d122d] hover:from-[#6d122d] hover:to-[#891839] font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={isLoading}
+                                    className="px-8 py-3 bg-gradient-to-r from-[#145C44] to-[#0d4a35] hover:from-[#0d4a35] hover:to-[#145C44] text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                >
+                                    {isLoading ? 'Submitting...' : 'Submit'}
+                                </button>
+                            </div>
 
-                    <div className="flex flex-col sm:flex-row md:flex-row lg:flex-row justify-end w-full gap-4 mt-5 pl-15 pr-15 mb-8">
-                        <button
-                            type="button"
-                            onClick={() => navigate('/jobs')}
-                            className="bg-[#891839] text-white font-medium px-12 py-2 rounded-md cursor-pointer focus:!outline-none"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={isLoading}
-                            className="bg-[#145C44] text-white font-medium px-6 py-2 rounded-md cursor-pointer focus:!outline-none"
-                        >
-                            Submit Job Posting
-                        </button>
+                            {error && (
+                                <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                                    <p className="text-red-600 text-sm font-medium">{error}</p>
+                                </div>
+                            )}
+                        </form>
                     </div>
-                    
-
-                    {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-                </form>
                 </div>
             )}
-
 
             <div className="w-full z-50">
                 <Footer />
@@ -373,3 +420,19 @@ export const Post_Job = () => {
         </>
     );
 }
+
+const InputField = ({ label, value, onChange, placeholder, icon: Icon, type = "text" }) => (
+    <div className="group">
+        <label className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+            {Icon && <Icon className="w-4 h-4 text-gray-500" />}
+            {label}
+        </label>
+        <input
+            type={type}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#145C44] focus:border-transparent transition-all duration-200 bg-white shadow-sm hover:shadow-md group-hover:border-gray-300"
+        />
+    </div>
+);

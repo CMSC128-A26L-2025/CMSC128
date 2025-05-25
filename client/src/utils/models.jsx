@@ -169,6 +169,7 @@ export const announcementList = [
     {
       announcement_id: 1,
       title: 'Important Update',
+      type: "event",
       context: 'There will be a system maintenance tonight at 10 PM.',
       date_posted: new Date('2025-04-10T09:00:00Z'),
       posted_by: 123,
@@ -177,6 +178,7 @@ export const announcementList = [
     {
       announcement_id: 2,
       title: 'Holiday Notice',
+      type: "announcement",
       context: 'The office will be closed on December 25th for Christmas.',
       date_posted: new Date('2024-12-20T09:00:00Z'),
       posted_by: 124,
@@ -185,6 +187,7 @@ export const announcementList = [
     {
       announcement_id: 3,
       title: 'New Employee Orientation',
+      type: "announcement",
       context: 'New employees are invited to attend the orientation on June 1st.',
       date_posted: new Date('2025-04-01T09:00:00Z'),
       posted_by: 125,
@@ -193,6 +196,7 @@ export const announcementList = [
     {
       announcement_id: 4,
       title: 'Upcoming Webinar',
+      type: "event",
       context: 'Join us for a webinar on cloud computing on May 20th.',
       date_posted: new Date('2025-04-05T09:00:00Z'),
       posted_by: 126,
@@ -201,6 +205,7 @@ export const announcementList = [
     {
       announcement_id: 5,
       title: 'Software Update',
+      type: "event",
       context: 'A new version of the software will be released next week.',
       date_posted: new Date('2025-04-08T09:00:00Z'),
       posted_by: 127,
@@ -209,6 +214,7 @@ export const announcementList = [
     {
       announcement_id: 6,
       title: 'Job Fair Invitation',
+      type: "announcement",
       context: 'We are hosting a job fair next month. Make sure to attend!',
       date_posted: new Date('2025-04-07T09:00:00Z'),
       posted_by: 128,
@@ -217,6 +223,7 @@ export const announcementList = [
     {
       announcement_id: 7,
       title: 'Training Session',
+      type: "event",
       context: 'A training session on the new system will be held on April 10th.',
       date_posted: new Date('2025-04-01T09:00:00Z'),
       posted_by: 129,
@@ -225,6 +232,7 @@ export const announcementList = [
     {
       announcement_id: 8,
       title: 'Employee of the Month',
+      type: "announcemet",
       context: 'Congratulations to Sarah for being Employee of the Month!',
       date_posted: new Date('2025-04-03T09:00:00Z'),
       posted_by: 130,
@@ -233,6 +241,7 @@ export const announcementList = [
     {
       announcement_id: 9,
       title: 'Project Deadline',
+      type: "announcement",
       context: 'The project deadline has been extended to May 15th.',
       date_posted: new Date('2025-04-03T09:00:00Z'),
       posted_by: 131,
@@ -241,6 +250,7 @@ export const announcementList = [
     {
       announcement_id: 10,
       title: 'Office Renovation',
+      type: "announcement",
       context: 'The office will undergo renovations starting next week.',
       date_posted: new Date('2025-04-03T09:00:00Z'),
       posted_by: 132,

@@ -1,15 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { PiCalendarDotsFill } from "react-icons/pi";
+import { announcementList } from "../../utils/models";    //test case
 import Navbar_landing from "../header_landing";
 import Footer from "../footer";
 import Loading from "../loading";
 import { useAuth } from "../../auth/AuthContext";
 
 export const Landing_page = () => {
-  const navigate = useNavigate();
-  const [announcements, setAnnouncements] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate()
+  const [announcements, setAnnouncements] = useState(announcementList);
   const [isLoading, setIsLoading] = useState(true);
   const { authAxios } = useAuth();
 
@@ -42,21 +42,14 @@ export const Landing_page = () => {
       setIsLoading(false);
     }, 1000);
     return () => clearTimeout(timer);
-  }, []); // This runs once on mount to simulate initial loading
-
-  const announcementsPerPage = 3;
-  const totalPages = Math.ceil(announcements.length / announcementsPerPage);
-  const startIndex = (currentPage - 1) * announcementsPerPage;
-  const currentAnnouncements = announcements.slice(startIndex, startIndex + announcementsPerPage);
-
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
+  }, []);
+  
+  const sortedAnnouncements = [...announcements].sort((a, b) => 
+    new Date(b.date_posted) - new Date(a.date_posted)
+  );
+  
+  const latestAnnouncements = sortedAnnouncements.slice(0, 4);
+   
   return (
     <>
       <div className="fixed top-0 w-full z-50">
@@ -84,11 +77,11 @@ export const Landing_page = () => {
             </div>
             <div className="flex justify-end pb-15 pr-25">
               <div className="flex gap-4">
-                <button className="text-base sm:text-lg lg:text-xl text-white h-[50px] sm:h-[60px] w-[140px] sm:w-[180px] font-bold px-4 py-2 border-2 border-white rounded-md hover:bg-white hover:text-[#085740] cursor-pointer"
-                  onClick={() => navigate('/login')}>
+                <button className="text-base sm:text-lg lg:text-xl text-white h-[50px] sm:h-[60px] w-[140px] sm:w-[180px] font-bold px-4 py-2 border-2 border-white rounded-4xl hover:bg-white hover:text-[#085740] cursor-pointer"
+                  onClick={()=> navigate('/login')}>
                   Log In
                 </button>
-                <button className="text-base sm:text-lg lg:text-xl text-white h-[50px] sm:h-[60px] w-[170px] sm:w-[190px] font-bold px-4 py-2 border-2 border-white rounded-md hover:bg-white hover:text-[#085740] cursor-pointer"
+                <button className="text-base sm:text-lg lg:text-xl text-white h-[50px] sm:h-[60px] w-[170px] sm:w-[190px] font-bold px-4 py-2 border-2 border-white rounded-4xl hover:bg-white hover:text-[#085740] cursor-pointer"
                   onClick={() => navigate('/guest_jobs')}>
                   View Job Listing
                 </button>
@@ -96,131 +89,257 @@ export const Landing_page = () => {
             </div>
           </div>
 
-          <div className="flex flex-col w-screen bg-gray-100 px-10 py-15 h-auto">
+          <div className="flex flex-col w-screen bg-gray-100 px-10 py-30 h-auto">
             <div className="flex flex-col justify-center text-center">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl text-center text-[#891839] font-bold">
-                Stay Connected, Stay Involved
-              </h2>
-              <h2 className="text-md md:text-md lg:text-xl text-center text-black font-light py-5 sm:px-20">
-                The ICS Alumni Tracker and Relations Management System is your gateway
-                to reconnecting with old friends, expanding your professional network,
-                and giving back to the ICS community.
-              </h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl text-center text-[#891839] font-bold">
+              Stay Connected, Stay Involved
+            </h2>
+            <h2 className="text-md md:text-md lg:text-xl text-center text-black font-light py-5 sm:px-20 lg:px-30">
+              The ICS Alumni Tracker and Relations Management System is your gateway
+              to reconnecting with old friends, expanding your professional network,
+              and giving back to the ICS community.
+            </h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 pt-10 sm:px-10">
-              {/* Column 1 */}
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#891839] italic text-center col-span-1 ">1</span>
-                <div className=" col-span-3">
-                  <h3 className="text-xl font-bold text-[#891839] text-left">Build Your Profile</h3>
-                  <p className="text-md md:text-md lg:text-lg text-black text-left pt-1">Share your journey, update your career milestones, and let others find you.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-15 gap-y-10 pt-10 sm:px-10 lg:px-30">
+                {/* Column 1 */ }
+                <div className="grid grid-cols-4 gap-2">
+                    <span className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#891839] italic text-center col-span-1"style={{ fontFamily: "sans-serif" }}>1</span>
+                    <div className=" col-span-3">
+                        <h3 className="text-xl font-bold text-[#891839] text-left">Build Your Profile</h3>
+                        <p className="text-md md:text-md lg:text-lg text-black text-left pt-1">Share your journey, update your career milestones, and let others find you.</p>
+                    </div>
+                    
+                </div>
+                {/* Column 1 */ }
+                <div className="grid grid-cols-4 gap-2">
+                    <span className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#891839] italic text-center col-span-1 "style={{ fontFamily: "sans-serif" }}>2</span>
+                    <div className=" col-span-3">
+                        <h3 className="text-xl font-bold text-[#891839] text-left">Expand Your Network</h3>
+                        <p className="text-md md:text-md lg:text-lg text-black text-left pt-1">Share your journey, update your career milestones, and let others find you.</p>
+                    </div>
+                    
                 </div>
 
-              </div>
-              {/* Column 1 */}
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#891839] italic text-center col-span-1 ">2</span>
-                <div className=" col-span-3">
-                  <h3 className="text-xl font-bold text-[#891839] text-left">Expand Your Network</h3>
-                  <p className="text-md md:text-md lg:text-lg text-black text-left pt-1">Share your journey, update your career milestones, and let others find you.</p>
+                {/* Column 3 */}
+                <div className="grid grid-cols-4 gap-2">
+                    <span className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#891839] italic text-center col-span-1 "style={{ fontFamily: "sans-serif" }}>3</span>
+                    <div className=" col-span-3">
+                        <h3 className="text-xl font-bold text-[#891839] text-left">Advance Your Career</h3>
+                        <p className="text-md md:text-md lg:text-lg text-black text-left pt-1">Post and discover job opportunities shared by ICS alumni.</p>
+                    </div>
+                    
                 </div>
 
-              </div>
-
-              {/* Column 3 */}
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#891839] italic text-center col-span-1 ">3</span>
-                <div className=" col-span-3">
-                  <h3 className="text-xl font-bold text-[#891839] text-left">Advance Your Career</h3>
-                  <p className="text-md md:text-md lg:text-lg text-black text-left pt-1">Post and discover job opportunities shared by ICS alumni.</p>
+                {/* Column 4 */}
+                <div className="grid grid-cols-4 gap-2">
+                    <span className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#891839] italic text-center col-span-1 "style={{ fontFamily: "sans-serif" }}>4</span>
+                    <div className=" col-span-3">
+                        <h3 className="text-xl font-bold text-[#891839] text-left">Join Events & Reunions</h3>
+                        <p className="text-md md:text-md lg:text-lg text-black text-left pt-1">Stay updated on upcoming gatherings and RSVP with ease.</p>
+                    </div>
+                    
                 </div>
 
-              </div>
-
-              {/* Column 4 */}
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#891839] italic text-center col-span-1 ">4</span>
-                <div className=" col-span-3">
-                  <h3 className="text-xl font-bold text-[#891839] text-left">Join Events & Reunions</h3>
-                  <p className="text-md md:text-md lg:text-lg text-black text-left pt-1">Stay updated on upcoming gatherings and RSVP with ease.</p>
+                {/* Column 5 */}
+                <div className="grid grid-cols-4 gap-2">
+                    <span className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#891839] italic text-center col-span-1 "style={{ fontFamily: "sans-serif" }}>5</span>
+                    <div className=" col-span-3">
+                        <h3 className="text-xl font-bold text-[#891839] text-left">Give Back</h3>
+                        <p className="text-md md:text-md lg:text-lg text-black text-left pt-1">Support scholarships and initiatives through donations and sponsorship.</p>
+                    </div>
+                    
                 </div>
 
-              </div>
-
-              {/* Column 5 */}
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#891839] italic text-center col-span-1 ">5</span>
-                <div className=" col-span-3">
-                  <h3 className="text-xl font-bold text-[#891839] text-left">Give Back</h3>
-                  <p className="text-md md:text-md lg:text-lg text-black text-left pt-1">Support scholarships and initiatives through donations and sponsorship.</p>
+                {/* Column 6 */}
+                <div className="grid grid-cols-4 gap-2">
+                    <span className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#891839] italic text-center col-span-1 "style={{ fontFamily: "sans-serif" }}>6</span>
+                    <div className=" col-span-3">
+                        <h3 className="text-xl font-bold text-[#891839] text-left">Stay Informed</h3>
+                        <p className="text-md md:text-md lg:text-lg text-black text-left pt-1">Receive newsletters, announcements, and invitations exclusive events.</p>
+                    </div>
+                    
                 </div>
-
               </div>
-
-              {/* Column 6 */}
-              <div className="grid grid-cols-4 gap-2">
-                <span className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#891839] italic text-center col-span-1 ">6</span>
-                <div className=" col-span-3">
-                  <h3 className="text-xl font-bold text-[#891839] text-left">Stay Informed</h3>
-                  <p className="text-md md:text-md lg:text-lg text-black text-left pt-1">Receive newsletters, announcements, and invitations exclusive events.</p>
-                </div>
-
-              </div>
-            </div>
           </div>
 
-          {currentAnnouncements.length > 0 && (
-            <div className="flex flex-col bg-[#891839] w-full px-4 md:px-10 pt-15 pb-20">
+          {latestAnnouncements.length > 0 && (
+            <div className="flex flex-col bg-[#891839] w-full px-4 md:px-10 pt-20 pb-25">
               <div className="flex flex-col justify-center text-center mb-8 max-w-screen-lg mx-auto">
-                <p className="text-3xl md:text-4xl lg:text-5xl text-white font-bold">Announcements</p>
+                <p className="text-4xl md:text-4xl lg:text-5xl text-white font-bold">News and Updates</p>
                 <p className="text-md md:text-lg lg:text-xl text-white font-light mt-4 mb-8">
                   Stay updated with the current news, upcoming events, and important updates from the alumni community.
                 </p>
               </div>
-
-              <div
-                className={`grid ${announcements.length === 1 ? 'grid-cols-1' : announcements.length === 2 ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'} gap-8 px-20 justify-center`}
-              >
-                {currentAnnouncements.map((announcement) => (
-                  <div
-                    key={announcement.announcement_id}
-                    className={`bg-white shadow-lg hover:shadow-xl transition-shadow overflow-hidden ${announcements.length <= 2 ? 'w-full sm:w-80 md:w-96 lg:w-145 mx-auto' : ''}`}
-                  >
-                    <div className="overflow-hidden group h-60 w-full">
-                      <img
-                        src={announcement.image}
-                        alt="announcement"
-                        className="h-60 w-full object-cover transform transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
-                    <div className="p-5">
-                      <h3 className="text-xl text-left font-extralight text-[#145C44]">{announcement.title}</h3>
+              
+              <div className="max-w-7xl mx-auto w-full px-4 md:px-20">
+                {latestAnnouncements.length === 1 && (
+                  <div className="px-10 md:px-10 lg:px-30 flex justify-center">
+                    <div className="w-full md:w-[85%] lg:w-[85%] bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                      <div className="relative overflow-hidden group">
+                        <img
+                          src={latestAnnouncements[0].image}
+                          alt={latestAnnouncements[0].title}
+                          className="h-50 md:h-80 lg:h-80 w-full object-cover rounded-t-lg transform transition-transform duration-300 group-hover:scale-105"
+                        />
+                        {latestAnnouncements[0].type && (
+                          <span className="absolute top-4 left-4 bg-[#891839] text-white text-xs px-4 py-1 rounded-full">
+                            {latestAnnouncements[0].type}
+                          </span>
+                        )}
+                      </div>
+                      <div className="p-4 md:p-6 lg:p-6 text-left">
+                        <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#891839] mb-1">
+                          {latestAnnouncements[0].title}
+                        </h3>
+                        {latestAnnouncements[0].date_posted && (
+                          <div className="flex items-center text-xs md:text-sm font-medium text-gray-700">
+                            <PiCalendarDotsFill className="w-4 h-4 mr-2" />
+                            <p>{new Date(latestAnnouncements[0].date_posted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                )}
 
-              {announcements.length > 2 && totalPages > 1 && (
-                <div className="flex justify-center items-center gap-3 mt-10">
-                  <button
-                    onClick={handlePrev}
-                    disabled={currentPage === 1}
-                    className="text-sm font-normal cursor-pointer text-white disabled:opacity-30 focus:!outline-none"
-                  >
-                    <IoIosArrowBack size={15} />
-                  </button>
-                  <span className="text-sm font-normal text-white select-none">
-                    {`${currentPage} of ${totalPages}`}
-                  </span>
-                  <button
-                    onClick={handleNext}
-                    disabled={currentPage === totalPages}
-                    className="text-sm font-normal cursor-pointer text-white disabled:opacity-30 focus:!outline-none"
-                  >
-                    <IoIosArrowForward size={15} />
-                  </button>
-                </div>
-              )}
+                {latestAnnouncements.length === 2 && (
+                  <div className="px-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {latestAnnouncements.map((a) => (
+                      <div
+                        key={a.announcement_id}
+                        className="flex justify-center"
+                      >
+                        <div className="w-full bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                          <div className="relative overflow-hidden group">
+                            <img
+                              src={a.image}
+                              alt={a.title}
+                              className="h-50 md:h-80 lg:h-70 w-full object-cover rounded-t-lg transform transition-transform duration-300 group-hover:scale-105"
+                            />
+                            {a.type && 
+                              <span 
+                                className="absolute top-4 left-4 bg-[#891839] text-white text-xs px-4 py-1 rounded-full">
+                                {a.type}
+                              </span>
+                            }
+                          </div>
+                          <div className="p-4 md:p-6 lg:p-6 text-left">
+                            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#891839] mb-1">
+                              {a.title}
+                            </h3>
+                            {a.date_posted && (
+                              <div className="flex items-center text-xs md:text-sm font-medium text-gray-700">
+                                <PiCalendarDotsFill className="w-4 h-4 mr-2" />
+                                <p>{new Date(a.date_posted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {(latestAnnouncements.length === 3 || latestAnnouncements.length >= 4) && (
+                  <>
+                    <div className="xl:hidden flex flex-col gap-6 md:gap-6 lg:gap-4 px-10 md:px-4">
+                      {latestAnnouncements.slice(0, latestAnnouncements.length === 3 ? 3 : 4).map((a) => (
+                        <div key={a.announcement_id} className="flex justify-center">
+                          <div className="w-full md:w-[85%] bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                            <div className="relative overflow-hidden group">
+                              <img 
+                                src={a.image} 
+                                alt={a.title} 
+                                className="h-48 sm:h-56 md:h-64 w-full object-cover rounded-t-lg transform transition-transform duration-300 group-hover:scale-105" 
+                              />
+                              {a.type && (
+                                <span className="absolute top-3 left-3 md:top-4 md:left-4 bg-[#891839] text-white text-xs px-3 py-1 md:px-4 md:py-1 rounded-full">
+                                  {a.type}
+                                </span>
+                              )}
+                            </div>
+                            <div className="p-4 md:p-6 lg:p-6 text-left">
+                              <h3 className="text-lg md:text-xl font-bold text-[#891839] mb-1">
+                                {a.title}
+                              </h3>
+                              {a.date_posted && (
+                                <div className="flex items-center text-xs md:text-sm font-medium text-gray-700">
+                                  <PiCalendarDotsFill className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
+                                  <p>{new Date(a.date_posted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="hidden xl:grid grid-cols-3 gap-6 md:gap-6 lg:gap-4">
+                      <div className="col-span-2 flex justify-start">
+                        <div className="w-[85%] bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden h-full">
+                          <div className="relative overflow-hidden group">
+                            <img 
+                              src={latestAnnouncements[0].image} 
+                              alt={latestAnnouncements[0].title} 
+                              className={`${latestAnnouncements.length === 3 ? 'h-75' : 'h-96'} w-full object-cover rounded-t-lg transform transition-transform duration-300 group-hover:scale-105`}
+                            />
+                            {latestAnnouncements[0].type && (
+                              <span className="absolute top-5 left-5 bg-[#891839] text-white text-xs px-4 py-1 rounded-full">
+                                {latestAnnouncements[0].type}
+                              </span>
+                            )}
+                          </div>
+                          <div className="p-4 md:p-6 lg:p-6 text-left">
+                            <h3 className="text-3xl font-bold text-[#891839] mb-1">
+                              {latestAnnouncements[0].title}
+                            </h3>
+                            {latestAnnouncements[0].date_posted && (
+                              <div className="flex items-center text-md font-medium text-gray-700">
+                                <PiCalendarDotsFill className="w-4 h-4 mr-2" />
+                                <p>{new Date(latestAnnouncements[0].date_posted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="col-span-1 flex flex-col gap-4 h-full ml-[-6.7rem]">
+                        {latestAnnouncements.slice(1, latestAnnouncements.length === 3 ? 3 : 4).map((a) => (
+                          <div key={a.announcement_id} className="w-full bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden flex-1">
+                            <div className="flex h-full">
+                              <div className={`w-[60%] ${announcements.length === 3 ? 'h-50' : 'h-39'} overflow-hidden group`}>
+                                <img 
+                                  src={a.image} 
+                                  alt={a.title} 
+                                  className="h-full w-full object-cover rounded-l-lg transform transition-transform duration-300 group-hover:scale-105" 
+                                />
+                              </div>
+                              <div className="w-[40%] p-4 flex flex-col justify-center text-left">
+                                <div>
+                                  {a.type && (
+                                    <span className="inline-block bg-[#891839] text-white text-xs px-3 py-1 rounded-full mb-2">
+                                      {a.type}
+                                    </span>
+                                  )}
+                                  <h3 className="text-md font-bold text-[#891839] mb-1 line-clamp-2">
+                                    {a.title}
+                                  </h3>
+                                  {a.date_posted && (
+                                    <div className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                      <PiCalendarDotsFill className="w-3 h-3 mr-1 flex-shrink-0" />
+                                      <p className="truncate">{new Date(a.date_posted).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</p>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           )}
         </>
